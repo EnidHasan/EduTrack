@@ -23,7 +23,6 @@
                 <div asp-validation-summary="ModelOnly"></div>
                 <div class="form-field"><label asp-for="Email" class="form-label">University email</label><div class="input-wrap"><span>✉</span><input asp-for="Email" class="form-control" placeholder="you@university.edu" autocomplete="username"/></div><span asp-validation-for="Email" class="text-danger small"></span></div>
                 <div class="form-field"><div class="label-row"><label asp-for="Password" class="form-label"></label><span>Secure access</span></div><div class="input-wrap"><span>⌑</span><input asp-for="Password" class="form-control" placeholder="Enter your password" autocomplete="current-password"/></div><span asp-validation-for="Password" class="text-danger small"></span></div>
-                <label class="remember"><input asp-for="RememberMe"/><span class="checkmark">✓</span><span>Keep me signed in on this device</span></label>
                 <button class="login-submit" type="submit"><span>Continue to EduTrack</span><b>→</b></button>
             </form>
             <div class="login-security"><span>◆</span> Your credentials are encrypted and securely protected</div>
