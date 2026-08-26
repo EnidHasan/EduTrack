@@ -16,6 +16,8 @@ public class UserFormViewModel
     [Required] public string Role { get; set; } = "Student";
     [DataType(DataType.Password), Display(Name = "Temporary password")] public string? Password { get; set; }
     public bool IsActive { get; set; } = true;
+    public bool IsRoleLocked { get; set; }
+    public string LinkedRecord { get; set; } = "Administration";
 }
 public class ChangePasswordViewModel
 {
@@ -31,5 +33,5 @@ public class ProfileViewModel
     public string Role { get; set; } = string.Empty;
     [Phone, Display(Name = "Phone number")] public string? PhoneNumber { get; set; }
 }
-public record UserListItem(string Id, string FullName, string Email, string Role, bool IsActive, DateTime CreatedAt);
+public record UserListItem(string Id, string FullName, string Email, string Role, bool IsActive, DateTime CreatedAt, string Source, bool IsLinked, bool IsCurrent);
 public record DashboardViewModel(int Students, int Teachers, int Courses, int Users, IReadOnlyList<Course> RecentCourses);

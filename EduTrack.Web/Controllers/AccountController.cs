@@ -14,6 +14,8 @@ public class AccountController(SignInManager<ApplicationUser> signInManager, Use
     public async Task<IActionResult> Login(LoginViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
+        var account = await users.FindByEmailAsync(model.Email);
+        if (account is not null && !account.IsActive) { ModelState.AddModelError(string.Empty, "This account is disabled. Contact an administrator."); return View(model); }
         var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
         if (result.Succeeded)
         {
