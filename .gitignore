@@ -1,0 +1,23 @@
+# Visual Studio user settings and caches
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# .NET build output
+[Bb]in/
+[Oo]bj/
+
+# Local databases and logs
+*.mdf
+*.ldf
+*.log
+
+# Machine-specific configuration and secrets
+appsettings.Local.json
+secrets.json
+
+# Operating system files
+.DS_Store
+Thumbs.db
