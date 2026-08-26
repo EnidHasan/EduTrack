@@ -1,32 +1,14 @@
-# EduTrack — Member 1 checkpoint
+# EduTrack
 
-ASP.NET Core MVC academic information system foundation with SQL Server, EF Core, and ASP.NET Core Identity.
+EduTrack is a role-based academic information system designed to bring university academic operations into one secure and organized platform. It supports three primary roles—Admin, Teacher, and Student—and provides each user with access to the features appropriate to their responsibilities.
 
-## Included
+The system enables administrators to manage students, teachers, courses, user accounts, and academic records. Teachers can work with their assigned courses and grading activities, while students can access their academic information and related services. EduTrack uses ASP.NET Core Identity for secure authentication and role-based access, Entity Framework Core for data management, and Microsoft SQL Server as its database.
 
-- Responsive admin shell, sidebar/navbar, dashboard, polished login, forms, tables, empty states, alerts, and mobile navigation
-- Identity authentication with `Admin`, `Teacher`, and `Student` roles, secure password policy, lockout, and authorization
-- Admin account management (create/edit, role assignment, password reset, enable/disable)
-- Full Student, Teacher, and Course CRUD with validation, search, uniqueness constraints, and teacher-course assignment
-- SQL Server `ApplicationDbContext`, initial migration, relationships, indexes, and automatic development seeding
+The broader project includes course enrollment, automated grade calculation, student transcripts, grade-recheck workflows, academic-risk detection, dashboards, and reporting. Its purpose is to reduce repetitive administrative work, protect academic information, improve transparency, and provide students and faculty with a reliable university-wide academic workspace.
 
-## Run in Visual Studio
+## Default Administrator Login
 
-1. Open `EduTrack.slnx` in Visual Studio 2026.
-2. Confirm SQL Server LocalDB is installed, or replace `DefaultConnection` in `EduTrack.Web/appsettings.json` with your SSMS SQL Server instance, for example:
-   `Server=.;Database=EduTrackDb;Trusted_Connection=True;TrustServerCertificate=True`
-3. Set `EduTrack.Web` as the startup project and run it. In Development, pending migrations are applied automatically.
-4. Sign in with the seeded checkpoint account:
-   - Email: `admin@edutrack.edu`
-   - Password: `Admin@12345`
-
-Change the seed password before demonstration or deployment. For production, store it with User Secrets or environment variables (`SeedAdmin__Password`) instead of source-controlled configuration.
-
-## EF Core commands
-
-```powershell
-dotnet ef database update --project EduTrack.Web
-dotnet ef migrations add MigrationName --project EduTrack.Web --output-dir Data/Migrations
+```text
+Email: admin@edutrack.edu
+Password: Admin@12345
 ```
-
-The current local development database is `EduTrackDb` and can be inspected in SSMS under `(localdb)\MSSQLLocalDB`.
