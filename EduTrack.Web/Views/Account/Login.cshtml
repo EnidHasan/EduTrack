@@ -1,0 +1,33 @@
+@model LoginViewModel
+@{ ViewData["Title"] = "Sign in"; }
+<div class="login-page">
+    <section class="login-art">
+        <div class="login-orb orb-one"></div><div class="login-orb orb-two"></div>
+        <a class="brand login-brand" href="/"><span class="brand-mark">E</span><span>EduTrack<small>Academic management platform</small></span></a>
+        <div class="login-copy">
+            <span class="login-kicker"><i></i> One connected academic community</span>
+            <h1>Academic life,<br/><em>beautifully organized.</em></h1>
+            <p>Bring people, courses, and academic operations together in one secure university workspace.</p>
+            <div class="login-features"><span>✓ Role-based access</span><span>✓ Trusted academic records</span><span>✓ Built for every department</span></div>
+        </div>
+        <div class="login-trust"><span class="trust-mark">◎</span><span><strong>Secure by design</strong><small>Identity-protected university access</small></span></div>
+    </section>
+    <section class="login-panel">
+        <div class="login-box">
+            <div class="login-icon">↗</div>
+            <span class="eyebrow">WELCOME TO EDUTRACK</span>
+            <h2>Access your workspace</h2>
+            <p class="login-intro">Enter your university credentials to continue.</p>
+            <form method="post">
+                <input asp-for="ReturnUrl" type="hidden"/>
+                <div asp-validation-summary="ModelOnly"></div>
+                <div class="form-field"><label asp-for="Email" class="form-label">University email</label><div class="input-wrap"><span>✉</span><input asp-for="Email" class="form-control" placeholder="you@university.edu" autocomplete="username"/></div><span asp-validation-for="Email" class="text-danger small"></span></div>
+                <div class="form-field"><div class="label-row"><label asp-for="Password" class="form-label"></label><span>Secure access</span></div><div class="input-wrap"><span>⌑</span><input asp-for="Password" class="form-control" placeholder="Enter your password" autocomplete="current-password"/></div><span asp-validation-for="Password" class="text-danger small"></span></div>
+                <label class="remember"><input asp-for="RememberMe"/><span class="checkmark">✓</span><span>Keep me signed in on this device</span></label>
+                <button class="login-submit" type="submit"><span>Continue to EduTrack</span><b>→</b></button>
+            </form>
+            <div class="login-security"><span>◆</span> Your credentials are encrypted and securely protected</div>
+        </div>
+    </section>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial"/> }
