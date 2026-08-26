@@ -7,4 +7,5 @@ public class ApplicationUser : IdentityUser
     [StringLength(20)] public string? ProfileType { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
+    public bool MustChangePassword { get; set; }
 }

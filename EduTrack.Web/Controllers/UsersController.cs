@@ -31,7 +31,7 @@ public class UsersController(UserManager<ApplicationUser> users) : Controller
         ApplicationUser user; IdentityResult result;
         if (model.Id is null)
         {
-            user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName, ProfileType = model.Role, IsActive = model.IsActive, EmailConfirmed = true };
+            user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName, ProfileType = model.Role, IsActive = model.IsActive, EmailConfirmed = true, MustChangePassword = true };
             result = await users.CreateAsync(user, model.Password!);
         }
         else
@@ -40,7 +40,7 @@ public class UsersController(UserManager<ApplicationUser> users) : Controller
             user = existingUser;
             user.FullName = model.FullName; user.Email = user.UserName = model.Email; user.ProfileType = model.Role; user.IsActive = model.IsActive;
             result = await users.UpdateAsync(user);
-            if (result.Succeeded && !string.IsNullOrWhiteSpace(model.Password)) { var token = await users.GeneratePasswordResetTokenAsync(user); result = await users.ResetPasswordAsync(user, token, model.Password); }
+            if (result.Succeeded && !string.IsNullOrWhiteSpace(model.Password)) { var token = await users.GeneratePasswordResetTokenAsync(user); result = await users.ResetPasswordAsync(user, token, model.Password); if (result.Succeeded) user.MustChangePassword = true; }
         }
         if (result.Succeeded)
         {
@@ -55,7 +55,7 @@ public class UsersController(UserManager<ApplicationUser> users) : Controller
     {
         var user = await users.FindByIdAsync(id); if (user is null) return NotFound();
         if (users.GetUserId(User) == id) { TempData["Error"] = "You cannot disable your own account."; return RedirectToAction(nameof(Index)); }
-        user.IsActive = !user.IsActive; user.LockoutEnd = user.IsActive ? null : DateTimeOffset.MaxValue; await users.UpdateAsync(user);
+        user.IsActive = !user.IsActive; user.LockoutEnd = user.IsActive ? null : DateTimeOffset.MaxValue; user.AccessFailedCount = 0; await users.UpdateAsync(user);
         TempData["Success"] = $"{user.FullName} is now {(user.IsActive ? "active" : "disabled")}."; return RedirectToAction(nameof(Index));
     }
 }

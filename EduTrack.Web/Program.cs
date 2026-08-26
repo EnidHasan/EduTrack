@@ -28,6 +28,22 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity?.IsAuthenticated == true &&
+        !context.Request.Path.StartsWithSegments("/Account/ChangePassword") &&
+        !context.Request.Path.StartsWithSegments("/Account/Logout"))
+    {
+        var userManager = context.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
+        var user = await userManager.GetUserAsync(context.User);
+        if (user?.MustChangePassword == true)
+        {
+            context.Response.Redirect("/Account/ChangePassword");
+            return;
+        }
+    }
+    await next();
+});
 app.UseAuthorization();
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 await DbInitializer.InitializeAsync(app.Services, app.Environment);

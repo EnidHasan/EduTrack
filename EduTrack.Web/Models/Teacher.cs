@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace EduTrack.Web.Models;
 public class Teacher
 {
@@ -12,4 +13,6 @@ public class Teacher
     public string? ApplicationUserId { get; set; }
     public ApplicationUser? ApplicationUser { get; set; }
     public ICollection<Course> Courses { get; set; } = [];
+    [NotMapped, DataType(DataType.Password), Display(Name = "Temporary password")]
+    public string? TemporaryPassword { get; set; }
 }

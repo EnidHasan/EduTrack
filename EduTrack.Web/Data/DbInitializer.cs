@@ -18,7 +18,7 @@ public static class DbInitializer
         var admin = await users.FindByEmailAsync(email);
         if (admin is null)
         {
-            admin = new ApplicationUser { UserName = email, Email = email, FullName = "System Administrator", EmailConfirmed = true, ProfileType = "Admin" };
+            admin = new ApplicationUser { UserName = email, Email = email, FullName = "System Administrator", EmailConfirmed = true, ProfileType = "Admin", MustChangePassword = false };
             var result = await users.CreateAsync(admin, password);
             if (!result.Succeeded) throw new InvalidOperationException(string.Join("; ", result.Errors.Select(x => x.Description)));
             await users.AddToRoleAsync(admin, "Admin");
