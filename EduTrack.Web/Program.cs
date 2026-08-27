@@ -1,5 +1,6 @@
 using EduTrack.Web.Data;
 using EduTrack.Web.Models;
+using EduTrack.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<GradeCalculatorService>();
 var app = builder.Build();
 if (!app.Environment.IsDevelopment()) { app.UseExceptionHandler("/Home/Error"); app.UseHsts(); }
 app.UseHttpsRedirection();
