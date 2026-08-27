@@ -3,21 +3,21 @@ namespace EduTrack.Web.Services;
 
 /// <summary>
 /// Calculates the total mark, letter grade, and grade point for a <see cref="Grade"/>.
-/// Component weights (of the 0-100 total): Assignment/Quiz 20%, Attendance 10%, Midterm 20%, Final 50%.
+/// Component marks are summed directly out of 100: Assignment/Quiz 0-20, Attendance 0-10, Midterm 0-20, Final 0-50.
 /// </summary>
 public class GradeCalculatorService
 {
-    public const decimal AssignmentWeight = 0.20m;
-    public const decimal AttendanceWeight = 0.10m;
-    public const decimal MidtermWeight = 0.20m;
-    public const decimal FinalWeight = 0.50m;
+    public const decimal AssignmentMaxMark = 20m;
+    public const decimal AttendanceMaxMark = 10m;
+    public const decimal MidtermMaxMark = 20m;
+    public const decimal FinalMaxMark = 50m;
 
     public decimal CalculateTotalMark(Grade grade) =>
         Math.Round(
-            grade.AssignmentMark * AssignmentWeight +
-            grade.AttendanceMark * AttendanceWeight +
-            grade.MidtermMark * MidtermWeight +
-            grade.FinalMark * FinalWeight,
+            grade.AssignmentMark +
+            grade.AttendanceMark +
+            grade.MidtermMark +
+            grade.FinalMark,
             2, MidpointRounding.AwayFromZero);
 
     public (string LetterGrade, decimal GradePoint) CalculateLetterGradeAndPoint(decimal totalMark) => totalMark switch

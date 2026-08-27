@@ -7,10 +7,10 @@ public class Grade
     [Required] public int EnrollmentId { get; set; }
     public Enrollment? Enrollment { get; set; }
 
-    [Range(0, 100), Column(TypeName = "decimal(5,2)"), Display(Name = "Assignment marks")] public decimal AssignmentMark { get; set; }
-    [Range(0, 100), Column(TypeName = "decimal(5,2)"), Display(Name = "Attendance marks")] public decimal AttendanceMark { get; set; }
-    [Range(0, 100), Column(TypeName = "decimal(5,2)"), Display(Name = "Midterm marks")] public decimal MidtermMark { get; set; }
-    [Range(0, 100), Column(TypeName = "decimal(5,2)"), Display(Name = "Final marks")] public decimal FinalMark { get; set; }
+    [Range(0, 20), Column(TypeName = "decimal(5,2)"), Display(Name = "Quiz marks (out of 20)")] public decimal AssignmentMark { get; set; }
+    [Range(0, 10), Column(TypeName = "decimal(5,2)"), Display(Name = "Attendance marks (out of 10)")] public decimal AttendanceMark { get; set; }
+    [Range(0, 20), Column(TypeName = "decimal(5,2)"), Display(Name = "Midterm marks (out of 20)")] public decimal MidtermMark { get; set; }
+    [Range(0, 50), Column(TypeName = "decimal(5,2)"), Display(Name = "Final marks (out of 50)")] public decimal FinalMark { get; set; }
 
     [Column(TypeName = "decimal(5,2)"), Display(Name = "Total mark")] public decimal TotalMark { get; set; }
     [StringLength(3), Display(Name = "Letter grade")] public string? LetterGrade { get; set; }
