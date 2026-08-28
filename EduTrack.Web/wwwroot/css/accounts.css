@@ -1,1 +1,47 @@
-.account-explainer{max-width:none;margin:-7px 0 20px}.source-badge{display:inline-flex;padding:6px 9px;border-radius:8px;background:#edf3ff;color:#3769b9;font-size:11px;font-weight:700}.source-badge.unlinked{background:#fff3e4;color:#a3671d;border:1px solid #f4dfbf}.role-status{background:#edf8f6;color:#268478}.locked-role{min-height:46px;display:flex;align-items:center;gap:10px;padding:7px 11px;border:1px solid #dce6ef;background:#f7f9fc;border-radius:9px}.locked-role>span{width:30px;height:30px;border-radius:8px;background:#e8f0ff;color:#2e6edc;display:grid;place-items:center;font-size:10px}.locked-role>div{flex:1}.locked-role strong,.locked-role small{display:block}.locked-role strong{font-size:12px}.locked-role small{font-size:9px;color:#8494a4}.locked-role>b{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:#71859a;background:#fff;border:1px solid #dce5ed;border-radius:6px;padding:4px 6px}
+/* Identity lifecycle and profile - PREMIUM OVERHAUL */
+.page-head{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;border:1px solid rgba(255,255,255,.05);border-radius:24px;padding:36px 40px;margin-bottom:30px;box-shadow:0 20px 40px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.1)}
+.page-head h1{font-size:32px;letter-spacing:-1px;color:#fff;margin:8px 0 12px;text-shadow:0 2px 10px rgba(0,0,0,.3)}
+.page-head p{font-size:16px;color:#94a3b8;margin:0}
+.page-head .eyebrow{color:#38bdf8;font-weight:800;font-size:13px;letter-spacing:1.5px;text-transform:uppercase}
+.role-chip{padding:10px 20px;border-radius:14px;background:rgba(56,189,248,.1);color:#38bdf8;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;border:1px solid rgba(56,189,248,.2)}
+
+.profile-grid{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:35px;align-items:start}
+.profile-card{max-width:none;background:linear-gradient(135deg,rgba(240,247,255,.85) 0%,rgba(255,255,255,.5) 50%,rgba(238,242,255,.85) 100%);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.8);border-top:5px solid #3b82f6;box-shadow:0 30px 60px rgba(15,23,42,.08),inset 0 0 0 1px rgba(255,255,255,.5);border-radius:24px;padding:45px;position:relative;overflow:hidden}
+.profile-card::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(59,130,246,.05) 0%,transparent 60%);z-index:-1;animation:rotateBg 20s linear infinite}
+@keyframes rotateBg{100%{transform:rotate(360deg)}}
+.profile-heading{display:flex;align-items:center;gap:24px;padding-bottom:35px;margin-bottom:35px;border-bottom:1px solid rgba(0,0,0,.06)}
+.profile-avatar{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,#3b82f6,#2dd4bf);display:grid;place-items:center;color:#fff;font:800 32px Manrope;box-shadow:0 15px 30px rgba(59,130,246,.25);text-shadow:0 2px 5px rgba(0,0,0,.1)}
+.profile-heading h3{font:800 26px Manrope;margin:0;color:#0f172a}
+.profile-heading p{color:#64748b;font-size:16px;margin:6px 0 0;font-weight:500}
+
+.form-section{padding:5px 0 35px;margin-bottom:35px;border-bottom:1px solid rgba(0,0,0,.06)}
+.form-section-title{display:flex;align-items:center;gap:16px;margin-bottom:30px}
+.form-section-title>span{width:42px;height:42px;border-radius:14px;background:#eff6ff;color:#3b82f6;display:grid;place-items:center;font:800 13px Manrope;box-shadow:inset 0 2px 4px rgba(255,255,255,.5)}
+.form-section-title strong{font:800 18px Manrope;color:#0f172a}
+.form-section-title small{font-size:14px;color:#64748b;margin-top:4px}
+
+.form-label{color:#334155;margin-bottom:10px;font-weight:700;font-size:14px;letter-spacing:.3px}
+.form-control{min-height:54px;background:rgba(255,255,255,.5);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,.7);border-radius:14px;font-size:16px;color:#0f172a;transition:all .3s ease;padding:0 18px;box-shadow:inset 0 2px 4px rgba(0,0,0,.02)}
+.form-control:focus{background:rgba(255,255,255,.85);border-color:#3b82f6;box-shadow:0 0 0 4px rgba(59,130,246,.15),inset 0 2px 4px rgba(0,0,0,.02)}
+.form-control:disabled{background:rgba(241,245,249,.6);color:#64748b;border-color:rgba(203,213,225,.5)}
+.password-rules{font-size:13px;color:#94a3b8;margin-top:10px;font-weight:500}
+
+.form-footer .btn-primary{min-height:54px;border-radius:14px;font-size:16px;font-weight:800;padding:0 32px;background:linear-gradient(135deg,#3b82f6,#2563eb);box-shadow:0 10px 20px rgba(37,99,235,.2);transition:all .3s ease}
+.form-footer .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 30px rgba(37,99,235,.3)}
+.security-card{padding:45px;background:linear-gradient(160deg,#1e293b,#0f172a);color:#fff;border-radius:24px;border:1px solid rgba(255,255,255,.05);box-shadow:0 30px 60px rgba(0,0,0,.25)}
+.security-icon{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,rgba(45,212,191,.2),rgba(59,130,246,.1));display:grid;place-items:center;color:#2dd4bf;font-size:32px;box-shadow:inset 0 2px 10px rgba(255,255,255,.05)}
+.security-card .eyebrow{color:#38bdf8;font-weight:800;letter-spacing:1px;font-size:12px;display:block;margin-top:25px}
+.security-card h3{font:800 28px Manrope;margin:12px 0 16px}
+.security-card>p{font-size:15px;line-height:1.7;color:#94a3b8}
+.security-status{display:flex;gap:16px;align-items:center;padding:20px 24px;margin:35px 0;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:16px;box-shadow:inset 0 2px 10px rgba(0,0,0,.1)}
+.security-status>span{color:#10b981;font-size:20px;width:32px;height:32px;background:rgba(16,185,129,.15);border-radius:50%;display:grid;place-items:center}
+.security-status strong{font-size:15px;color:#f8fafc;font-weight:800}
+.security-status small{font-size:13px;color:#94a3b8;margin-top:4px}
+.security-card .btn-primary{width:100%;min-height:54px;border-radius:14px;background:#fff;color:#0f172a;font-size:16px;font-weight:800;transition:all .3s ease;box-shadow:0 10px 20px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;gap:10px}
+.security-card .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 30px rgba(255,255,255,.15);background:#f8fafc}
+.security-card .btn-primary span{transition:transform .2s ease}
+.security-card .btn-primary:hover span{transform:translateX(5px)}
+
+@media(max-width:1100px){.profile-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.security-card{order:-1}.form-footer{align-items:stretch;flex-direction:column}.form-footer .btn-primary{width:100%}}
+@media(max-width:600px){.profile-card,.security-card{padding:25px}.page-head{padding:25px}.profile-heading{flex-direction:column;text-align:center;gap:16px}}
