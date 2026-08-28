@@ -1,0 +1,167 @@
+@model IEnumerable<EduTrack.Web.Models.RecheckRequest>
+@{
+    ViewData["Title"] = "My Disputes";
+}
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        --glass-bg: rgba(255, 255, 255, 0.75);
+        --glass-border: rgba(255, 255, 255, 0.5);
+    }
+
+    @@keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .st-container { animation: slideUp 0.5s ease-out forwards; }
+
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.15);
+        padding: 30px;
+    }
+
+    .dispute-card {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dispute-card:hover {
+        transform: translateY(-4px) scale(1.01);
+        box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.1);
+        border-color: rgba(148, 163, 184, 0.3);
+        z-index: 2;
+    }
+    
+    .status-indicator {
+        position: absolute;
+        top: 0; left: 0; bottom: 0;
+        width: 6px;
+    }
+    
+    .indicator-Pending { background: #f59e0b; }
+    .indicator-Approved { background: #10b981; }
+    .indicator-Rejected { background: #ef4444; }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 800;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-Pending { background-color: #fef3c7; color: #b45309; }
+    .status-Approved { background-color: #d1fae5; color: #047857; }
+    .status-Rejected { background-color: #fee2e2; color: #b91c1c; }
+
+    .feedback-box {
+        background: #f8fafc;
+        border-left: 3px solid #cbd5e1;
+        padding: 12px 16px;
+        border-radius: 0 8px 8px 0;
+        margin-top: 15px;
+        font-style: italic;
+        color: #475569;
+    }
+</style>
+
+<div class="container-fluid py-4 st-container">
+    <div class="glass-card mb-5">
+        <div class="d-flex justify-content-between align-items-end border-bottom pb-4 mb-4" style="border-color: rgba(226, 232, 240, 0.6) !important;">
+            <div>
+                <h3 class="fw-bolder text-dark mb-1">Dispute Requests</h3>
+                <p class="text-muted mb-0">Track the status of your official grade rechecks</p>
+            </div>
+            <div class="text-end">
+                <div class="badge bg-primary bg-opacity-10 text-primary fs-6 px-3 py-2 rounded-pill">
+                    Total Requests: @Model.Count()
+                </div>
+            </div>
+        </div>
+        
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <div class="text-muted fs-5 fst-italic">You have no active or past grade dispute requests.</div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    <div class="col-12">
+                        <div class="dispute-card">
+                            <div class="status-indicator indicator-@item.Status"></div>
+                            
+                            <div class="row align-items-center">
+                                <!-- Date & Course Info -->
+                                <div class="col-md-5">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="text-center bg-light rounded p-2" style="min-width: 70px;">
+                                            <div class="fw-bolder text-dark fs-5">@item.RequestDate.ToString("dd")</div>
+                                            <div class="text-uppercase small fw-bold text-muted">@item.RequestDate.ToString("MMM")</div>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold text-dark mb-1">@item.Grade!.Enrollment!.Course!.CourseName</h5>
+                                            <div class="text-primary fw-semibold small">@item.Grade.Enrollment.Course.CourseCode</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Instructor & Time -->
+                                <div class="col-md-4">
+                                    <div class="text-muted small fw-bold text-uppercase mb-1">Instructor</div>
+                                    <div class="fw-semibold text-dark">@item.Teacher!.FullName</div>
+                                    <div class="text-muted small mt-1">Submitted at @item.RequestDate.ToString("hh:mm tt")</div>
+                                </div>
+                                
+                                <!-- Status -->
+                                <div class="col-md-3 text-md-end mt-3 mt-md-0">
+                                    <span class="status-badge status-@item.Status">
+                                        @if(item.Status == "Pending") { <span>⏳</span> }
+                                        @if(item.Status == "Approved") { <span>✅</span> }
+                                        @if(item.Status == "Rejected") { <span>❌</span> }
+                                        @item.Status
+                                    </span>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(item.TeacherComment) || item.Status != "Pending")
+                            {
+                                <div class="feedback-box mt-4">
+                                    <div class="fw-bold text-dark mb-1" style="font-size: 0.85rem; font-style: normal; text-transform: uppercase;">Teacher Feedback</div>
+                                    @if (string.IsNullOrEmpty(item.TeacherComment))
+                                    {
+                                        <span>No detailed feedback provided.</span>
+                                    }
+                                    else
+                                    {
+                                        <span>"@item.TeacherComment"</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
