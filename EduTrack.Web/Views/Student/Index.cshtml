@@ -1,0 +1,329 @@
+@model IEnumerable<EduTrack.Web.Models.Enrollment>
+@{
+    ViewData["Title"] = "My Transcript";
+    var cgpa = ViewBag.CGPA;
+    var totalCredits = ViewBag.TotalCredits;
+    var gpaBySemester = ViewBag.GPABySemester as Dictionary<string, decimal>;
+    var studentId = ViewBag.StudentId;
+    var cgpaPercentage = (Convert.ToDouble(cgpa) / 4.0) * 100.0;
+}
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        --success-gradient: linear-gradient(135deg, #10b981, #34d399);
+        --glass-bg: rgba(255, 255, 255, 0.65);
+        --glass-border: rgba(255, 255, 255, 0.4);
+    }
+
+    @@keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @@keyframes pulse-ring {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+
+    .st-container {
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.15);
+        padding: 28px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .glass-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: var(--primary-gradient);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px -10px rgba(31, 38, 135, 0.2);
+    }
+    
+    .glass-card:hover::before {
+        opacity: 1;
+    }
+
+    /* Circular Progress for CGPA */
+    .cgpa-ring {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 15px;
+        border-radius: 50%;
+        background: conic-gradient(#3b82f6 @(cgpaPercentage)%, #e2e8f0 0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulse-ring 3s infinite;
+    }
+
+    .cgpa-ring::before {
+        content: "";
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        background: #f8fafc;
+        border-radius: 50%;
+    }
+
+    .cgpa-value {
+        position: relative;
+        font-size: 2.8rem;
+        font-weight: 900;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        z-index: 1;
+    }
+
+    /* Semester Blocks */
+    .semester-block {
+        background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+        border: 1px solid rgba(255,255,255,0.8);
+        border-radius: 16px;
+        min-width: 140px;
+        padding: 20px 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .semester-block:hover {
+        transform: scale(1.05);
+        background: rgba(255,255,255,0.9);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.1);
+    }
+
+    .table-glass {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 12px;
+        margin-top: -10px;
+    }
+
+    .table-glass th {
+        color: #475569;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        padding: 0 20px;
+    }
+
+    .table-glass tr.item-row td {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 20px;
+        transition: all 0.3s ease;
+        border-top: 1px solid rgba(255,255,255,0.8);
+        border-bottom: 1px solid rgba(255,255,255,0.8);
+    }
+    
+    .table-glass tr.item-row:hover td {
+        background: rgba(255, 255, 255, 0.95);
+        transform: scale(1.01);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        z-index: 10;
+        position: relative;
+    }
+
+    .table-glass tr.item-row td:first-child { 
+        border-top-left-radius: 12px; 
+        border-bottom-left-radius: 12px; 
+        border-left: 1px solid rgba(255,255,255,0.8);
+    }
+    
+    .table-glass tr.item-row td:last-child { 
+        border-top-right-radius: 12px; 
+        border-bottom-right-radius: 12px; 
+        border-right: 1px solid rgba(255,255,255,0.8);
+    }
+
+    .grade-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .grade-A { background: var(--success-gradient); color: white; }
+    .grade-B { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; }
+    .grade-C { background: linear-gradient(135deg, #f97316, #fb923c); color: white; }
+    .grade-D { background: linear-gradient(135deg, #ef4444, #f87171); color: white; }
+    .grade-F { background: linear-gradient(135deg, #991b1b, #dc2626); color: white; }
+    .grade-pending { background: #e2e8f0; color: #475569; border-radius: 8px; width: auto; padding: 4px 12px; font-size: 0.9rem; }
+
+    .action-btn {
+        background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+        border: 1px solid #cbd5e1;
+        color: #334155;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 8px 20px;
+        border-radius: 10px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .action-btn:hover {
+        background: var(--primary-gradient);
+        color: white;
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="container-fluid py-4 st-container">
+    <div class="row mb-5 g-4">
+        <!-- CGPA Card -->
+        <div class="col-md-4">
+            <div class="glass-card text-center h-100 d-flex flex-column justify-content-center" style="animation-delay: 0.1s;">
+                <h5 class="text-muted text-uppercase fw-bold mb-4" style="letter-spacing: 1px;">Cumulative Record</h5>
+                <div class="cgpa-ring">
+                    <div class="cgpa-value">@cgpa.ToString("0.00")</div>
+                </div>
+                <div class="text-muted mt-3 fs-6">
+                    Earned Credits: <strong class="text-dark fs-5">@totalCredits</strong>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progression Card -->
+        <div class="col-md-8">
+            <div class="glass-card h-100" style="animation-delay: 0.2s;">
+                <h5 class="text-muted text-uppercase fw-bold mb-4" style="letter-spacing: 1px;">Academic Journey</h5>
+                <div class="d-flex flex-wrap gap-3 mt-2">
+                    @if(gpaBySemester != null && gpaBySemester.Any())
+                    {
+                        foreach(var sem in gpaBySemester)
+                        {
+                            <div class="semester-block">
+                                <div class="fw-bold text-slate-600 mb-1" style="font-size: 0.9rem;">@sem.Key</div>
+                                <div class="fs-3 fw-bolder" style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                                    @sem.Value.ToString("0.00")
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="w-100 text-center py-5 text-muted fst-italic">
+                            Your academic journey starts here. Grades will appear once posted.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @{ var delay = 0.3; }
+    @foreach (var semGroup in Model.GroupBy(e => new { e.AcademicYear, e.Semester }))
+    {
+        var semesterName = $"{semGroup.Key.Semester} {semGroup.Key.AcademicYear}";
+        var semGpa = gpaBySemester != null && gpaBySemester.ContainsKey(semesterName) ? gpaBySemester[semesterName] : 0;
+
+        <div class="glass-card mb-5" style="animation-delay: @(delay)s;">
+            <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-3" style="border-color: rgba(226, 232, 240, 0.6) !important;">
+                <div>
+                    <h3 class="fw-bolder text-dark mb-0">@semesterName</h3>
+                    <small class="text-muted text-uppercase fw-bold">Semester Record</small>
+                </div>
+                <div class="text-end">
+                    <div class="fw-bolder fs-4" style="color: #3b82f6;">@semGpa.ToString("0.00")</div>
+                    <small class="text-muted fw-bold">TERM GPA</small>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table-glass">
+                    <thead>
+                        <tr>
+                            <th>Course Info</th>
+                            <th>Credits</th>
+                            <th>Marks Breakdown</th>
+                            <th>Grade Point</th>
+                            <th class="text-center">Grade</th>
+                            <th class="text-end">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in semGroup)
+                        {
+                            var hasGrade = item.Grade != null;
+                            var letter = hasGrade ? item.Grade!.LetterGrade : "-";
+                            var gradeClass = letter != null && letter != "-" ? $"grade-{letter[0]}" : "grade-pending";
+
+                            <tr class="item-row">
+                                <td>
+                                    <div class="fw-bold text-dark fs-6">@item.Course!.CourseName</div>
+                                    <div class="small text-primary fw-bold" style="letter-spacing: 0.5px;">@item.Course.CourseCode</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border p-2">@item.Course.CreditHours CH</span>
+                                </td>
+                                <td>
+                                    @if (hasGrade)
+                                    {
+                                        <div class="fw-bolder fs-5 text-dark">@item.Grade!.TotalMark</div>
+                                        <div class="small text-muted fw-semibold">
+                                            A: @item.Grade.AssignmentMark &middot; M: @item.Grade.MidtermMark &middot; F: @item.Grade.FinalMark
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border">Not graded yet</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="fw-bolder fs-5 text-slate-700">@(hasGrade ? item.Grade!.GradePoint.ToString("0.00") : "-")</div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="grade-badge @gradeClass">@(hasGrade ? letter : "Pending")</span>
+                                </td>
+                                <td class="text-end">
+                                    @if (hasGrade)
+                                    {
+                                        <form asp-action="SubmitDispute" method="post" style="display:inline;">
+                                            <input type="hidden" name="gradeId" value="@item.Grade!.Id" />
+                                            <button type="submit" class="action-btn" onclick="return confirm('Would you like to submit an official recheck request for @item.Course.CourseCode?');">
+                                                Recheck Request
+                                            </button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        delay += 0.1;
+    }
+</div>
