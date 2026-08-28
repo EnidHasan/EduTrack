@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using EduTrack.Web.Services;
 namespace EduTrack.Web.Controllers;
 [Authorize(Roles = "Teacher")]
-public class TeacherController(ApplicationDbContext db, UserManager<ApplicationUser> users, GradeCalculatorService calculator) : Controller
+public class TeacherController(ApplicationDbContext db, UserManager<ApplicationUser> users, GradeCalculatorService calculator, RecheckService recheckService) : Controller
 {
     public async Task<IActionResult> Index()
     {
@@ -58,6 +58,27 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         await db.SaveChangesAsync();
         TempData["Success"] = "Grade saved.";
         return RedirectToAction(nameof(Course), new { id = enrollment.CourseId });
+    }
+
+    public async Task<IActionResult> Disputes()
+    {
+        var teacher = await CurrentTeacherAsync();
+        if (teacher is null) return Forbid();
+        var requests = await recheckService.GetTeacherRequestsAsync(teacher.Id);
+        return View(requests);
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateDisputeStatus(int requestId, string status, string? comment)
+    {
+        var teacher = await CurrentTeacherAsync();
+        if (teacher is null) return Forbid();
+
+        var result = await recheckService.UpdateDisputeStatusAsync(requestId, teacher.Id, status, comment);
+        if (result.success) TempData["Success"] = result.message;
+        else TempData["Error"] = result.message;
+
+        return RedirectToAction(nameof(Disputes));
     }
 
     private async Task<Teacher?> CurrentTeacherAsync()
