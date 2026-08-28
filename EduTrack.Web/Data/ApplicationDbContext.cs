@@ -9,6 +9,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<Enrollment> Enrollments => Set<Enrollment>();
     public DbSet<Grade> Grades => Set<Grade>();
+    public DbSet<RecheckRequest> RecheckRequests => Set<RecheckRequest>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -28,5 +29,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         builder.Entity<Grade>().HasIndex(x => x.EnrollmentId).IsUnique();
         builder.Entity<Grade>().HasOne(x => x.Enrollment).WithOne(x => x.Grade).HasForeignKey<Grade>(x => x.EnrollmentId).OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<RecheckRequest>().HasOne(x => x.Student).WithMany().HasForeignKey(x => x.StudentId).OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<RecheckRequest>().HasOne(x => x.Teacher).WithMany().HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<RecheckRequest>().HasOne(x => x.Grade).WithMany().HasForeignKey(x => x.GradeId).OnDelete(DeleteBehavior.Restrict);
     }
 }
