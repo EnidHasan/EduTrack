@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EduTrack.Web.Controllers;
 
 [Authorize(Roles = "Student")]
-public class StudentController(ApplicationDbContext db, UserManager<ApplicationUser> users, RecheckService recheckService) : Controller
+public class StudentController(ApplicationDbContext db, UserManager<ApplicationUser> users, RecheckService recheckService, AtRiskEvaluationService atRiskService) : Controller
 {
     public async Task<IActionResult> Index()
     {
@@ -18,6 +18,9 @@ public class StudentController(ApplicationDbContext db, UserManager<ApplicationU
 
         var student = await db.Students.FirstOrDefaultAsync(s => s.ApplicationUserId == user.Id);
         if (student == null) return NotFound();
+
+        var atRiskEval = await atRiskService.EvaluateStudentRiskAsync(student.Id);
+        ViewBag.AtRiskEval = atRiskEval;
 
         var enrollments = await db.Enrollments
             .Include(e => e.Course)
