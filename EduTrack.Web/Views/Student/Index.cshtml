@@ -201,6 +201,31 @@
 </style>
 
 <div class="container-fluid py-4 st-container">
+    @{
+        var atRiskEval = ViewBag.AtRiskEval as EduTrack.Web.ViewModels.StudentAtRiskItem;
+    }
+
+    @if (atRiskEval != null && atRiskEval.RiskLevel != "Normal")
+    {
+        <div class="alert alert-@(atRiskEval.RiskLevel == "High" ? "danger" : "warning") shadow-sm border-0 rounded-4 p-4 mb-4 d-flex align-items-center gap-3">
+            <div class="rounded-circle p-3 d-flex align-items-center justify-content-center text-white" style="background: @(atRiskEval.RiskLevel == "High" ? "linear-gradient(135deg, #ef4444, #dc2626)" : "linear-gradient(135deg, #f59e0b, #d97706)"); min-width: 56px; height: 56px;">
+                <i class="bi bi-@(atRiskEval.RiskLevel == "High" ? "exclamation-octagon-fill" : "exclamation-triangle-fill") fs-3"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="badge bg-@(atRiskEval.RiskLevel == "High" ? "danger" : "warning") text-white fw-bold px-3 py-1 text-uppercase">
+                        @atRiskEval.RiskLevel Risk Warning Flag
+                    </span>
+                    <span class="badge bg-white text-dark border px-2 py-1 small fw-semibold">Category: @atRiskEval.RiskType Risk</span>
+                </div>
+                <h5 class="fw-bold mb-1 text-dark">Academic Early Warning Alert</h5>
+                <p class="mb-0 text-secondary" style="font-size: 0.95rem;">
+                    Your academic standing is currently flagged due to: <strong>@atRiskEval.Reason</strong>. Please contact your course instructor or department advisor for guidance.
+                </p>
+            </div>
+        </div>
+    }
+
     <div class="row mb-5 g-4">
         <!-- CGPA Card -->
         <div class="col-md-4">
@@ -212,6 +237,23 @@
                 <div class="text-muted mt-3 fs-6">
                     Earned Credits: <strong class="text-dark fs-5">@totalCredits</strong>
                 </div>
+                @if (atRiskEval != null)
+                {
+                    <div class="mt-3">
+                        @if (atRiskEval.RiskLevel == "High")
+                        {
+                            <span class="badge bg-danger text-white px-3 py-2 rounded-pill shadow-sm"><i class="bi bi-exclamation-octagon-fill me-1"></i> HIGH RISK FLAG</span>
+                        }
+                        else if (atRiskEval.RiskLevel == "Medium")
+                        {
+                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm"><i class="bi bi-exclamation-triangle-fill me-1"></i> MEDIUM RISK FLAG</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1.5 rounded-pill"><i class="bi bi-check-circle-fill me-1"></i> Satisfactory Standing</span>
+                        }
+                    </div>
+                }
             </div>
         </div>
         
