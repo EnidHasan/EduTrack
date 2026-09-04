@@ -1,15 +1,34 @@
 using EduTrack.Web.Data;
 using EduTrack.Web.Models;
+using EduTrack.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace EduTrack.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = "AdminOnly")]
 public class StudentsController(ApplicationDbContext db, UserManager<ApplicationUser> users) : Controller
 {
     public async Task<IActionResult> Index(string? q) { ViewBag.Query = q; var x = db.Students.AsNoTracking(); if (!string.IsNullOrWhiteSpace(q)) x = x.Where(s => s.FullName.Contains(q) || s.RollNumber.Contains(q) || s.Email.Contains(q)); return View(await x.OrderBy(s => s.FullName).ToListAsync()); }
+    public async Task<IActionResult> Details(int id)
+    {
+        var student = await db.Students.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        if (student is null) return NotFound();
+
+        var enrollments = await db.Enrollments
+            .AsNoTracking()
+            .Include(x => x.Course)
+                .ThenInclude(x => x!.Teacher)
+            .Include(x => x.Grade)
+            .Where(x => x.StudentId == id)
+            .OrderByDescending(x => x.AcademicYear)
+            .ThenByDescending(x => x.Semester)
+            .ThenBy(x => x.Course!.CourseCode)
+            .ToListAsync();
+
+        return View(new StudentDetailsViewModel(student, enrollments));
+    }
     public IActionResult Create() => View("Form", new Student());
     public async Task<IActionResult> Edit(int id) => (await db.Students.FindAsync(id)) is { } x ? View("Form", x) : NotFound();
 

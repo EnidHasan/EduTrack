@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EduTrack.Web.Controllers;
 
-[Authorize(Roles = "Admin,Teacher")]
+[Authorize(Policy = "AcademicStaff")]
 public class EarlyWarningController(
     ApplicationDbContext db,
     UserManager<ApplicationUser> userManager,

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 namespace EduTrack.Web.Controllers;
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = "AdminOnly")]
 public class CoursesController(ApplicationDbContext db) : Controller
 {
     public async Task<IActionResult> Index(string? q) { ViewBag.Query = q; var x = db.Courses.Include(c => c.Teacher).AsNoTracking(); if (!string.IsNullOrWhiteSpace(q)) x = x.Where(c => c.CourseName.Contains(q) || c.CourseCode.Contains(q)); return View(await x.OrderBy(c => c.CourseCode).ToListAsync()); }

@@ -6,10 +6,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 namespace EduTrack.Web.Controllers;
 
+[Authorize]
 public class AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> users, ApplicationDbContext db) : Controller
 {
     [AllowAnonymous]
-    public IActionResult Login(string? returnUrl = null) => User.Identity?.IsAuthenticated == true ? RedirectToAction("Index", "Dashboard") : View(new LoginViewModel { ReturnUrl = returnUrl });
+    public IActionResult Login(string? returnUrl = null, string? reason = null)
+    {
+        if (User.Identity?.IsAuthenticated == true) return RedirectToAction("Index", "Dashboard");
+        if (reason == "disabled") ModelState.AddModelError(string.Empty, "Your account is disabled. Contact an administrator for access.");
+        return View(new LoginViewModel { ReturnUrl = returnUrl });
+    }
     [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
@@ -26,13 +32,12 @@ public class AccountController(SignInManager<ApplicationUser> signInManager, Use
         ModelState.AddModelError(string.Empty, result.IsLockedOut ? "Account locked temporarily after repeated attempts. Contact an administrator if you need immediate access." : "Invalid email or password.");
         return View(model);
     }
-    [Authorize]
     public async Task<IActionResult> Profile()
     {
         var user = await users.GetUserAsync(User); if (user is null) return Challenge();
         return View(new ProfileViewModel { FullName = user.FullName, Email = user.Email ?? "", PhoneNumber = user.PhoneNumber, Role = (await users.GetRolesAsync(user)).FirstOrDefault() ?? "Member" });
     }
-    [HttpPost, Authorize, ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Profile(ProfileViewModel model)
     {
         var user = await users.GetUserAsync(User); if (user is null) return Challenge();
@@ -45,13 +50,12 @@ public class AccountController(SignInManager<ApplicationUser> signInManager, Use
         if (result.Succeeded) { await db.SaveChangesAsync(); TempData["Success"] = "Your profile has been updated."; return RedirectToAction(nameof(Profile)); }
         foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description); return View(model);
     }
-    [Authorize]
     public async Task<IActionResult> ChangePassword()
     {
         var user = await users.GetUserAsync(User); if (user is null) return Challenge();
         return View(new ChangePasswordViewModel { IsFirstLogin = user.MustChangePassword });
     }
-    [HttpPost, Authorize, ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
     {
         var user = await users.GetUserAsync(User); if (user is null) return Challenge();

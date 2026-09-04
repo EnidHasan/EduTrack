@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EduTrack.Web.Services;
 namespace EduTrack.Web.Controllers;
-[Authorize(Roles = "Teacher")]
+[Authorize(Policy = "TeacherOnly")]
 public class TeacherController(ApplicationDbContext db, UserManager<ApplicationUser> users, GradeCalculatorService calculator, RecheckService recheckService) : Controller
 {
     public async Task<IActionResult> Index()

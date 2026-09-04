@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace EduTrack.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = "AdminOnly")]
 public class TeachersController(ApplicationDbContext db, UserManager<ApplicationUser> users) : Controller
 {
     public async Task<IActionResult> Index(string? q) { ViewBag.Query = q; var x = db.Teachers.AsNoTracking(); if (!string.IsNullOrWhiteSpace(q)) x = x.Where(s => s.FullName.Contains(q) || s.EmployeeId.Contains(q) || s.Email.Contains(q)); return View(await x.OrderBy(s => s.FullName).ToListAsync()); }
@@ -48,7 +48,57 @@ public class TeachersController(ApplicationDbContext db, UserManager<Application
         }
         catch (DbUpdateException) { await transaction.RollbackAsync(); ModelState.AddModelError(string.Empty, "Employee ID or email already exists."); return View("Form", model); }
     }
-    public async Task<IActionResult> Delete(int id) => (await db.Teachers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id)) is { } x ? View(x) : NotFound();
+    public async Task<IActionResult> Delete(int id)
+    {
+        var teacher = await db.Teachers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        if (teacher is null) return NotFound();
+
+        ViewBag.RecheckRequestCount = await db.RecheckRequests.CountAsync(x => x.TeacherId == id);
+        return View(teacher);
+    }
+
     [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id) { var x = await db.Teachers.FindAsync(id); if (x is not null) { var account = x.ApplicationUserId is null ? null : await users.FindByIdAsync(x.ApplicationUserId); db.Remove(x); await db.SaveChangesAsync(); if (account is not null) await users.DeleteAsync(account); TempData["Success"] = "Teacher and login account deleted."; } return RedirectToAction(nameof(Index)); }
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var teacher = await db.Teachers.FindAsync(id);
+        if (teacher is null) return RedirectToAction(nameof(Index));
+
+        if (await db.RecheckRequests.AnyAsync(x => x.TeacherId == id))
+        {
+            TempData["Error"] = $"{teacher.FullName} cannot be deleted because the teacher has associated grade recheck history. Disable the login account instead to preserve academic records.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        await using var transaction = await db.Database.BeginTransactionAsync();
+        try
+        {
+            var account = teacher.ApplicationUserId is null
+                ? null
+                : await users.FindByIdAsync(teacher.ApplicationUserId);
+
+            db.Remove(teacher);
+            await db.SaveChangesAsync();
+
+            if (account is not null)
+            {
+                var accountResult = await users.DeleteAsync(account);
+                if (!accountResult.Succeeded)
+                {
+                    await transaction.RollbackAsync();
+                    TempData["Error"] = "The teacher could not be deleted because the linked login account could not be removed. No records were changed.";
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            await transaction.CommitAsync();
+            TempData["Success"] = "Teacher and login account deleted.";
+        }
+        catch (DbUpdateException)
+        {
+            await transaction.RollbackAsync();
+            TempData["Error"] = $"{teacher.FullName} cannot be deleted because related academic records still exist. Disable the login account instead.";
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
 }

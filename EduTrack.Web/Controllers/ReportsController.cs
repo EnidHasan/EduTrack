@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EduTrack.Web.Controllers;
 
-[Authorize(Roles = "Admin,Teacher")]
+[Authorize(Policy = "AdminOnly")]
 public class ReportsController(AtRiskEvaluationService atRiskService) : Controller
 {
     public async Task<IActionResult> Index(string? department, string? semester)

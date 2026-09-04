@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 namespace EduTrack.Web.Controllers;
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = "AdminOnly")]
 public class EnrollmentsController(ApplicationDbContext db) : Controller
 {
     public async Task<IActionResult> Index(string? q)

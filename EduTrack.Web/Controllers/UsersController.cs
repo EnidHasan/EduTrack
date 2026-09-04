@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace EduTrack.Web.Controllers;
 
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = "AdminOnly")]
 public class UsersController(UserManager<ApplicationUser> users, ApplicationDbContext db) : Controller
 {
     public async Task<IActionResult> Index(string? q)

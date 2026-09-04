@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EduTrack.Web.Controllers;
 
-[Authorize(Roles = "Student")]
+[Authorize(Policy = "StudentOnly")]
 public class StudentController(ApplicationDbContext db, UserManager<ApplicationUser> users, RecheckService recheckService, AtRiskEvaluationService atRiskService) : Controller
 {
     public async Task<IActionResult> Index()
