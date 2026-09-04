@@ -12,4 +12,13 @@ public class ReportsController(AtRiskEvaluationService atRiskService) : Controll
         var model = await atRiskService.GetSystemReportAsync(department, semester);
         return View(model);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> ExportPdf(string? department, string? semester)
+    {
+        var model = await atRiskService.GetSystemReportAsync(department, semester);
+        var pdf = SystemReportPdfBuilder.Build(model);
+        var fileName = $"EduTrack-System-Report-{DateTime.Now:yyyyMMdd-HHmm}.pdf";
+        return File(pdf, "application/pdf", fileName);
+    }
 }
