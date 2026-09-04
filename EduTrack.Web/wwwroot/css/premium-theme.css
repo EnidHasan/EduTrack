@@ -1748,6 +1748,15 @@ html, body, body *, body *::before, body *::after {
     background: linear-gradient(110deg, #7f172b, #aa2742 52%, #123765) !important;
 }
 
+/* Student disputes count: prevent Bootstrap background/text utility collision. */
+.total-disputes-badge {
+    color: #244b91 !important;
+    background: #e8efff !important;
+    border: 1px solid #bdcff4 !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+}
+
 /* Login viewport correction: keep the full composition visible at every height. */
 @media (min-width: 901px) {
     .login-page {
