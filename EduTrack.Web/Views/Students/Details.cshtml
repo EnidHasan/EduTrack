@@ -1,0 +1,80 @@
+@model StudentDetailsViewModel
+@{
+    ViewData["Title"] = "Student profile";
+    var student = Model.Student;
+}
+
+<div class="page-head student-profile-head">
+    <div>
+        <span class="eyebrow">STUDENT ADMINISTRATION</span>
+        <h1>Student profile</h1>
+        <p>Review identity, academic placement, enrollment and grading information.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn-soft" asp-controller="EarlyWarning" asp-action="Index"><i class="bi bi-arrow-left"></i> At-Risk panel</a>
+        <a class="btn-primary" asp-action="Edit" asp-route-id="@student.Id"><i class="bi bi-pencil-square"></i> Edit student</a>
+    </div>
+</div>
+
+<section class="student-profile-grid">
+    <article class="card student-identity-card">
+        <div class="student-profile-avatar">@student.FullName[0]</div>
+        <span class="status @(student.IsActive ? "" : "off")">@(student.IsActive ? "Active student" : "Inactive student")</span>
+        <h2>@student.FullName</h2>
+        <p>@student.Email</p>
+        <div class="student-identity-list">
+            <div><i class="bi bi-person-vcard"></i><span><small>Student ID / Roll</small><strong>@student.RollNumber</strong></span></div>
+            <div><i class="bi bi-building"></i><span><small>Department</small><strong>@student.Department</strong></span></div>
+            <div><i class="bi bi-calendar3"></i><span><small>Enrollment year</small><strong>@student.EnrollmentYear</strong></span></div>
+            <div><i class="bi bi-mortarboard"></i><span><small>Current semester</small><strong>@(student.Semester ?? "Not specified")</strong></span></div>
+        </div>
+    </article>
+
+    <div class="student-profile-main">
+        <div class="student-profile-stats">
+            <div class="card"><span><i class="bi bi-journal-bookmark-fill"></i></span><small>Active courses</small><strong>@Model.ActiveCourseCount</strong></div>
+            <div class="card"><span><i class="bi bi-award-fill"></i></span><small>Graded courses</small><strong>@Model.GradedCourseCount</strong></div>
+            <div class="card"><span><i class="bi bi-person-check-fill"></i></span><small>Account status</small><strong>@(student.ApplicationUserId is null ? "Unlinked" : "Linked")</strong></div>
+        </div>
+
+        <article class="card student-enrollment-card">
+            <div class="card-heading">
+                <div><span class="eyebrow">ACADEMIC RECORD</span><h3>Course enrollments</h3></div>
+                <span class="role-chip">@Model.Enrollments.Count total</span>
+            </div>
+            @if (Model.Enrollments.Count == 0)
+            {
+                <div class="empty"><i class="bi bi-journal-x fs-2 text-primary"></i><strong>No course enrollments yet</strong><span>This student has not been enrolled in a course.</span></div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead><tr><th>Course</th><th>Term</th><th>Teacher</th><th>Result</th><th>Status</th></tr></thead>
+                        <tbody>
+                        @foreach (var enrollment in Model.Enrollments)
+                        {
+                            <tr>
+                                <td><span class="course-code">@enrollment.Course?.CourseCode</span><div class="field-note mt-1">@enrollment.Course?.CourseName</div></td>
+                                <td><strong>@enrollment.Semester</strong><div class="field-note">@enrollment.AcademicYear</div></td>
+                                <td>@(enrollment.Course?.Teacher?.FullName ?? "Not assigned")</td>
+                                <td>
+                                    @if (enrollment.Grade is null)
+                                    {
+                                        <span class="status off">Not graded</span>
+                                    }
+                                    else
+                                    {
+                                        <strong>@enrollment.Grade.LetterGrade</strong><div class="field-note">@enrollment.Grade.TotalMark.ToString("0.##") marks · GPA @enrollment.Grade.GradePoint.ToString("0.00")</div>
+                                    }
+                                </td>
+                                <td><span class="status @(enrollment.IsActive ? "" : "off")">@(enrollment.IsActive ? "Active" : "Inactive")</span></td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </article>
+    </div>
+</section>

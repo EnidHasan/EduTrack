@@ -1,3 +1,36 @@
 @model Teacher
-@{ ViewData["Title"] = "Delete teacher"; }
-<div class="card danger-zone"><h2>Delete @Model.FullName?</h2><p class="text-secondary">This permanently removes teacher <strong>@Model.EmployeeId</strong>. Assigned courses will become unassigned.</p><form method="post"><input type="hidden" name="id" value="@Model.Id"/><a class="btn-soft" asp-action="Index">Cancel</a><button class="btn-danger-soft ms-2">Delete permanently</button></form></div>
+@{
+    ViewData["Title"] = "Delete teacher";
+    var recheckCount = ViewBag.RecheckRequestCount is int count ? count : 0;
+    var deletionBlocked = recheckCount > 0;
+}
+<div class="card danger-zone">
+    <div class="danger-icon"><i class="bi @(deletionBlocked ? "bi-shield-exclamation" : "bi-trash3")"></i></div>
+    <span class="eyebrow">FACULTY RECORD MANAGEMENT</span>
+    <h2>@(deletionBlocked ? "This teacher must be retained" : $"Delete {Model.FullName}?")</h2>
+
+    @if (deletionBlocked)
+    {
+        <div class="dependency-warning" role="alert">
+            <i class="bi bi-lock-fill"></i>
+            <div>
+                <strong>Deletion is unavailable</strong>
+                <p>This teacher is connected to @recheckCount grade recheck @(recheckCount == 1 ? "request" : "requests"). Those records are part of the academic history and cannot be orphaned.</p>
+            </div>
+        </div>
+        <p class="text-secondary">If this teacher should no longer access EduTrack, disable the linked login from <strong>User accounts</strong> instead.</p>
+        <div class="delete-actions">
+            <a class="btn-soft" asp-action="Index"><i class="bi bi-arrow-left"></i> Back to teachers</a>
+            <a class="btn-primary" asp-controller="Users" asp-action="Index"><i class="bi bi-shield-lock"></i> Open User accounts</a>
+        </div>
+    }
+    else
+    {
+        <p class="text-secondary">This permanently removes teacher <strong>@Model.EmployeeId</strong> and the linked login account. Assigned courses will become unassigned.</p>
+        <form method="post" class="delete-actions">
+            <input type="hidden" name="id" value="@Model.Id"/>
+            <a class="btn-soft" asp-action="Index">Cancel</a>
+            <button class="btn-danger-soft" type="submit"><i class="bi bi-trash3"></i> Delete permanently</button>
+        </form>
+    }
+</div>

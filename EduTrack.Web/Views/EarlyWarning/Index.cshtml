@@ -182,7 +182,10 @@
                         <th>Attendance %</th>
                         <th>Risk Severity</th>
                         <th>Risk Reason / Context</th>
-                        <th class="pe-4 text-end">Action</th>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th class="pe-4 text-end">Action</th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -277,11 +280,14 @@
                                     }
                                 </div>
                             </td>
-                            <td class="pe-4 text-end">
-                                <a asp-controller="Students" asp-action="Details" asp-route-id="@s.StudentId" class="btn btn-sm btn-outline-primary rounded-2 px-3 fw-semibold">
-                                    <i class="bi bi-eye me-1"></i> Profile
-                                </a>
-                            </td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td class="pe-4 text-end">
+                                    <a asp-controller="Students" asp-action="Details" asp-route-id="@s.StudentId" class="btn btn-sm btn-outline-primary rounded-2 px-3 fw-semibold">
+                                        <i class="bi bi-eye me-1"></i> Profile
+                                    </a>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>

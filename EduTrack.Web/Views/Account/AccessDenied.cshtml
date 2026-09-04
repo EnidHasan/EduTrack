@@ -1,2 +1,11 @@
 @{ ViewData["Title"] = "Access denied"; }
-<div class="empty"><h1>Access denied</h1><p>Your account does not have permission to open this page.</p><a class="btn-primary" asp-controller="Dashboard" asp-action="Index">Return to dashboard</a></div>
+<section class="access-denied card" aria-labelledby="access-denied-title">
+    <div class="access-denied-icon"><i class="bi bi-shield-lock-fill"></i></div>
+    <span class="eyebrow">PROTECTED WORKSPACE</span>
+    <h1 id="access-denied-title">This page is not available for your role</h1>
+    <p>Your account is signed in, but it does not have permission to open this area. EduTrack has blocked the direct URL request to keep role data separated.</p>
+    <div class="access-denied-actions">
+        <a class="btn-primary" asp-controller="Dashboard" asp-action="Index"><i class="bi bi-grid-1x2-fill"></i> Return to my overview</a>
+        <button class="btn-soft" type="button" onclick="history.back()"><i class="bi bi-arrow-left"></i> Go back</button>
+    </div>
+</section>
