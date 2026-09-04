@@ -18,14 +18,19 @@
             <span class="eyebrow">WELCOME TO EDUTRACK</span>
             <h2>Access your workspace</h2>
             <p class="login-intro">Enter your university credentials to continue.</p>
+            <div class="login-audience" aria-label="Supported account roles">
+                <span><i class="bi bi-shield-check"></i> Admin</span>
+                <span><i class="bi bi-person-badge"></i> Faculty</span>
+                <span><i class="bi bi-mortarboard"></i> Student</span>
+            </div>
             <form method="post">
                 <input asp-for="ReturnUrl" type="hidden"/>
                 <div asp-validation-summary="ModelOnly"></div>
-                <div class="form-field"><label asp-for="Email" class="form-label">University email</label><div class="input-wrap"><span>✉</span><input asp-for="Email" class="form-control" placeholder="you@university.edu" autocomplete="username"/></div><span asp-validation-for="Email" class="text-danger small"></span></div>
-                <div class="form-field"><div class="label-row"><label asp-for="Password" class="form-label"></label><span>Secure access</span></div><div class="input-wrap"><span>⌑</span><input asp-for="Password" class="form-control" placeholder="Enter your password" autocomplete="current-password"/></div><span asp-validation-for="Password" class="text-danger small"></span></div>
-                <button class="login-submit" type="submit"><span>Continue to EduTrack</span><b>→</b></button>
+                <div class="form-field"><label asp-for="Email" class="form-label">University email</label><div class="input-wrap"><span class="field-icon"><i class="bi bi-envelope"></i></span><input asp-for="Email" class="form-control" placeholder="you@university.edu" autocomplete="username"/></div><span asp-validation-for="Email" class="text-danger small"></span></div>
+                <div class="form-field"><div class="label-row"><label asp-for="Password" class="form-label"></label><span><i class="bi bi-lock-fill"></i> Secure access</span></div><div class="input-wrap password-input-wrap"><span class="field-icon"><i class="bi bi-key"></i></span><input asp-for="Password" class="form-control" placeholder="Enter your password" autocomplete="current-password"/><button class="password-toggle" type="button" data-password-toggle="Password" aria-label="Show password" aria-pressed="false"><i class="bi bi-eye"></i></button></div><span asp-validation-for="Password" class="text-danger small"></span></div>
+                <button class="login-submit" type="submit"><span>Continue to EduTrack</span><b><i class="bi bi-arrow-right"></i></b></button>
             </form>
-            <div class="login-security"><span>◆</span> Your credentials are encrypted and securely protected</div>
+            <div class="login-security"><span><i class="bi bi-patch-check-fill"></i></span> Your credentials are encrypted and securely protected</div>
         </div>
     </section>
 </div>

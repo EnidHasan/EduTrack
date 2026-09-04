@@ -21,6 +21,22 @@ window.addEventListener('resize', () => {
     if (window.innerWidth > 900) setNavigation(false);
 });
 
+document.querySelectorAll('[data-password-toggle]').forEach(button => {
+    button.addEventListener('click', () => {
+        const input = document.getElementById(button.dataset.passwordToggle);
+        if (!input) return;
+
+        const showing = input.type === 'text';
+        input.type = showing ? 'password' : 'text';
+        button.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+        button.setAttribute('aria-pressed', String(!showing));
+        const icon = button.querySelector('i');
+        icon?.classList.toggle('bi-eye', showing);
+        icon?.classList.toggle('bi-eye-slash', !showing);
+        input.focus({ preventScroll: true });
+    });
+});
+
 setTimeout(() => document.querySelectorAll('.notice').forEach(notice => {
     notice.classList.add('notice-leaving');
     setTimeout(() => notice.remove(), 250);
