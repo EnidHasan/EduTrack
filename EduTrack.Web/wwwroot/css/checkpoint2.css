@@ -15,7 +15,8 @@ html { scroll-behavior: smooth; }
 body { min-width: 320px; color: var(--et-text); overflow-x: hidden; }
 button, input, select, textarea { font: inherit; }
 a, button { -webkit-tap-highlight-color: transparent; }
-:focus-visible { outline: 3px solid rgba(40, 103, 232, .28) !important; outline-offset: 3px; }
+:focus-visible { outline: 3px solid #2563eb !important; outline-offset: 3px; }
+.sidebar :focus-visible, .login-art :focus-visible, .hero :focus-visible, .module-head :focus-visible { outline-color: #5eead4 !important; }
 .skip-link { position: fixed; left: 16px; top: -80px; z-index: 2000; padding: 10px 15px; border-radius: 10px; background: #fff; color: var(--et-primary-dark); font-weight: 700; box-shadow: var(--et-shadow); }
 .skip-link:focus { top: 16px; }
 
@@ -28,6 +29,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .role-pill-student { background: #f2edff; color: #6743bf; }
 .menu-btn { width: 42px; height: 42px; place-items: center; border: 1px solid var(--et-border); border-radius: 12px; background: #fff; color: var(--et-navy); box-shadow: 0 5px 14px rgba(20, 47, 72, .06); }
 .menu-btn i { font-size: 23px; }
+.navigation-close { display: none; flex: 0 0 auto; align-self: flex-end; width: 44px; height: 44px; margin-bottom: 12px; border: 1px solid #94a3b8; border-radius: 10px; background: transparent; color: #fff; }
 
 .page-head { align-items: center; }
 .page-head > div:first-child { min-width: 0; }
@@ -50,7 +52,13 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .actions { flex-wrap: wrap; }
 .empty { min-height: 190px; display: grid; place-items: center; align-content: center; gap: 8px; }
 
-.notice { display: flex; align-items: center; gap: 9px; max-width: min(420px, calc(100vw - 30px)); }
+.notices { position: fixed; top: 104px; right: 28px; z-index: 100; display: grid; gap: 12px; width: min(420px, calc(100vw - 30px)); max-height: calc(100dvh - 120px); overflow-y: auto; padding: 5px; }
+.notices:empty { display: none; }
+.notices .notice { position: static; display: flex; align-items: flex-start; gap: 9px; min-width: 0; max-width: none; margin: 0; padding: 12px; }
+.notice-message { flex: 1; min-width: 0; overflow-wrap: anywhere; align-self: center; }
+.notice > i { margin-top: 12px; flex-shrink: 0; }
+.notice-dismiss { display: grid; place-items: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 1px solid currentColor; border-radius: 8px; color: inherit; background: transparent; cursor: pointer; }
+.notice-dismiss:hover { background: rgba(0, 0, 0, .05); }
 .notice-leaving { opacity: 0; transform: translateY(-8px); transition: .25s; }
 .access-denied { width: min(680px, 100%); margin: clamp(30px, 9vh, 100px) auto; padding: clamp(28px, 5vw, 52px); text-align: center; align-items: center; }
 .access-denied-icon { width: 72px; height: 72px; margin: 0 auto 22px; display: grid; place-items: center; border-radius: 22px; background: linear-gradient(135deg, #fff0f2, #edf3ff); color: #d7485f; font-size: 30px; }
@@ -99,7 +107,9 @@ a, button { -webkit-tap-highlight-color: transparent; }
 
 @media (max-width: 900px) {
     body.nav-open { overflow: hidden; }
-    .sidebar { width: min(310px, 88vw); padding: 22px 18px; box-shadow: 18px 0 45px rgba(5, 25, 42, .28); }
+    .sidebar { width: min(310px, 88vw); padding: 22px 18px; box-shadow: 18px 0 45px rgba(5, 25, 42, .28); visibility: hidden; pointer-events: none; }
+    .sidebar.open { visibility: visible; pointer-events: auto; }
+    .navigation-close { display: grid; place-items: center; }
     .sidebar > .brand { margin-bottom: 18px; }
     .menu-btn { display: grid; flex: 0 0 auto; }
     .overlay { display: block; position: fixed; inset: 0; z-index: 15; border: 0; background: rgba(7, 24, 39, .58); opacity: 0; visibility: hidden; transition: opacity .2s, visibility .2s; }
@@ -152,7 +162,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
     .access-denied-actions > * { width: 100%; }
     .delete-actions { align-items: stretch; flex-direction: column; }
     .delete-actions > * { width: 100%; }
-    .notice { top: 82px; left: 13px; right: 13px; width: auto; }
+    .notices { top: 82px; left: 8px; right: 8px; width: auto; max-height: calc(100dvh - 98px); }
 }
 
 @media (max-height: 720px) and (min-width: 901px) {
