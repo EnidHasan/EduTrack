@@ -66,12 +66,16 @@ p, .text-muted, .text-secondary, .field-note { color: var(--et-ink-600) !importa
 .brand-logo {
     width: 58px;
     height: 58px;
-    padding: 2px;
-    border: 1px solid rgba(255, 255, 255, .14);
-    border-radius: 17px;
-    background: rgba(255, 255, 255, .07);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, .24);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    object-fit: contain;
+    flex-shrink: 0;
 }
+.login-brand-logo { width: 120px; height: 120px; object-fit: contain; flex-shrink: 0; }
+.login-form-logo { width: 100px; height: 100px; object-fit: contain; margin-bottom: 10px; }
 .brand small {
     margin-top: 7px;
     color: #9ab5ca;
@@ -644,8 +648,8 @@ body {
     border: 24px solid rgba(49, 91, 234, .045);
     border-radius: 50%;
 }
-.login-box > .text-center img { transition: transform .3s ease, box-shadow .3s ease; }
-.login-box > .text-center img:hover { transform: translateY(-3px) rotate(-1deg); box-shadow: 0 17px 34px rgba(20, 48, 76, .2) !important; }
+.login-box > .text-center img { transition: transform .3s ease; }
+.login-box > .text-center img:hover { transform: translateY(-3px) rotate(-1deg); }
 .login-audience { display: flex; flex-wrap: wrap; gap: 7px; margin: -15px 0 28px; }
 .login-audience span {
     display: inline-flex;
@@ -857,7 +861,7 @@ h1, h2, h3, h4, h5, h6, p, span, small, strong, label, a,
     .login-panel { min-height: 690px; padding: 22px 38px; }
     .login-box { width: min(520px, 100%); padding: 27px 38px 25px; }
     .login-box > .text-center { margin-bottom: 12px !important; }
-    .login-box > .text-center img { width: 76px !important; height: 76px !important; border-radius: 18px !important; margin-bottom: 0 !important; }
+    .login-box > .text-center img { width: 76px !important; height: 76px !important; margin-bottom: 0 !important; }
     .login-box h2 { margin: 9px 0 6px; font-size: clamp(28px, 2.15vw, 36px); }
     .login-intro { margin-bottom: 18px; }
     .login-audience { margin: -4px 0 19px; }
@@ -1189,7 +1193,6 @@ body:not(.role-member) {
     border-right: 1px solid rgba(241, 213, 138, .22);
     box-shadow: 18px 0 55px rgba(4, 18, 37, .18);
 }
-.brand-logo { border-color: rgba(241,213,138,.42); box-shadow: 0 14px 32px rgba(0,0,0,.34), 0 0 0 4px rgba(241,213,138,.06); }
 .brand small, .nav-label { color: #9fb8d0; }
 .sidebar nav a.active, .sidebar-account a.active {
     border-color: rgba(241,213,138,.3);
@@ -1289,7 +1292,6 @@ body:not(.role-member) {
 }
 .login-box::before { height: 7px; background: linear-gradient(90deg, #2f63cb, #0e8a7c 58%, #d1a744); }
 .login-box::after { border-color: rgba(196,154,58,.11); box-shadow: 0 0 0 28px rgba(44,97,194,.035); }
-.login-box > .text-center img { border: 1px solid rgba(241,213,138,.48); box-shadow: 0 18px 38px rgba(4,28,59,.25) !important; }
 .login-audience span { border-color: rgba(38,76,115,.2); background: linear-gradient(135deg, #e8f0fb, #fff5dc); }
 .login-box .input-wrap { border-radius: 14px; background: rgba(255,255,255,.52); }
 .login-box .form-control { background: rgba(255,253,248,.9); }
@@ -1779,7 +1781,6 @@ html, body, body *, body *::before, body *::after {
     .login-brand img {
         width: 96px !important;
         height: 96px !important;
-        border-radius: 21px !important;
     }
 
     .login-copy {
