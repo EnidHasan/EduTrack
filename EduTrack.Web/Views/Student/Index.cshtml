@@ -6,6 +6,13 @@
     var gpaBySemester = ViewBag.GPABySemester as Dictionary<string, decimal>;
     var studentId = ViewBag.StudentId;
     var cgpaPercentage = (Convert.ToDouble(cgpa) / 4.0) * 100.0;
+    string FormatAcademicTerm(string? semester, int academicYear)
+    {
+        var term = semester?.Trim() ?? string.Empty;
+        var year = academicYear.ToString();
+        if (string.IsNullOrWhiteSpace(term)) return year;
+        return term.EndsWith(year, StringComparison.OrdinalIgnoreCase) ? term : $"{term} {year}";
+    }
 }
 
 <style>
@@ -288,8 +295,9 @@
     @{ var delay = 0.3; }
     @foreach (var semGroup in Model.GroupBy(e => new { e.AcademicYear, e.Semester }))
     {
-        var semesterName = $"{semGroup.Key.Semester} {semGroup.Key.AcademicYear}";
-        var semGpa = gpaBySemester != null && gpaBySemester.ContainsKey(semesterName) ? gpaBySemester[semesterName] : 0;
+        var semesterName = FormatAcademicTerm(semGroup.Key.Semester, semGroup.Key.AcademicYear);
+        var semesterKey = semesterName;
+        var semGpa = gpaBySemester != null && gpaBySemester.ContainsKey(semesterKey) ? gpaBySemester[semesterKey] : 0;
 
         <div class="glass-card mb-5" style="animation-delay: @(delay)s;">
             <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-3" style="border-color: rgba(226, 232, 240, 0.6) !important;">

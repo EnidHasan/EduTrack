@@ -1790,3 +1790,336 @@ html, body, body *, body *::before, body *::after {
     .form-field { margin-bottom: 11px !important; }
     .login-security { margin-top: 12px !important; padding-top: 11px !important; }
 }
+
+/* ==========================================================================
+   Logo-aligned finish — static, polished controls and richer colour harmony
+   ========================================================================== */
+:root {
+    --brand-cobalt: #3567e8;
+    --brand-sapphire: #173f8c;
+    --brand-navy: #0b2447;
+    --brand-teal: #35b7aa;
+    --brand-teal-dark: #167c77;
+    --brand-champagne: #e5c66f;
+    --brand-danger: #bd3d55;
+}
+
+body:not(.role-member) {
+    background-image:
+        radial-gradient(ellipse 55% 45% at 4% 5%, rgba(53,103,232,.21), transparent 68%),
+        radial-gradient(ellipse 50% 42% at 96% 7%, rgba(53,183,170,.23), transparent 68%),
+        radial-gradient(ellipse 54% 45% at 80% 96%, rgba(100,77,198,.15), transparent 70%),
+        linear-gradient(135deg, #d8e4f2 0%, #e7e8f4 43%, #d5ebe8 100%) !important;
+}
+
+.topbar {
+    background: linear-gradient(100deg, rgba(250,252,255,.96), rgba(239,244,252,.94), rgba(235,249,246,.94)) !important;
+    box-shadow: 0 10px 30px rgba(11,36,71,.09), inset 0 -2px rgba(53,183,170,.13) !important;
+}
+
+.card, .glass-card, .form-card {
+    border-color: rgba(31,70,119,.17) !important;
+    background:
+        radial-gradient(circle at 100% 0, rgba(53,183,170,.075), transparent 15rem),
+        linear-gradient(145deg, rgba(252,253,255,.97), rgba(237,244,250,.95)) !important;
+    box-shadow: 0 18px 42px rgba(10,35,70,.11), inset 0 1px rgba(255,255,255,.9) !important;
+}
+
+/* Primary actions use the same cobalt-to-teal language as the new logo. */
+.btn-primary, .btn.btn-primary, a.btn-primary, button.btn-primary,
+.login-submit, .search button {
+    min-height: 48px;
+    padding: 11px 22px;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,.24) !important;
+    border-radius: 14px !important;
+    background:
+        radial-gradient(circle at 88% 12%, rgba(255,255,255,.23), transparent 5rem),
+        linear-gradient(112deg, var(--brand-sapphire) 0%, var(--brand-cobalt) 54%, var(--brand-teal-dark) 100%) !important;
+    box-shadow:
+        0 11px 24px rgba(31,76,170,.25),
+        inset 0 1px rgba(255,255,255,.24),
+        inset 0 -2px rgba(4,25,66,.16) !important;
+    font-weight: 800;
+    letter-spacing: .005em;
+    text-shadow: 0 1px 1px rgba(5,25,61,.18);
+}
+.btn-primary:hover, .btn.btn-primary:hover, a.btn-primary:hover,
+button.btn-primary:hover, .login-submit:hover, .search button:hover,
+.btn-primary:focus, .btn.btn-primary:focus, .login-submit:focus {
+    color: #fff !important;
+    background:
+        radial-gradient(circle at 82% 10%, rgba(255,255,255,.27), transparent 5rem),
+        linear-gradient(112deg, #123778 0%, #2f60dd 50%, #126f6b 100%) !important;
+    box-shadow: 0 13px 27px rgba(25,69,155,.29), inset 0 1px rgba(255,255,255,.27) !important;
+}
+.btn-primary:focus-visible, .btn.btn-primary:focus-visible,
+.login-submit:focus-visible, .search button:focus-visible {
+    outline: 3px solid rgba(53,103,232,.24) !important;
+    outline-offset: 3px;
+}
+
+/* Premium light actions */
+.btn-soft, .btn-secondary, .btn-outline-secondary, .icon-btn {
+    min-height: 42px;
+    color: #173b68 !important;
+    border: 1px solid #bacce0 !important;
+    border-radius: 12px !important;
+    background:
+        radial-gradient(circle at 90% 5%, rgba(53,183,170,.10), transparent 4rem),
+        linear-gradient(145deg, #ffffff, #edf3fa) !important;
+    box-shadow: 0 7px 16px rgba(11,42,80,.09), inset 0 1px #fff !important;
+    font-weight: 750;
+}
+.btn-soft:hover, .btn-secondary:hover, .btn-outline-secondary:hover, .icon-btn:hover {
+    color: #0b6663 !important;
+    border-color: #79bdb8 !important;
+    background: linear-gradient(145deg, #faffff, #e2f4f1) !important;
+}
+
+/* Destructive actions remain unmistakable without looking harsh. */
+.btn-danger, .btn-danger-soft, .icon-btn.text-danger {
+    color: #a52c43 !important;
+    border: 1px solid #e3aeba !important;
+    border-radius: 12px !important;
+    background: linear-gradient(145deg, #fffafa, #fbe7eb) !important;
+    box-shadow: 0 7px 16px rgba(142,38,57,.09), inset 0 1px #fff !important;
+    font-weight: 750;
+}
+.btn-danger:hover, .btn-danger-soft:hover, .icon-btn.text-danger:hover {
+    color: #fff !important;
+    border-color: #aa3048 !important;
+    background: linear-gradient(135deg, #cc4b62, #9d2840) !important;
+}
+
+/* Hero actions receive a clear premium hierarchy. */
+.hero-btn {
+    color: #102b51 !important;
+    border: 1px solid #e4c66d !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #fff9e7, #e8cb78) !important;
+    box-shadow: 0 11px 24px rgba(3,19,45,.25), inset 0 1px #fff !important;
+    text-shadow: none;
+}
+.hero-btn:hover { color: #09213f !important; background: linear-gradient(135deg, #fffdf4, #dfbd5c) !important; }
+.hero-link {
+    color: #effcff !important;
+    border: 1px solid rgba(152,220,212,.35) !important;
+    border-radius: 13px !important;
+    background: rgba(255,255,255,.09) !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.09) !important;
+}
+.hero-link:hover { color: #fff !important; border-color: rgba(229,198,111,.58) !important; background: rgba(255,255,255,.14) !important; }
+
+/* Sign out is a compact branded control rather than a generic white button. */
+.logout-btn {
+    min-height: 50px;
+    color: #122f54 !important;
+    border: 1px solid #c4d2e0 !important;
+    border-radius: 14px !important;
+    background: linear-gradient(145deg, #fff, #edf4fa) !important;
+    box-shadow: 0 9px 21px rgba(10,39,75,.11), inset 0 1px #fff !important;
+    font-weight: 750;
+}
+.logout-icon {
+    color: #fff !important;
+    background: linear-gradient(135deg, var(--brand-cobalt), var(--brand-teal-dark)) !important;
+    box-shadow: 0 6px 15px rgba(38,92,184,.24) !important;
+}
+.logout-btn:hover { color: #0c6562 !important; border-color: #83bdb9 !important; background: linear-gradient(145deg, #fff, #e6f5f3) !important; }
+
+/* Badges and form fields complete the colour system. */
+.role-pill { color: var(--brand-sapphire) !important; border-color: rgba(53,103,232,.25) !important; background: linear-gradient(145deg, #fff, #eef3ff) !important; }
+.role-pill-teacher { color: #116f69 !important; border-color: rgba(53,183,170,.3) !important; background: linear-gradient(145deg, #fff, #e7f7f4) !important; }
+.role-pill-student { color: #6246aa !important; border-color: rgba(100,77,198,.27) !important; background: linear-gradient(145deg, #fff, #f0edfb) !important; }
+.form-control, .form-select {
+    border-color: #b8c9dc !important;
+    background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(239,245,251,.96)) !important;
+    box-shadow: inset 0 1px 2px rgba(9,37,74,.035), 0 5px 12px rgba(9,37,74,.045) !important;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--brand-cobalt) !important;
+    box-shadow: 0 0 0 3px rgba(53,103,232,.14), 0 7px 16px rgba(20,65,139,.08) !important;
+}
+
+/* ==========================================================================
+   Atmospheric canvas refinement — static, vivid, and performance-safe
+   ========================================================================== */
+
+/* Authenticated pages: a richer campus-blue aurora instead of a flat pale fill. */
+body:not(.role-member) {
+    background-color: #cadbea !important;
+    background-image:
+        radial-gradient(ellipse 62% 52% at -4% -4%, rgba(67, 91, 205, .34), transparent 68%),
+        radial-gradient(ellipse 54% 48% at 103% 3%, rgba(30, 166, 151, .31), transparent 66%),
+        radial-gradient(ellipse 48% 42% at 88% 96%, rgba(103, 73, 190, .23), transparent 70%),
+        radial-gradient(ellipse 42% 38% at 14% 91%, rgba(27, 121, 179, .22), transparent 72%),
+        linear-gradient(132deg, #cbd9eb 0%, #d9dcf0 38%, #c8e3e2 72%, #d1dceb 100%) !important;
+}
+
+.content {
+    background-image:
+        linear-gradient(115deg, rgba(255,255,255,.16), transparent 34%),
+        radial-gradient(circle at 78% 12%, rgba(255,255,255,.22), transparent 19rem) !important;
+}
+
+.topbar {
+    background:
+        radial-gradient(circle at 90% -80%, rgba(52,183,170,.17), transparent 17rem),
+        linear-gradient(105deg, rgba(248,251,255,.97), rgba(232,239,251,.95) 52%, rgba(226,246,242,.95)) !important;
+}
+
+/* Cards float clearly above the colourful canvas without becoming stark white. */
+.card, .glass-card, .form-card {
+    background:
+        radial-gradient(circle at 102% -3%, rgba(58,103,226,.105), transparent 16rem),
+        radial-gradient(circle at -4% 104%, rgba(43,177,164,.075), transparent 14rem),
+        linear-gradient(145deg, rgba(250,252,255,.98), rgba(231,240,248,.96)) !important;
+    border-color: rgba(39,76,128,.20) !important;
+    box-shadow: 0 20px 46px rgba(10,35,72,.14), inset 0 1px rgba(255,255,255,.92) !important;
+}
+
+.stat {
+    background:
+        radial-gradient(circle at 108% 105%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 10rem),
+        linear-gradient(145deg, rgba(250,252,255,.99), color-mix(in srgb, var(--accent) 10%, #e7eef6)) !important;
+}
+
+/* Login: visually connect both halves with a jewel-toned presentation stage. */
+.login-page {
+    background: #cbdced !important;
+}
+
+.login-art {
+    background:
+        radial-gradient(circle at 7% 2%, rgba(74,104,222,.31), transparent 25rem),
+        radial-gradient(circle at 93% 91%, rgba(43,183,170,.27), transparent 28rem),
+        linear-gradient(145deg, #081b38 0%, #112e55 58%, #0a535a 100%) !important;
+}
+
+.login-panel {
+    background-color: #cadcec !important;
+    background-image:
+        radial-gradient(ellipse 62% 50% at 93% 4%, rgba(106,77,198,.30), transparent 66%),
+        radial-gradient(ellipse 58% 48% at 8% 96%, rgba(31,166,152,.30), transparent 67%),
+        radial-gradient(circle at 50% 45%, rgba(255,255,255,.40), transparent 22rem),
+        linear-gradient(145deg, #c9d9ed 0%, #dcdcf0 48%, #c6e5e1 100%) !important;
+        background-size: auto !important;
+}
+
+.login-panel::before {
+    display: block !important;
+    inset: 6% 8% !important;
+    border: 1px solid rgba(38,72,126,.16) !important;
+    border-radius: 36px !important;
+    background:
+        linear-gradient(135deg, rgba(255,255,255,.12), transparent 45%),
+        repeating-linear-gradient(90deg, transparent 0 47px, rgba(255,255,255,.08) 48px) !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.45) !important;
+}
+
+.login-box {
+    border: 1px solid rgba(30,70,126,.22) !important;
+    background:
+        radial-gradient(circle at 103% -3%, rgba(53,103,232,.13), transparent 13rem),
+        radial-gradient(circle at -5% 105%, rgba(53,183,170,.09), transparent 12rem),
+        linear-gradient(150deg, rgba(253,254,255,.99), rgba(235,243,250,.98)) !important;
+    box-shadow:
+        0 32px 72px rgba(8,31,66,.24),
+        0 0 0 7px rgba(255,255,255,.24),
+        inset 0 1px rgba(255,255,255,.94) !important;
+}
+
+.login-box::before {
+    display: block !important;
+    height: 6px !important;
+    background: linear-gradient(90deg, var(--brand-cobalt), #7255d2, var(--brand-teal), var(--brand-champagne)) !important;
+}
+
+.login-form-logo {
+    padding: 8px;
+    border: 1px solid rgba(42,82,146,.16);
+    border-radius: 20px;
+    background: linear-gradient(145deg, #f5f8ff, #e6f7f4);
+    box-shadow: 0 12px 25px rgba(16,52,100,.13);
+}
+
+.login-audience span {
+    color: #264a77 !important;
+    border-color: rgba(47,91,158,.19) !important;
+    background: linear-gradient(145deg, #f8fbff, #eaf3fb) !important;
+}
+
+.login-box .form-control {
+    border-color: #9eb5d3 !important;
+    background: linear-gradient(145deg, #f8fbff, #e8f0fc) !important;
+}
+
+.login-security {
+    color: #395773 !important;
+    border-top-color: rgba(40,78,129,.16) !important;
+}
+
+@media (max-width: 900px) {
+    .login-page, .login-panel {
+        background:
+            radial-gradient(ellipse at 90% 5%, rgba(104,77,198,.27), transparent 22rem),
+            radial-gradient(ellipse at 8% 95%, rgba(31,165,152,.28), transparent 24rem),
+            linear-gradient(145deg, #cadbed, #dcdcf0 52%, #c8e5e1) !important;
+    }
+    .login-panel::before { display: none !important; }
+}
+
+/* Directory search alignment: input and action remain one exact-height control. */
+.page-head .search, .module-head .search, .search {
+    height: 50px !important;
+    min-height: 50px !important;
+    padding: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    overflow: hidden;
+    border-radius: 14px !important;
+}
+.page-head .search input, .module-head .search input, .search input {
+    height: 40px !important;
+    min-height: 40px !important;
+    margin: 0 !important;
+    padding-block: 0 !important;
+    align-self: center;
+}
+.page-head .search button, .module-head .search button, .search button {
+    height: 40px !important;
+    min-height: 40px !important;
+    margin: 0 !important;
+    padding: 0 18px !important;
+    align-self: center !important;
+    flex: 0 0 auto;
+    border-radius: 10px !important;
+    line-height: 1 !important;
+}
+
+/* Early-warning export uses a clear emerald data-action treatment. */
+.export-csv-btn {
+    min-height: 48px;
+    padding: 11px 18px !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(185, 241, 226, .42) !important;
+    border-radius: 14px !important;
+    background:
+        radial-gradient(circle at 88% 10%, rgba(255,255,255,.20), transparent 5rem),
+        linear-gradient(110deg, #08645f 0%, #119286 53%, #2859a4 100%) !important;
+    box-shadow: 0 11px 25px rgba(3,45,62,.25), inset 0 1px rgba(255,255,255,.20) !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    text-shadow: 0 1px 1px rgba(0,35,42,.22);
+}
+.export-csv-btn i { color: #d9fff5 !important; font-size: 17px; }
+.export-csv-btn:hover, .export-csv-btn:focus {
+    color: #ffffff !important;
+    border-color: rgba(226,255,248,.62) !important;
+    background: linear-gradient(110deg, #075651 0%, #0d8177 53%, #214b8c 100%) !important;
+}
+.export-csv-btn:focus-visible {
+    outline: 3px solid rgba(61,205,187,.30) !important;
+    outline-offset: 3px;
+}

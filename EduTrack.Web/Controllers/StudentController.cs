@@ -49,7 +49,7 @@ public class StudentController(ApplicationDbContext db, UserManager<ApplicationU
             .GroupBy(e => new { e.AcademicYear, e.Semester })
             .Select(g => new
             {
-                Semester = $"{g.Key.Semester} {g.Key.AcademicYear}",
+                Semester = FormatAcademicTerm(g.Key.Semester, g.Key.AcademicYear),
                 GPA = Math.Round(g.Sum(e => e.Grade!.GradePoint * e.Course!.CreditHours) / g.Sum(e => e.Course!.CreditHours), 2)
             })
             .ToDictionary(k => k.Semester, v => v.GPA);
@@ -60,6 +60,14 @@ public class StudentController(ApplicationDbContext db, UserManager<ApplicationU
         ViewBag.StudentId = student.Id;
 
         return View(enrollments);
+    }
+
+    private static string FormatAcademicTerm(string? semester, int academicYear)
+    {
+        var term = semester?.Trim() ?? string.Empty;
+        var year = academicYear.ToString();
+        if (string.IsNullOrWhiteSpace(term)) return year;
+        return term.EndsWith(year, StringComparison.OrdinalIgnoreCase) ? term : $"{term} {year}";
     }
 
     public async Task<IActionResult> Disputes()
