@@ -11,6 +11,7 @@ public class Student
     [Range(2000, 2100), Display(Name = "Enrollment year")] public int EnrollmentYear { get; set; } = DateTime.Today.Year;
     [StringLength(20)] public string? Semester { get; set; }
     public bool IsActive { get; set; } = true;
+    [Column(TypeName = "decimal(4, 2)")] public decimal CGPA { get; set; } = 0m;
     public string? ApplicationUserId { get; set; }
     public ApplicationUser? ApplicationUser { get; set; }
     [NotMapped, DataType(DataType.Password), Display(Name = "Temporary password")]
