@@ -20,4 +20,13 @@ public class DashboardController(ApplicationDbContext db, UserManager<Models.App
             await db.Students.CountAsync(), await db.Teachers.CountAsync(), await db.Courses.CountAsync(),
             await users.Users.CountAsync(), await db.Courses.Include(x => x.Teacher).OrderByDescending(x => x.Id).Take(5).ToListAsync()));
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    public async Task<IActionResult> SeedDatabase()
+    {
+        await DbSeeder.SeedDataAsync(db, users);
+        TempData["SuccessMessage"] = "Database successfully seeded with Checkpoint 2 sample data!";
+        return RedirectToAction(nameof(Index));
+    }
 }
