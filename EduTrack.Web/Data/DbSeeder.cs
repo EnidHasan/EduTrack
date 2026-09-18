@@ -8,6 +8,13 @@ public static class DbSeeder
 {
     public static async Task SeedDataAsync(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
     {
+        // 0. Normalize Departments
+        var oldStudents = await db.Students.Where(s => s.Department == "Computer Science").ToListAsync();
+        foreach (var s in oldStudents) s.Department = "CSE";
+        var oldTeachers = await db.Teachers.Where(t => t.Department == "Computer Science").ToListAsync();
+        foreach (var t in oldTeachers) t.Department = "CSE";
+        await db.SaveChangesAsync();
+
         // 1. Seed Admin
         var adminEmail = "admin@edutrack.edu";
         var admin = await userManager.FindByEmailAsync(adminEmail);
@@ -29,13 +36,13 @@ public static class DbSeeder
         // 2. Seed Teachers
         var teachersToSeed = new[]
         {
-            new Teacher { EmployeeId = "T-001", FullName = "Dr. Syed Akhter Hossain", Email = "syed.akhter@edutrack.edu", Department = "CSE", Designation = "Professor" },
-            new Teacher { EmployeeId = "T-002", FullName = "Dr. Mohammad Ali", Email = "m.ali@edutrack.edu", Department = "EEE", Designation = "Associate Professor" },
-            new Teacher { EmployeeId = "T-003", FullName = "Dr. Farhana Zulkernine", Email = "farhana@edutrack.edu", Department = "CSE", Designation = "Assistant Professor" },
-            new Teacher { EmployeeId = "T-004", FullName = "Prof. Jamal Uddin", Email = "jamal.uddin@edutrack.edu", Department = "BBA", Designation = "Professor" },
-            new Teacher { EmployeeId = "T-005", FullName = "Dr. Anika Tabassum", Email = "anika@edutrack.edu", Department = "Physics", Designation = "Lecturer" },
-            new Teacher { EmployeeId = "T-006", FullName = "Dr. Rafiqul Islam", Email = "rafiqul@edutrack.edu", Department = "Mathematics", Designation = "Associate Professor" },
-            new Teacher { EmployeeId = "T-007", FullName = "Tariqul Islam", Email = "tariqul@edutrack.edu", Department = "English", Designation = "Lecturer" }
+            new Teacher { EmployeeId = "T-101", FullName = "Dr. Syed Akhter Hossain", Email = "syed.akhter@edutrack.edu", Department = "CSE", Designation = "Professor" },
+            new Teacher { EmployeeId = "T-102", FullName = "Dr. Mohammad Ali", Email = "m.ali@edutrack.edu", Department = "EEE", Designation = "Associate Professor" },
+            new Teacher { EmployeeId = "T-103", FullName = "Dr. Farhana Zulkernine", Email = "farhana@edutrack.edu", Department = "CSE", Designation = "Assistant Professor" },
+            new Teacher { EmployeeId = "T-104", FullName = "Prof. Jamal Uddin", Email = "jamal.uddin@edutrack.edu", Department = "BBA", Designation = "Professor" },
+            new Teacher { EmployeeId = "T-105", FullName = "Dr. Anika Tabassum", Email = "anika@edutrack.edu", Department = "Physics", Designation = "Lecturer" },
+            new Teacher { EmployeeId = "T-106", FullName = "Dr. Rafiqul Islam", Email = "rafiqul@edutrack.edu", Department = "Mathematics", Designation = "Associate Professor" },
+            new Teacher { EmployeeId = "T-107", FullName = "Tariqul Islam", Email = "tariqul@edutrack.edu", Department = "English", Designation = "Lecturer" }
         };
 
         var dbTeachers = new List<Teacher>();
@@ -45,17 +52,21 @@ public static class DbSeeder
             var existingTeacher = await db.Teachers.FirstOrDefaultAsync(x => x.Email == t.Email);
             if (existingTeacher == null)
             {
-                var user = new ApplicationUser 
-                { 
-                    UserName = t.Email, 
-                    Email = t.Email, 
-                    FullName = t.FullName, 
-                    EmailConfirmed = true, 
-                    ProfileType = "Teacher", 
-                    MustChangePassword = false 
-                };
-                await userManager.CreateAsync(user, "Teacher@123");
-                await userManager.AddToRoleAsync(user, "Teacher");
+                var user = await userManager.FindByEmailAsync(t.Email);
+                if (user == null)
+                {
+                    user = new ApplicationUser 
+                    { 
+                        UserName = t.Email, 
+                        Email = t.Email, 
+                        FullName = t.FullName, 
+                        EmailConfirmed = true, 
+                        ProfileType = "Teacher", 
+                        MustChangePassword = false 
+                    };
+                    await userManager.CreateAsync(user, "Teacher@123");
+                    await userManager.AddToRoleAsync(user, "Teacher");
+                }
                 
                 t.ApplicationUserId = user.Id;
                 db.Teachers.Add(t);
@@ -69,29 +80,35 @@ public static class DbSeeder
         }
 
         // 3. Seed Courses
-        var dbCourses = await db.Courses.ToListAsync();
-        if (!dbCourses.Any())
+        var coursesToSeed = new[]
         {
-            var courses = new[]
-            {
-                new Course { CourseCode = "CSE101", CourseName = "Intro to Programming", CreditHours = 3, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "CSE")?.Id },
-                new Course { CourseCode = "PHY101", CourseName = "General Physics", CreditHours = 4, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "Physics")?.Id },
-                new Course { CourseCode = "CSE201", CourseName = "Data Structures", CreditHours = 3, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "CSE")?.Id },
-                new Course { CourseCode = "ENG101", CourseName = "Basic English", CreditHours = 3, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "English")?.Id }
-            };
+            new Course { CourseCode = "CSE101", CourseName = "Intro to Programming", CreditHours = 3, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "CSE")?.Id },
+            new Course { CourseCode = "PHY101", CourseName = "General Physics", CreditHours = 4, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "Physics")?.Id },
+            new Course { CourseCode = "CSE201", CourseName = "Data Structures", CreditHours = 3, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "CSE")?.Id },
+            new Course { CourseCode = "ENG101", CourseName = "Basic English", CreditHours = 3, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "English")?.Id },
+            new Course { CourseCode = "BBA101", CourseName = "Principles of Management", CreditHours = 3, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "BBA")?.Id },
+            new Course { CourseCode = "EEE101", CourseName = "Electrical Circuits", CreditHours = 4, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "EEE")?.Id },
+            new Course { CourseCode = "MATH101", CourseName = "Calculus I", CreditHours = 3, Semester = "Fall 2026", TeacherId = dbTeachers.FirstOrDefault(x => x.Department == "Mathematics")?.Id }
+        };
 
-            db.Courses.AddRange(courses);
-            await db.SaveChangesAsync();
-            dbCourses = courses.ToList();
+        var dbCourses = await db.Courses.ToListAsync();
+        foreach (var c in coursesToSeed)
+        {
+            if (!dbCourses.Any(x => x.CourseCode == c.CourseCode))
+            {
+                db.Courses.Add(c);
+                await db.SaveChangesAsync();
+                dbCourses.Add(c);
+            }
         }
 
         // 4. Seed Students
         var studentsToSeed = new[]
         {
-            new Student { FullName = "Rakibul Hasan", RollNumber = "S2026-001", Email = "rakib@edutrack.edu", Department = "CSE", EnrollmentYear = 2026, Semester = "Fall 2026" },
-            new Student { FullName = "Nusrat Jahan", RollNumber = "S2026-002", Email = "nusrat@edutrack.edu", Department = "CSE", EnrollmentYear = 2026, Semester = "Fall 2026" },
-            new Student { FullName = "Mehdi Hasan", RollNumber = "S2026-003", Email = "mehdi@edutrack.edu", Department = "BBA", EnrollmentYear = 2026, Semester = "Fall 2026" },
-            new Student { FullName = "Sadia Afrin", RollNumber = "S2026-004", Email = "sadia@edutrack.edu", Department = "EEE", EnrollmentYear = 2026, Semester = "Fall 2026" }
+            new Student { FullName = "Rakibul Hasan", RollNumber = "S2026-101", Email = "rakib@edutrack.edu", Department = "CSE", EnrollmentYear = 2026, Semester = "Fall 2026" },
+            new Student { FullName = "Nusrat Jahan", RollNumber = "S2026-102", Email = "nusrat@edutrack.edu", Department = "CSE", EnrollmentYear = 2026, Semester = "Fall 2026" },
+            new Student { FullName = "Mehdi Hasan", RollNumber = "S2026-103", Email = "mehdi@edutrack.edu", Department = "BBA", EnrollmentYear = 2026, Semester = "Fall 2026" },
+            new Student { FullName = "Sadia Afrin", RollNumber = "S2026-104", Email = "sadia@edutrack.edu", Department = "EEE", EnrollmentYear = 2026, Semester = "Fall 2026" }
         };
 
         var dbStudents = new List<Student>();
@@ -101,13 +118,17 @@ public static class DbSeeder
             var existingStudent = await db.Students.FirstOrDefaultAsync(x => x.Email == s.Email);
             if (existingStudent == null)
             {
-                var user = new ApplicationUser 
-                { 
-                    UserName = s.Email, Email = s.Email, FullName = s.FullName, 
-                    EmailConfirmed = true, ProfileType = "Student", MustChangePassword = false 
-                };
-                await userManager.CreateAsync(user, "Student@123");
-                await userManager.AddToRoleAsync(user, "Student");
+                var user = await userManager.FindByEmailAsync(s.Email);
+                if (user == null)
+                {
+                    user = new ApplicationUser 
+                    { 
+                        UserName = s.Email, Email = s.Email, FullName = s.FullName, 
+                        EmailConfirmed = true, ProfileType = "Student", MustChangePassword = false 
+                    };
+                    await userManager.CreateAsync(user, "Student@123");
+                    await userManager.AddToRoleAsync(user, "Student");
+                }
                 
                 s.ApplicationUserId = user.Id;
                 db.Students.Add(s);
@@ -123,8 +144,8 @@ public static class DbSeeder
         // 5. Seed Enrollments & Grades
         if (!await db.Enrollments.AnyAsync())
         {
-            var rakib = dbStudents.FirstOrDefault(x => x.RollNumber == "S2026-001");
-            var nusrat = dbStudents.FirstOrDefault(x => x.RollNumber == "S2026-002");
+            var rakib = dbStudents.FirstOrDefault(x => x.RollNumber == "S2026-101");
+            var nusrat = dbStudents.FirstOrDefault(x => x.RollNumber == "S2026-102");
             var cse101 = dbCourses.FirstOrDefault(x => x.CourseCode == "CSE101");
             var phy101 = dbCourses.FirstOrDefault(x => x.CourseCode == "PHY101");
             var eng101 = dbCourses.FirstOrDefault(x => x.CourseCode == "ENG101");
