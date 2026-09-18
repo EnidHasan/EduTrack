@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EduTrack.Web.Services;
 
-public class RecheckService(ApplicationDbContext db)
+public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpaService)
 {
     public async Task<List<RecheckRequest>> GetStudentRequestsAsync(int studentId)
     {
@@ -66,6 +66,12 @@ public class RecheckService(ApplicationDbContext db)
         request.TeacherComment = comment;
         
         await db.SaveChangesAsync();
+
+        if (status == "Approved")
+        {
+            await cgpaService.RecalculateStudentCgpaAsync(request.StudentId);
+        }
+
         return (true, $"Dispute {status.ToLower()} successfully.");
     }
 }

@@ -46,6 +46,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<GradeCalculatorService>();
 builder.Services.AddScoped<RecheckService>();
 builder.Services.AddScoped<AtRiskEvaluationService>();
+builder.Services.AddScoped<CgpaCalculationService>();
 var app = builder.Build();
 if (!app.Environment.IsDevelopment()) { app.UseExceptionHandler("/Home/Error"); app.UseHsts(); }
 app.UseHttpsRedirection();
