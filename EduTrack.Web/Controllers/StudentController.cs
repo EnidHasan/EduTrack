@@ -30,19 +30,9 @@ public class StudentController(ApplicationDbContext db, UserManager<ApplicationU
             .ThenByDescending(e => e.Semester)
             .ToListAsync();
 
-        decimal totalPoints = 0;
-        decimal totalCredits = 0;
-
-        foreach (var enrollment in enrollments)
-        {
-            if (enrollment.Grade != null && enrollment.Course != null)
-            {
-                totalPoints += enrollment.Grade.GradePoint * enrollment.Course.CreditHours;
-                totalCredits += enrollment.Course.CreditHours;
-            }
-        }
-
-        decimal cgpa = totalCredits > 0 ? Math.Round(totalPoints / totalCredits, 2) : 0;
+        decimal totalCredits = enrollments
+            .Where(e => e.Grade != null && e.Course != null)
+            .Sum(e => e.Course!.CreditHours);
 
         var gpaBySemester = enrollments
             .Where(e => e.Grade != null && e.Course != null)
@@ -54,7 +44,7 @@ public class StudentController(ApplicationDbContext db, UserManager<ApplicationU
             })
             .ToDictionary(k => k.Semester, v => v.GPA);
 
-        ViewBag.CGPA = cgpa;
+        ViewBag.CGPA = student.CGPA;
         ViewBag.TotalCredits = totalCredits;
         ViewBag.GPABySemester = gpaBySemester;
         ViewBag.StudentId = student.Id;
