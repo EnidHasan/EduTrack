@@ -12,6 +12,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<RecheckRequest> RecheckRequests => Set<RecheckRequest>();
     public DbSet<AtRiskFlag> AtRiskFlags => Set<AtRiskFlag>();
     public DbSet<CourseMaterial> CourseMaterials => Set<CourseMaterial>();
+    public DbSet<ClassRoutine> ClassRoutines => Set<ClassRoutine>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
