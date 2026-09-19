@@ -174,9 +174,38 @@ The system provides complete governance over student enrollment, faculty allocat
 - **UI Smoke Test Script (`tests/ui-smoke.test.mjs`):**
   - Automated smoke test verifying authentication, admin dashboard, teacher grading interface, and student transcript pages.
 
+### 3.9. Course Materials Management
+- **Centralized File Sharing & Storage:**
+  - Multi-file upload support for PDFs, Office documents, presentations, images, and archives up to 50MB per file.
+  - Safe storage with sanitized unique filenames and dedicated secure disk directory.
+- **Role-Based Access Control:**
+  - **Admin View (`/CourseMaterials/AdminIndex`):** Complete institutional oversight across all courses and instructors with filtering and direct download.
+  - **Teacher View (`/CourseMaterials/TeacherIndex`):** Upload, view, and manage course materials scoped strictly to assigned courses.
+  - **Student View (`/CourseMaterials/StudentIndex`):** Access and download course materials exclusively for actively enrolled courses.
+
 ---
 
-### 3.9. Design System & Frontend Architecture
+### 3.10. Academic Analytics Subsystem
+- **Real-Time Database Aggregations (`AcademicAnalyticsService`):**
+  - Live Pass/Fail distribution calculation based on existing grading thresholds (Pass $\ge 40$, Fail $< 40$).
+  - Dynamic course average calculation out of 100 based on actual student grading records.
+  - Safe calculations preventing division-by-zero or `NaN` outputs for ungraded or new courses.
+- **Interactive Visualizations (Chart.js):**
+  - **Pass/Fail Distribution Donut Chart:** Shows pass vs fail student counts and percentages with custom tooltips.
+  - **Course Average Performance Horizontal Bar Chart:** Clean horizontal bars showing average marks out of 100 with hover tooltips.
+  - **Course Performance Summary Table:** Accessible tabular view with course codes, enrollment counts, pass counts, fail counts, and colored progress bars.
+  - **4 KPI Metric Cards:** Graded Students, Average Final Mark, Pass Rate, and Fail Rate.
+- **Dynamic Multi-Criteria Filters:**
+  - Filter by Academic Year, Semester, Department (Admin), and Course with instant updates and empty-state handling.
+- **Strict Role-Based Scoping:**
+  - **Admin:** University-wide analytics across all departments and courses.
+  - **Teacher:** Scoped strictly to courses assigned to the authenticated faculty member; access to other courses or departments is rejected server-side.
+  - **Student:** Access restricted via `AcademicStaff` authorization policy.
+- **Automated Test Suite:** 14 dedicated xUnit tests covering role access, scoping, pass/fail counts, percentages, course averages, filters, and no-data scenarios.
+
+---
+
+### 3.11. Design System & Frontend Architecture
 - **Custom Premium Theme (`premium-theme.css`, `checkpoint2.css`):**
   - Professional SaaS UI layout with dark navy/indigo sidebar and clean neutral content area.
   - Responsive layouts with modern card components, KPI statistic blocks, badge indicators, and data tables.
