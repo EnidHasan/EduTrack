@@ -1,0 +1,81 @@
+@model IEnumerable<EduTrack.Web.Models.ClassRoutine>
+
+@{
+    ViewData["Title"] = "Class Routine";
+    var days = new[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday" };
+    var timeSlots = new[] {
+        new { Start = new TimeSpan(8,0,0), End = new TimeSpan(8,50,0), Label = "08:00 AM -\n08:50 AM" },
+        new { Start = new TimeSpan(8,50,0), End = new TimeSpan(9,40,0), Label = "08:50 AM -\n09:40 AM" },
+        new { Start = new TimeSpan(9,40,0), End = new TimeSpan(10,30,0), Label = "09:40 AM -\n10:30 AM" },
+        new { Start = new TimeSpan(10,30,0), End = new TimeSpan(11,20,0), Label = "10:30 AM -\n11:20 AM" },
+        new { Start = new TimeSpan(11,20,0), End = new TimeSpan(12,10,0), Label = "11:20 AM -\n12:10 PM" },
+        new { Start = new TimeSpan(12,10,0), End = new TimeSpan(13,0,0), Label = "12:10 PM -\n01:00 PM" },
+        new { Start = new TimeSpan(13,0,0), End = new TimeSpan(13,50,0), Label = "01:00 PM -\n01:50 PM" },
+        new { Start = new TimeSpan(13,50,0), End = new TimeSpan(14,40,0), Label = "01:50 PM -\n02:40 PM" },
+        new { Start = new TimeSpan(14,40,0), End = new TimeSpan(15,30,0), Label = "02:40 PM -\n03:30 PM" },
+        new { Start = new TimeSpan(15,30,0), End = new TimeSpan(16,20,0), Label = "03:30 PM -\n04:20 PM" },
+        new { Start = new TimeSpan(16,20,0), End = new TimeSpan(17,10,0), Label = "04:20 PM -\n05:10 PM" },
+        new { Start = new TimeSpan(17,10,0), End = new TimeSpan(18,0,0), Label = "05:10 PM -\n06:00 PM" }
+    };
+}
+
+<div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; overflow: hidden;">
+    <div class="card-header bg-white py-3 border-bottom-0 text-center">
+        <h4 class="mb-0 fw-bold text-dark">Teacher Routine for Semester: Fall, 2026</h4>
+    </div>
+    <div class="card-body p-0" style="overflow-x: auto;">
+        <table class="table table-bordered mb-0" style="min-width: 1200px; text-align: center; vertical-align: middle; font-size: 0.85rem;">
+            <thead>
+                <tr class="bg-light">
+                    <th style="width: 100px;">Time <i class="bi bi-arrow-right"></i><br/>Day <i class="bi bi-arrow-down"></i></th>
+                    @foreach(var slot in timeSlots)
+                    {
+                        <th style="font-weight: 600; color: #444; white-space: pre-wrap;">@slot.Label</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var day in days)
+                {
+                    <tr>
+                        <td class="fw-bold bg-light">@day</td>
+                        @{
+                            var classesForDay = Model.Where(m => m.DayOfWeek == day).ToList();
+                            for (int i = 0; i < timeSlots.Length; i++)
+                            {
+                                var slot = timeSlots[i];
+                                var matchedClass = classesForDay.FirstOrDefault(c => c.StartTime == slot.Start);
+                                
+                                if (matchedClass != null)
+                                {
+                                    // Calculate colspan based on duration
+                                    int colSpan = 1;
+                                    var currentEnd = matchedClass.EndTime;
+                                    while (i + colSpan < timeSlots.Length && timeSlots[i + colSpan].Start < currentEnd)
+                                    {
+                                        colSpan++;
+                                    }
+                                    
+                                    <td colspan="@colSpan" style="border-bottom: 3px solid blue; padding: 10px;">
+                                        <div class="fw-bold">@matchedClass.Course?.CourseCode(@matchedClass.Section)</div>
+                                        <div class="text-muted small">@matchedClass.Course?.CreditHours</div>
+                                        <div class="fw-bold">@matchedClass.RoomNumber</div>
+                                    </td>
+                                    
+                                    i += (colSpan - 1);
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer bg-white text-end border-top-0 py-3">
+        <button class="btn btn-success"><i class="bi bi-download"></i> Download Pdf</button>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+@model IEnumerable<EduTrack.Web.Models.ClassRoutine>
+
+@{
+    ViewData["Title"] = "Master Class Routine";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>@ViewData["Title"]</h2>
+    <a asp-action="Create" class="btn btn-primary">Create New Block</a>
+</div>
+
+<table class="table table-striped premium-table">
+    <thead>
+        <tr>
+            <th>Course</th>
+            <th>Section</th>
+            <th>Day</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Room</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.Course?.CourseName (@item.Course?.CourseCode)</td>
+            <td>@item.Section</td>
+            <td>@item.DayOfWeek</td>
+            <td>@item.StartTime.ToString(@"hh\:mm")</td>
+            <td>@item.EndTime.ToString(@"hh\:mm")</td>
+            <td>@item.RoomNumber</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
