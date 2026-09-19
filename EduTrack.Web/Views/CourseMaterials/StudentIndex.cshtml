@@ -1,0 +1,47 @@
+@model IEnumerable<EduTrack.Web.Models.CourseMaterial>
+@{
+    ViewData["Title"] = "Course Materials";
+    var course = ViewBag.Course as EduTrack.Web.Models.Course;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Course Materials: @course?.CourseName (@course?.CourseCode)</h2>
+    <a asp-controller="Student" asp-action="Index" class="btn btn-secondary">
+        Back to Dashboard
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No materials available for this course.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (var material in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title text-primary mb-0">@material.Title</h5>
+                            <span class="badge bg-secondary">@material.OriginalFileName</span>
+                        </div>
+                        <p class="card-text text-muted small mb-3">
+                            <i class="bi bi-clock"></i> Uploaded: @material.UploadedAt.ToString("MMM dd, yyyy")
+                        </p>
+                        @if (!string.IsNullOrEmpty(material.Description))
+                        {
+                            <p class="card-text">@material.Description</p>
+                        }
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 pt-0">
+                        <a asp-action="Download" asp-route-id="@material.Id" class="btn btn-primary w-100" target="_blank">
+                            <i class="bi bi-download me-1"></i> Download File
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

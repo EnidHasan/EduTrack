@@ -1,0 +1,60 @@
+@model IEnumerable<EduTrack.Web.Models.CourseMaterial>
+@{
+    ViewData["Title"] = "All Course Materials";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>All Course Materials</h2>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Course</th>
+                        <th>Teacher</th>
+                        <th>Material Title</th>
+                        <th>File Name</th>
+                        <th>Uploaded At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var material in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong>@material.Course?.CourseCode</strong><br />
+                                <small class="text-muted">@material.Course?.CourseName</small>
+                            </td>
+                            <td>@material.Teacher?.FullName</td>
+                            <td>@material.Title</td>
+                            <td>@material.OriginalFileName</td>
+                            <td>@material.UploadedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-action="Download" asp-route-id="@material.Id" class="btn btn-outline-primary" target="_blank" title="Download">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                    <form asp-action="AdminDelete" asp-route-id="@material.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to forcibly delete this material as Admin?');">
+                                        <button type="submit" class="btn btn-outline-danger" title="Force Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">No course materials found in the system.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
