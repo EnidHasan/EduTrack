@@ -1,0 +1,34 @@
+@model EduTrack.Web.Models.ClassRoutine
+
+@{
+    ViewData["Title"] = "Delete Routine Block";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">Course</dt>
+        <dd class = "col-sm-10">@Model.Course?.CourseName (@Model.Course?.CourseCode)</dd>
+        
+        <dt class = "col-sm-2">Section</dt>
+        <dd class = "col-sm-10">@Model.Section</dd>
+        
+        <dt class = "col-sm-2">Day</dt>
+        <dd class = "col-sm-10">@Model.DayOfWeek</dd>
+        
+        <dt class = "col-sm-2">Time</dt>
+        <dd class = "col-sm-10">@Model.StartTime.ToString(@"hh\:mm") - @Model.EndTime.ToString(@"hh\:mm")</dd>
+        
+        <dt class = "col-sm-2">Room</dt>
+        <dd class = "col-sm-10">@Model.RoomNumber</dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>
