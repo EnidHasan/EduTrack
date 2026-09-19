@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EduTrack.Web.Services;
 
-public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpaService)
+public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpaService, GradeCalculatorService calculator)
 {
     public async Task<List<RecheckRequest>> GetStudentRequestsAsync(int studentId)
     {
@@ -57,6 +57,7 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
     public async Task<(bool success, string message)> UpdateDisputeStatusAsync(int requestId, int teacherId, string status, string? comment)
     {
         var request = await db.RecheckRequests
+            .Include(r => r.Grade)
             .FirstOrDefaultAsync(r => r.Id == requestId && r.TeacherId == teacherId);
 
         if (request == null) return (false, "Dispute not found.");
@@ -64,7 +65,14 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
 
         request.Status = status;
         request.TeacherComment = comment;
-        
+
+        // On approval, recalculate grade totals (in case teacher edited marks before approving)
+        // then recalculate the student's CGPA
+        if (status == "Approved" && request.Grade != null)
+        {
+            calculator.Apply(request.Grade);
+        }
+
         await db.SaveChangesAsync();
 
         if (status == "Approved")
@@ -75,3 +83,4 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
         return (true, $"Dispute {status.ToLower()} successfully.");
     }
 }
+

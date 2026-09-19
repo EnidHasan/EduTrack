@@ -44,9 +44,24 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
     {
         var teacher = await CurrentTeacherAsync();
         if (teacher is null) return Forbid();
-        var enrollment = await db.Enrollments.Include(e => e.Course).FirstOrDefaultAsync(e => e.Id == model.EnrollmentId && e.Course!.TeacherId == teacher.Id);
+        var enrollment = await db.Enrollments.Include(e => e.Course).Include(e => e.Student).FirstOrDefaultAsync(e => e.Id == model.EnrollmentId && e.Course!.TeacherId == teacher.Id);
         if (enrollment is null) return NotFound();
-        if (!ModelState.IsValid) return View(model);
+
+        // Explicit server-side range validation
+        if (model.AssignmentMark < 0 || model.AssignmentMark > 20)
+            ModelState.AddModelError(nameof(model.AssignmentMark), "Quiz marks must be between 0 and 20.");
+        if (model.AttendanceMark < 0 || model.AttendanceMark > 10)
+            ModelState.AddModelError(nameof(model.AttendanceMark), "Attendance marks must be between 0 and 10.");
+        if (model.MidtermMark < 0 || model.MidtermMark > 20)
+            ModelState.AddModelError(nameof(model.MidtermMark), "Midterm marks must be between 0 and 20.");
+        if (model.FinalMark < 0 || model.FinalMark > 50)
+            ModelState.AddModelError(nameof(model.FinalMark), "Final marks must be between 0 and 50.");
+
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "Please correct the validation errors and try again.";
+            return View(model);
+        }
 
         var grade = await db.Grades.FirstOrDefaultAsync(g => g.EnrollmentId == model.EnrollmentId);
         if (grade is null) { grade = new Grade { EnrollmentId = model.EnrollmentId }; db.Add(grade); }
@@ -56,7 +71,7 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         grade.FinalMark = model.FinalMark;
         calculator.Apply(grade);
         await db.SaveChangesAsync();
-        TempData["Success"] = "Grade saved.";
+        TempData["Success"] = $"Grade saved successfully for {enrollment.Student?.FullName ?? "student"} — Total: {grade.TotalMark}, Grade: {grade.LetterGrade}.";
         return RedirectToAction(nameof(Course), new { id = enrollment.CourseId });
     }
 

@@ -1,0 +1,389 @@
+/* ============================================================
+   EduTrack Theme Layer (loaded last)
+   - Fixes page-head contrast (dark-on-dark banner bug)
+   - Richer professional palette via token overrides
+   - Performant animations (transform/opacity only)
+   - prefers-reduced-motion aware
+   ============================================================ */
+
+:root {
+    /* Richer professional palette (kept names used by other files) */
+    --et-primary: #2563eb;
+    --et-primary-dark: #1741a6;
+    --et-navy: #0f2740;
+    --et-text: #16293b;
+    --et-muted: #64758b;
+    --et-canvas: #eef3f9;
+    --et-border: #dbe6f1;
+    --et-radius: 18px;
+    --et-shadow: 0 18px 48px rgba(20, 46, 74, .10);
+    --et-accent: #14b8a6;
+    --et-violet: #7c5cff;
+    --et-amber: #f0a63c;
+
+    /* Bridge legacy tokens from site.css / app.css to the new palette */
+    --primary: var(--et-primary);
+    --primary-dark: var(--et-primary-dark);
+    --brand: var(--et-primary);
+    --navy: var(--et-navy);
+    --ink: var(--et-text);
+    --text: var(--et-text);
+    --muted: var(--et-muted);
+    --subtle: var(--et-muted);
+    --bg: var(--et-canvas);
+    --canvas: var(--et-canvas);
+    --line: var(--et-border);
+    --border: var(--et-border);
+    --shadow: var(--et-shadow);
+    --soft-shadow: var(--et-shadow);
+}
+
+/* -----------------------------------------------------------
+   Page header contrast fix
+   accounts.css applies a dark banner globally and checkpoint2.css
+   forces dark heading text -> unreadable. Restore a light,
+   professional banner so the dark text reads clearly.
+   ----------------------------------------------------------- */
+.page-head {
+    background: linear-gradient(120deg, #ffffff, #f2f7ff) !important;
+    border: 1px solid var(--et-border) !important;
+    border-radius: var(--et-radius);
+    box-shadow: var(--et-shadow) !important;
+    color: var(--et-text) !important;
+}
+
+.page-head h1,
+.page-head .h2 {
+    color: var(--et-text) !important;
+    text-shadow: none !important;
+}
+
+.page-head p {
+    color: var(--et-muted) !important;
+}
+
+.page-head .eyebrow {
+    color: var(--et-primary) !important;
+}
+
+/* Keep the immersive dark banner ONLY on account/profile pages,
+   where its own light heading styles are designed for it. */
+body[data-page="account"] .page-head,
+body[data-page="manage"] .page-head,
+body[data-page="profile"] .page-head {
+    background: linear-gradient(135deg, #0f172a, #1e293b) !important;
+    border: 1px solid rgba(255, 255, 255, .06) !important;
+    color: #fff !important;
+}
+
+body[data-page="account"] .page-head h1,
+body[data-page="manage"] .page-head h1,
+body[data-page="profile"] .page-head h1,
+body[data-page="account"] .page-head .h2,
+body[data-page="manage"] .page-head .h2,
+body[data-page="profile"] .page-head .h2 {
+    color: #fff !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, .3) !important;
+}
+
+body[data-page="account"] .page-head p,
+body[data-page="manage"] .page-head p,
+body[data-page="profile"] .page-head p {
+    color: #94a3b8 !important;
+}
+
+/* -----------------------------------------------------------
+   Animations (transform/opacity only for GPU compositing)
+   ----------------------------------------------------------- */
+
+/* Page enter fade for the main content on every navigation */
+.content {
+    animation: et-page-in .45s ease both;
+}
+
+@keyframes et-page-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll reveal: elements start hidden, JS adds .is-visible */
+.reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .5s ease, transform .5s cubic-bezier(.22, .61, .36, 1);
+    will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Staggered reveal delays for grouped items (cards, rows, stats) */
+.reveal[data-reveal-index="0"] { transition-delay: 0s; }
+.reveal[data-reveal-index="1"] { transition-delay: .05s; }
+.reveal[data-reveal-index="2"] { transition-delay: .1s; }
+.reveal[data-reveal-index="3"] { transition-delay: .15s; }
+.reveal[data-reveal-index="4"] { transition-delay: .2s; }
+.reveal[data-reveal-index="5"] { transition-delay: .25s; }
+.reveal[data-reveal-index="6"] { transition-delay: .3s; }
+.reveal[data-reveal-index="7"] { transition-delay: .35s; }
+
+/* Micro-interactions */
+.card {
+    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 24px 60px rgba(20, 46, 74, .14);
+}
+
+.stat, .stat-card {
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.stat:hover, .stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.table tbody tr {
+    transition: background-color .18s ease;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .content { animation: none !important; }
+
+    .reveal {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+/* ============================================================
+   DESIGN POLISH LAYER — elevate the visuals (CSS only)
+   ============================================================ */
+
+/* Softer, layered app background so surfaces pop */
+body {
+    background:
+        radial-gradient(1100px 620px at 100% -8%, rgba(37, 99, 235, .07), transparent 55%),
+        radial-gradient(900px 560px at -10% 110%, rgba(20, 184, 166, .07), transparent 55%),
+        var(--et-canvas) !important;
+    background-attachment: fixed;
+}
+
+/* -------- Page header: richer, with an accent rule -------- */
+.page-head {
+    position: relative;
+    padding: 26px 30px !important;
+    overflow: hidden;
+    background:
+        radial-gradient(600px 200px at 100% 0, rgba(37, 99, 235, .06), transparent 60%),
+        linear-gradient(120deg, #ffffff, #f4f8ff) !important;
+    box-shadow: 0 12px 34px rgba(20, 46, 74, .07) !important;
+}
+
+.page-head::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: linear-gradient(180deg, var(--et-primary), var(--et-accent));
+}
+
+.page-head h1 {
+    letter-spacing: -.5px;
+}
+
+/* Dark banners (account/profile) get a subtle glow */
+body[data-page="account"] .page-head,
+body[data-page="manage"] .page-head,
+body[data-page="profile"] .page-head {
+    background:
+        radial-gradient(500px 220px at 100% 0, rgba(56, 189, 248, .18), transparent 60%),
+        linear-gradient(135deg, #0f172a, #1e293b) !important;
+}
+
+body[data-page="account"] .page-head::before,
+body[data-page="manage"] .page-head::before,
+body[data-page="profile"] .page-head::before {
+    background: linear-gradient(180deg, #38bdf8, var(--et-accent));
+}
+
+/* -------- Buttons: gradient depth + shimmer on hover -------- */
+.btn-primary {
+    background: linear-gradient(135deg, var(--et-primary), #3f7af0) !important;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, .28) !important;
+    border: 0 !important;
+    transition: transform .18s ease, box-shadow .18s ease, filter .18s ease !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 34px rgba(37, 99, 235, .36) !important;
+    filter: saturate(1.08);
+}
+
+.btn-primary:active { transform: translateY(0); }
+
+.btn-soft {
+    background: #eef4ff !important;
+    color: #1c54c9 !important;
+    border: 1px solid #dbe7ff !important;
+    transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease !important;
+}
+
+.btn-soft:hover {
+    background: #e2ecff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(37, 99, 235, .14) !important;
+}
+
+.btn-danger-soft {
+    transition: transform .18s ease, background-color .18s ease !important;
+}
+
+.btn-danger-soft:hover { transform: translateY(-2px); }
+
+/* -------- Cards & surfaces: crisper depth -------- */
+.card {
+    border-radius: 20px !important;
+    border: 1px solid var(--et-border) !important;
+    box-shadow: 0 14px 40px rgba(20, 46, 74, .07) !important;
+}
+
+.card:hover {
+    box-shadow: 0 26px 64px rgba(20, 46, 74, .13) !important;
+    border-color: color-mix(in srgb, var(--et-primary) 22%, var(--et-border)) !important;
+}
+
+/* -------- Tables: modern, breathable, hover highlight -------- */
+.table thead th {
+    background: linear-gradient(180deg, #f6f9fd, #eef3f9) !important;
+    color: #5a6b80 !important;
+    font-size: 10.5px !important;
+    letter-spacing: .9px !important;
+    border-bottom: 1px solid var(--et-border) !important;
+}
+
+.table tbody tr:hover {
+    background: color-mix(in srgb, var(--et-primary) 5%, #ffffff) !important;
+}
+
+.table tbody tr:hover td {
+    color: var(--et-text);
+}
+
+/* -------- Status pills -------- */
+.status {
+    box-shadow: inset 0 0 0 1px rgba(19, 135, 120, .18);
+}
+
+.status.off {
+    box-shadow: inset 0 0 0 1px rgba(119, 132, 147, .18);
+}
+
+/* -------- Search field: focus glow -------- */
+.search {
+    border-radius: 12px !important;
+    transition: box-shadow .2s ease, border-color .2s ease;
+}
+
+.search:focus-within {
+    border-color: color-mix(in srgb, var(--et-primary) 55%, #ffffff) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, .12) !important;
+}
+
+.search button {
+    background: linear-gradient(135deg, var(--et-navy), #16324f) !important;
+    transition: filter .18s ease;
+}
+
+.search button:hover { filter: brightness(1.12); }
+
+/* -------- Form controls: smoother focus -------- */
+.form-control:focus,
+.form-select:focus {
+    border-color: color-mix(in srgb, var(--et-primary) 55%, #ffffff) !important;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, .12) !important;
+}
+
+/* -------- Sidebar: active item accent glow -------- */
+.sidebar nav a {
+    transition: background-color .18s ease, transform .18s ease, color .18s ease;
+}
+
+.sidebar nav a:hover {
+    transform: translateX(3px);
+}
+
+.sidebar nav a.active {
+    background: linear-gradient(90deg, rgba(37, 99, 235, .30), rgba(255, 255, 255, .06)) !important;
+    box-shadow: inset 3px 0 var(--et-accent), 0 10px 24px rgba(0, 0, 0, .12) !important;
+}
+
+/* -------- Notices: accent bar + icon spacing -------- */
+.notice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 22px rgba(20, 46, 74, .06);
+    border-left: 4px solid transparent;
+}
+
+.notice.success { border-left-color: #10b981; }
+.notice.error { border-left-color: #ef4444; }
+
+/* -------- Role pill in topbar -------- */
+.role-pill {
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .04);
+}
+
+/* -------- Icon buttons -------- */
+.icon-btn {
+    transition: transform .16s ease, border-color .16s ease, color .16s ease, background-color .16s ease;
+}
+
+.icon-btn:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--et-primary) 40%, var(--et-border));
+    color: var(--et-primary);
+    background: color-mix(in srgb, var(--et-primary) 6%, #ffffff);
+}
+
+/* -------- Refined custom scrollbar -------- */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--et-primary) 40%, #c9d6e6) transparent;
+}
+
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+*::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--et-primary) 35%, #cbd8e8);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--et-primary) 55%, #cbd8e8);
+    background-clip: padding-box;
+}
+
+/* -------- Selection color -------- */
+::selection {
+    background: color-mix(in srgb, var(--et-primary) 24%, #ffffff);
+    color: var(--et-text);
+}

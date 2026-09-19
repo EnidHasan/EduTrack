@@ -364,9 +364,10 @@
                                         </a>
                                         @if (hasGrade)
                                         {
-                                            <form asp-action="SubmitDispute" method="post">
+                                            <form id="disputeForm-@item.Grade!.Id" asp-action="SubmitDispute" method="post">
                                                 <input type="hidden" name="gradeId" value="@item.Grade!.Id" />
-                                                <button type="submit" class="action-btn" onclick="return confirm('Would you like to submit an official recheck request for @item.Course.CourseCode?');">
+                                                <button type="button" class="action-btn"
+                                                    onclick="confirmDispute(@item.Grade.Id, '@item.Course!.CourseCode', '@item.Course.CourseName')">
                                                     Recheck Request
                                                 </button>
                                             </form>
@@ -382,3 +383,25 @@
         delay += 0.1;
     }
 </div>
+
+@section Scripts {
+<script>
+function confirmDispute(gradeId, courseCode, courseName) {
+    Swal.fire({
+        title: 'Submit Recheck Request?',
+        html: '<p>Request an official grade recheck for <strong>' + courseCode + ' — ' + courseName + '</strong>?</p><p class="text-muted small">Your teacher will be notified and can review your marks.</p>',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '<i class="bi bi-send me-1"></i> Submit Request',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#3b82f6',
+        cancelButtonColor: '#64748b',
+        reverseButtons: true
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            document.getElementById('disputeForm-' + gradeId).submit();
+        }
+    });
+}
+</script>
+}

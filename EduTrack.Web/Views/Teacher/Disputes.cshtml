@@ -157,12 +157,21 @@
                                 <div class="col-md-5 text-md-end mt-3 mt-md-0">
                                     @if (item.Status == "Pending")
                                     {
-                                        <form asp-action="UpdateDisputeStatus" method="post" class="d-flex gap-2 justify-content-md-end align-items-center">
-                                            <input type="hidden" name="requestId" value="@item.Id" />
-                                            <input type="text" name="comment" class="feedback-input" placeholder="Feedback (optional)" style="max-width: 180px;" />
-                                            <button type="submit" name="status" value="Approved" class="action-btn approve" title="Approve Request">✓ Approve</button>
-                                            <button type="submit" name="status" value="Rejected" class="action-btn reject" title="Reject Request">✕ Reject</button>
+                                        <div class="d-flex gap-2 justify-content-md-end align-items-center">
+                                            <button type="button" class="action-btn approve" title="Approve Request"
+                                                onclick="handleDisputeAction(@item.Id, 'Approved', '@item.Student!.FullName', '@item.Grade!.Enrollment!.Course!.CourseCode')">
+                                                ✓ Approve
+                                            </button>
+                                            <button type="button" class="action-btn reject" title="Reject Request"
+                                                onclick="handleDisputeAction(@item.Id, 'Rejected', '@item.Student!.FullName', '@item.Grade!.Enrollment!.Course!.CourseCode')">
+                                                ✕ Reject
+                                            </button>
                                             <a href="/Teacher/GradeEntry?enrollmentId=@item.Grade.EnrollmentId" class="action-btn" title="Edit Grades before approving">✎ Edit Marks</a>
+                                        </div>
+                                        <form id="disputeForm-@item.Id" asp-action="UpdateDisputeStatus" method="post" style="display:none;">
+                                            <input type="hidden" name="requestId" value="@item.Id" />
+                                            <input type="hidden" name="status" id="disputeStatus-@item.Id" />
+                                            <input type="hidden" name="comment" id="disputeComment-@item.Id" />
                                         </form>
                                     }
                                     else
@@ -185,3 +194,33 @@
         }
     </div>
 </div>
+
+@section Scripts {
+<script>
+function handleDisputeAction(requestId, status, studentName, courseCode) {
+    var isApprove = status === 'Approved';
+    Swal.fire({
+        title: isApprove ? 'Approve Dispute?' : 'Reject Dispute?',
+        html: (isApprove
+            ? '<p>Approve the grade recheck for <strong>' + studentName + '</strong> in <strong>' + courseCode + '</strong>?</p><p class="text-muted small">The student\'s grade and CGPA will be recalculated automatically.</p>'
+            : '<p>Reject the grade recheck for <strong>' + studentName + '</strong> in <strong>' + courseCode + '</strong>?</p>'),
+        icon: isApprove ? 'question' : 'warning',
+        input: 'text',
+        inputLabel: 'Feedback (optional)',
+        inputPlaceholder: 'Add a comment for the student...',
+        showCancelButton: true,
+        confirmButtonText: isApprove ? '✓ Approve' : '✕ Reject',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: isApprove ? '#10b981' : '#ef4444',
+        cancelButtonColor: '#64748b',
+        reverseButtons: true
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            document.getElementById('disputeStatus-' + requestId).value = status;
+            document.getElementById('disputeComment-' + requestId).value = result.value || '';
+            document.getElementById('disputeForm-' + requestId).submit();
+        }
+    });
+}
+</script>
+}
