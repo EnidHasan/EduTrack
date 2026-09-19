@@ -358,15 +358,20 @@
                                     <span class="grade-badge @gradeClass">@(hasGrade ? letter : "Pending")</span>
                                 </td>
                                 <td class="text-end">
-                                    @if (hasGrade)
-                                    {
-                                        <form asp-action="SubmitDispute" method="post" style="display:inline;">
-                                            <input type="hidden" name="gradeId" value="@item.Grade!.Id" />
-                                            <button type="submit" class="action-btn" onclick="return confirm('Would you like to submit an official recheck request for @item.Course.CourseCode?');">
-                                                Recheck Request
-                                            </button>
-                                        </form>
-                                    }
+                                    <div class="d-flex flex-column align-items-end gap-2">
+                                        <a asp-controller="CourseMaterials" asp-action="StudentIndex" asp-route-courseId="@item.CourseId" class="action-btn" style="background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0369a1; border-color: #7dd3fc;">
+                                            <i class="bi bi-folder2-open me-1"></i> Materials
+                                        </a>
+                                        @if (hasGrade)
+                                        {
+                                            <form asp-action="SubmitDispute" method="post">
+                                                <input type="hidden" name="gradeId" value="@item.Grade!.Id" />
+                                                <button type="submit" class="action-btn" onclick="return confirm('Would you like to submit an official recheck request for @item.Course.CourseCode?');">
+                                                    Recheck Request
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
                                 </td>
                             </tr>
                         }

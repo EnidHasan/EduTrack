@@ -15,4 +15,5 @@ public class Teacher
     public ICollection<Course> Courses { get; set; } = [];
     [NotMapped, DataType(DataType.Password), Display(Name = "Temporary password")]
     public string? TemporaryPassword { get; set; }
+    public ICollection<CourseMaterial> CourseMaterials { get; set; } = [];
 }

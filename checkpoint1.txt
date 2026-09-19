@@ -1,0 +1,1368 @@
+MY ASSIGNED RESPONSIBILITY
+Member 4 — Early Warning Core & Basic Reporting — 15%
+Frontend
+At-Risk warning panel UI for Teachers/Admins
+Basic system report layout
+Backend
+AtRiskEvaluationService engine to calculate GPA/attendance risk thresholds
+Initial data query handlers for system-wide summaries
+IMPORTANT: READ THE PROJECT REPORTS FIRST
+
+Before implementing anything, thoroughly inspect and understand the project reports, requirements, documentation, database information, and existing source code that I provide.
+
+I want you to understand what the project is actually supposed to build before writing code.
+
+Pay particular attention to:
+
+Overall EduTrack system purpose
+Functional requirements
+User roles
+Teacher functionality
+Admin functionality
+Student functionality
+Existing GPA/CGPA functionality
+Existing attendance functionality
+Existing grade functionality
+Existing dashboard structure
+Existing database design
+Existing API structure
+Existing controllers
+Existing services
+Existing models/entities
+Existing DTOs
+Existing frontend components
+Existing routing
+Existing authentication/authorization
+Existing UI/design system
+
+Do not invent requirements when the report or existing implementation already defines them.
+
+1. INSPECT THE EXISTING GITHUB PROJECT
+
+The repository is already cloned at:
+
+X:\EduTrack
+
+First inspect the repository and Git status.
+
+Use the existing Git setup and determine:
+
+Current branch
+Remote repository
+Available branches
+Latest commits
+Which branch contains the latest integrated work from Members 1–3
+
+Use:
+
+git status
+git remote -v
+git branch
+git branch -a
+git log --oneline --all -20
+
+Then fetch the latest remote information:
+
+git fetch --all
+
+Do not assume the main branch is called main or master. Inspect the repository and follow the team's existing branch structure.
+
+2. DO NOT DESTROY EXISTING WORK
+
+Members 1, 2, and 3 have already completed their contributions.
+
+Treat their existing implementation as protected.
+
+DO NOT:
+
+Delete their code
+Rewrite their controllers
+Rewrite their services
+Rewrite their components
+Remove their features
+Replace their database structure
+Rename their files unnecessarily
+Change their API contracts unnecessarily
+Refactor unrelated code
+Change authentication unnecessarily
+Change existing routes unnecessarily
+Reset the repository
+Force-push
+Delete branches
+Reset the database
+Delete existing data
+
+If a modification to an existing file is genuinely required for integration, make the smallest possible change and preserve all existing functionality.
+
+Prefer adding new files/components/services rather than modifying existing code.
+
+3. CREATE MY OWN MEMBER 4 BRANCH
+
+After inspecting the existing branch structure and ensuring I have the latest work from Members 1–3, create a dedicated branch for my contribution.
+
+Preferred branch name:
+
+member4-early-warning-reporting
+
+If the team already has a branch naming convention, follow that instead.
+
+For example:
+
+git checkout -b member4-early-warning-reporting
+
+From this point onward, all Member 4 development must be done on this branch.
+
+Do not directly develop my work on main, master, or another teammate's branch.
+
+4. STUDY MEMBERS 1–3'S IMPLEMENTATION
+
+Before writing Member 4 code, inspect the existing implementation carefully.
+
+Understand how the previous members structured:
+
+Backend
+Controllers
+Services
+Interfaces
+Models
+Entities
+DTOs
+Repositories, if any
+DbContext
+Dependency Injection
+API endpoints
+Authentication
+Authorization
+Frontend
+Pages
+Components
+Layouts
+Navigation
+Dashboards
+Tables
+Cards
+Forms
+API calls
+State management
+Routing
+Styling
+Existing design system
+
+Follow the same architecture and coding style already used in the project.
+
+Do not introduce a completely different architecture for Member 4.
+
+5. INSPECT THE EXISTING DATABASE
+
+Before creating or modifying any database-related code, inspect the existing SQL Server database and Entity Framework configuration.
+
+Identify the actual existing structures for:
+
+Students
+Teachers
+Admins
+Courses
+Enrollments
+Grades
+Attendance
+GPA/CGPA-related information
+Academic records
+Any existing risk-related information
+Any existing reporting-related information
+
+Determine how GPA and attendance are currently represented.
+
+Do not create duplicate tables or duplicate data models if the required information already exists.
+
+If the project already has GPA calculation logic, understand and reuse it where appropriate rather than creating conflicting calculations.
+
+6. IMPLEMENT AtRiskEvaluationService
+
+My primary backend responsibility is:
+
+AtRiskEvaluationService
+
+Create this service according to the existing project's service architecture.
+
+The service should evaluate students based on the project's actual:
+
+GPA/CGPA
+Attendance
+Academic information
+
+and determine whether a student is at risk.
+
+The evaluation should support appropriate risk categories according to the project's requirements.
+
+For example, where supported by the report:
+
+High Risk
+Medium Risk
+Low/Normal Risk
+
+The service should be able to determine:
+
+Student
+GPA/CGPA
+Attendance percentage
+Risk status
+Risk severity
+Reason for the risk
+Relevant course/academic context where appropriate
+7. USE THE ACTUAL PROJECT THRESHOLDS
+
+This is extremely important.
+
+Do NOT randomly invent GPA or attendance thresholds.
+
+First search the:
+
+Project report
+Requirements
+Existing source code
+Database
+Configuration
+
+for the intended risk thresholds.
+
+If the project specifies something like:
+
+GPA < X
+Attendance < Y%
+
+use those actual requirements.
+
+If different thresholds are defined for different risk levels, implement those correctly.
+
+If thresholds already exist somewhere in the application, reuse them instead of creating duplicate hardcoded values.
+
+If the requirements are ambiguous, inspect the existing implementation and choose the approach that best fits the documented project design rather than inventing unnecessary functionality.
+
+8. SYSTEM-WIDE SUMMARY QUERY HANDLERS
+
+Implement the initial backend data-query functionality required for system-wide reporting.
+
+The system should be able to retrieve meaningful summary information from the real database.
+
+Depending on the project's actual requirements, this may include:
+
+Total students
+Total at-risk students
+Academic-risk students
+Attendance-risk students
+High-risk students
+Medium-risk students
+Normal/low-risk students
+Average GPA
+Average attendance
+Students below academic thresholds
+Other relevant system-wide statistics
+
+Only implement metrics that are relevant to the project.
+
+Do not fabricate data.
+
+All reporting values must come from the actual SQL Server database.
+
+Follow the existing architecture for API/data access.
+
+9. CREATE THE TEACHER/ADMIN AT-RISK WARNING PANEL
+
+Implement the frontend At-Risk Warning Panel for the appropriate Teacher/Admin interface.
+
+First inspect the existing Teacher and Admin dashboards.
+
+The new panel must look like a natural extension of the current EduTrack application.
+
+The panel should clearly show relevant information such as:
+
+Total number of at-risk students
+Student name
+Student ID
+GPA/CGPA
+Attendance percentage
+Risk level
+Reason for being flagged
+Course information where appropriate
+
+Use appropriate UI elements such as:
+
+Summary cards
+Risk badges
+Warning indicators
+Tables
+Search
+Filtering
+Risk-level filtering
+Empty states
+Loading states
+Error states
+
+Do not create a generic dashboard unrelated to the current EduTrack design.
+
+10. CREATE THE BASIC SYSTEM REPORTING UI
+
+Implement the Basic System Report layout required for Member 4.
+
+The report should display meaningful information from the backend.
+
+A suitable structure could include:
+
+Overview
+Total Students
+At-Risk Students
+Academic Risk
+Attendance Risk
+Risk Distribution
+High Risk
+Medium Risk
+Low/Normal Risk
+Academic Summary
+
+Where supported:
+
+Average GPA
+Students below GPA threshold
+Average attendance
+Students below attendance threshold
+
+Use the project's actual requirements to determine the final content.
+
+11. UI QUALITY IS A MAJOR PRIORITY
+
+I want the Member 4 contribution to look highly polished, professional, modern, and presentation-ready.
+
+However, it must remain visually consistent with the existing EduTrack application.
+
+Before designing the new UI, inspect the existing:
+
+Colors
+Typography
+Font sizes
+Spacing
+Border radius
+Cards
+Buttons
+Tables
+Sidebar
+Navbar
+Dashboard
+Icons
+Forms
+Responsive behavior
+
+Then extend the same visual language.
+
+The final UI should feel like it was built by the same team, not pasted from a different template.
+
+12. UI DESIGN EXPECTATIONS
+
+Make the Member 4 interface visually strong.
+
+Use:
+
+Clean dashboard cards
+Clear visual hierarchy
+Professional spacing
+Consistent typography
+Appropriate icons
+Modern tables
+Clear risk indicators
+Good alignment
+Responsive layouts
+Hover states
+Loading states
+Empty states
+Error states
+Proper success/error feedback
+Subtle transitions where appropriate
+
+Risk information should be immediately understandable.
+
+For example, users should be able to quickly identify:
+
+HIGH RISK
+MEDIUM RISK
+NORMAL
+
+without having to inspect every row.
+
+Avoid:
+
+Excessive animations
+Overcrowding
+Unnecessary gradients
+Random colors
+Inconsistent component styles
+Huge unnecessary UI elements
+
+The interface should look like a professional university management SaaS product.
+
+13. PRESERVE EXISTING ROUTING
+
+If Member 4 needs new routes:
+
+Add only the required routes.
+Follow the project's existing routing structure.
+Preserve all existing routes.
+Do not rename existing routes unnecessarily.
+Do not break authentication.
+Do not bypass role-based access control.
+
+The Member 4 functionality should integrate naturally with:
+
+Admin
+Teacher
+
+while preserving:
+
+Student
+Member 1 features
+Member 2 features
+Member 3 features
+Authentication
+Existing dashboards
+Existing APIs
+14. ROLE-BASED ACCESS
+
+At-Risk information may contain sensitive academic information.
+
+Therefore, inspect the existing authorization system and ensure the new functionality is available only to the appropriate roles defined by the project.
+
+Do not create a separate authentication system.
+
+Reuse the existing:
+
+Authentication
+Authorization
+Roles
+Claims
+Middleware
+Existing user context
+
+where applicable.
+
+15. DO NOT BREAK MEMBER 3'S WORK
+
+Member 3 specifically implemented:
+
+Student Dashboard
+Per-course transcript view
+Grade recheck request/tracking forms
+StudentController
+GPA/CGPA calculation
+RecheckService pipeline
+
+My work must not interfere with those features.
+
+Do not modify Member 3's GPA/recheck logic unless absolutely required for integration.
+
+If my AtRiskEvaluationService needs GPA information, determine how the existing GPA functionality works and reuse it safely.
+
+Do not create a conflicting second GPA calculation system.
+
+16. DATABASE SAFETY
+
+Before any database modification:
+
+Inspect the current schema.
+Determine whether a new table is actually necessary.
+Reuse existing tables whenever possible.
+Follow the project's existing migration/database approach.
+Never delete existing data.
+Never reset the database.
+Never drop existing tables.
+Never alter existing columns unnecessarily.
+
+If a database change is genuinely required, keep it isolated and explain why it is needed.
+
+17. TESTING
+
+After implementation, test the complete application.
+
+Backend
+
+Verify:
+
+Project builds successfully.
+APIs start successfully.
+Database connection works.
+AtRiskEvaluationService works.
+GPA data is retrieved correctly.
+Attendance data is retrieved correctly.
+Risk thresholds are applied correctly.
+Risk levels are calculated correctly.
+Summary queries return correct values.
+Empty data is handled safely.
+Invalid data does not crash the application.
+Frontend
+
+Verify:
+
+Login works.
+Existing dashboards work.
+Member 1 features work.
+Member 2 features work.
+Member 3 features work.
+Teacher pages work.
+Admin pages work.
+At-Risk panel works.
+Reporting page works.
+Navigation works.
+API loading states work.
+API errors are handled.
+Empty states work.
+No console errors exist.
+No broken UI exists.
+18. REGRESSION TESTING
+
+This is one of the most important requirements.
+
+After completing Member 4's work, verify that Members 1, 2, and 3's existing functionality still works exactly as before.
+
+My implementation should be an extension of the existing system, not a replacement.
+
+If you discover that an existing feature is broken before my implementation, do not silently rewrite it.
+
+Clearly identify whether the issue:
+
+A. existed before Member 4 changes
+OR
+B. was caused by Member 4 changes
+
+Fix only problems caused by my implementation unless integration genuinely requires otherwise.
+
+19. CODE QUALITY
+
+Keep the implementation:
+
+Modular
+Clean
+Readable
+Maintainable
+Properly named
+Consistent with the existing project
+Properly separated into services/controllers/components
+Free of unnecessary duplication
+
+Do not create massive files containing unrelated functionality.
+
+Create reusable components where appropriate.
+
+Do not install unnecessary packages if the existing project already provides the required functionality.
+
+20. REVIEW ALL CHANGES BEFORE COMMITTING
+
+Before committing:
+
+Run:
+
+git status
+
+and inspect the complete list of changed files.
+
+Make sure:
+
+Changes are related to Member 4.
+No unrelated files were modified.
+No Member 1–3 functionality was accidentally changed.
+No temporary/debug files remain.
+No secrets/API keys/passwords were added.
+No unnecessary dependencies were introduced.
+
+If an existing teammate file was modified, verify that the modification was genuinely necessary.
+
+21. COMMIT MY WORK
+
+After everything is implemented and tested successfully:
+
+git add .
+git commit -m "Implement Member 4 early warning and reporting"
+
+Then push only my branch:
+
+git push -u origin member4-early-warning-reporting
+
+Do not push directly to the main/integration branch.
+
+CURRENT SCOPE
+
+For now, I am working on Member 4 — Checkpoint 1 only.
+
+Do NOT implement Checkpoint 2 unless I explicitly ask you to do so later.
+
+Do not add unnecessary future functionality just because it might be useful later.
+
+Focus on making Checkpoint 1 complete, stable, professional, and well integrated.
+
+MOST IMPORTANT RULES
+Read and understand the project reports before coding.
+The existing website is already running correctly — do not redo the initial setup unnecessarily.
+Inspect the existing Git branches before creating mine.
+Create a dedicated Member 4 branch.
+Members 1–3's work is protected.
+Prefer new files/components/services over modifying teammates' code.
+Do not break existing functionality.
+Use the actual SQL Server data.
+Do not invent GPA/attendance thresholds when the project defines them.
+Reuse existing GPA/CGPA functionality where appropriate.
+Follow the existing backend architecture.
+Follow the existing frontend/UI design system.
+Make the UI highly polished and professional.
+Do not perform destructive Git or database operations.
+Test the entire application after implementation.
+Only work on Member 4 Checkpoint 1 for now.
+Final Goal
+
+My Member 4 contribution should look like it was originally designed as part of EduTrack, not added afterward.
+
+It must provide:
+
+                 MEMBER 4
+                     │
+        ┌────────────┴────────────┐
+        │                         │
+     BACKEND                   FRONTEND
+        │                         │
+AtRiskEvaluationService      At-Risk Panel
+        │                         │
+Risk Calculation             Teacher/Admin UI
+        │                         │
+System Summary Queries       Basic Reports
+        │                         │
+        └────────────┬────────────┘
+                     │
+              EXISTING EDUTrack
+             Members 1 + 2 + 3
+
+The final result must be stable, integrated, visually polished, original, and safe for the existing project.
+
+turja-early-warning-reporting  
+
+Yes. Use this branch name everywhere in the prompt:
+
+turja-early-warning-reporting
+
+So replace:
+
+member4-early-warning-reporting
+
+with:
+
+turja-early-warning-reporting
+
+And the Git commands should be:
+
+git checkout -b turja-early-warning-reporting
+
+and later:
+
+git push -u origin turja-early-warning-reporting
+
+Everything else in the prompt can remain unchanged.
+
+give full prompt
+# Antigravity Prompt — Member 4: Early Warning Core & Basic Reporting
+
+I am **Member 4** of a four-member Software Development Lab project called **EduTrack**.
+
+The project is built using:
+
+- ASP.NET / ASP.NET Core
+- Visual Studio
+- SQL Server / SQL Server Management Studio (SSMS)
+- The existing frontend technology already used by the project
+
+Members **1, 2, and 3 have already completed their assigned work and pushed their contributions to GitHub.**
+
+My local repository is already cloned at:
+
+```text
+X:\EduTrack
+
+I have already verified that the current website runs properly. Do not repeat the basic setup/run process unless it becomes necessary during development.
+
+My assigned responsibility is:
+
+Member 4 — Early Warning Core & Basic Reporting — 15%
+Frontend
+At-Risk warning panel UI for Teachers/Admins
+Basic system report layout
+Backend
+AtRiskEvaluationService engine to calculate GPA/attendance risk thresholds
+Initial data query handlers for system-wide summaries
+IMPORTANT: READ THE PROJECT REPORTS FIRST
+
+Before implementing anything, thoroughly inspect and understand all project reports, requirements, documentation, database information, and relevant project files that I provide.
+
+I specifically want you to understand what EduTrack is supposed to accomplish before writing code.
+
+Pay attention to:
+
+Overall EduTrack system purpose
+Functional requirements
+User roles
+Teacher functionality
+Admin functionality
+Student functionality
+Existing GPA/CGPA functionality
+Existing attendance functionality
+Existing grade functionality
+Existing dashboards
+Existing database design
+Existing API structure
+Existing controllers
+Existing services
+Existing models/entities
+Existing DTOs
+Existing frontend components
+Existing routing
+Existing authentication/authorization
+Existing UI/design system
+
+Do not invent requirements when the report or existing implementation already defines them.
+
+1. INSPECT THE EXISTING GITHUB PROJECT
+
+The repository is already cloned at:
+
+X:\EduTrack
+
+Inspect the repository and Git status first.
+
+Use:
+
+git status
+git remote -v
+git branch
+git branch -a
+git log --oneline --all -20
+
+Then fetch the latest remote information:
+
+git fetch --all
+
+Determine:
+
+Current branch
+Remote repository
+Available branches
+Latest commits
+Which branch contains the latest integrated work from Members 1–3
+
+Do not blindly assume the main branch is main or master.
+
+Follow the actual repository structure.
+
+2. PROTECT MEMBERS 1–3'S WORK
+
+Members 1, 2, and 3 have already completed their contributions.
+
+Treat all existing functionality as protected.
+
+DO NOT:
+
+Delete their code
+Rewrite their controllers
+Rewrite their services
+Rewrite their components
+Remove their features
+Replace their database structure
+Rename their files unnecessarily
+Change their API contracts unnecessarily
+Refactor unrelated code
+Change authentication unnecessarily
+Change existing routes unnecessarily
+Reset the repository
+Force-push
+Delete branches
+Reset the database
+Delete existing data
+
+If an existing file genuinely needs to be modified for integration, make the smallest possible change.
+
+Before modifying another member's code, determine why the modification is necessary.
+
+Prefer creating new files, components, services, controllers, DTOs, and endpoints rather than rewriting existing code.
+
+3. CREATE MY OWN MEMBER 4 BRANCH
+
+After inspecting the repository and identifying the correct branch containing the latest integrated work from Members 1–3, create my own branch.
+
+My branch name MUST be:
+
+turja-early-warning-reporting
+
+Create it using:
+
+git checkout -b turja-early-warning-reporting
+
+From this point onward:
+
+ALL Member 4 development must happen on:
+
+turja-early-warning-reporting
+
+Do not directly develop my work on main, master, or another teammate's branch.
+
+4. STUDY MEMBERS 1–3'S IMPLEMENTATION
+
+Before writing Member 4 code, inspect the existing implementation carefully.
+
+Understand how the previous members structured:
+
+Backend
+Controllers
+Services
+Interfaces
+Models
+Entities
+DTOs
+Repositories, if any
+DbContext
+Dependency Injection
+API endpoints
+Authentication
+Authorization
+Frontend
+Pages
+Components
+Layouts
+Navigation
+Dashboards
+Tables
+Cards
+Forms
+API calls
+State management
+Routing
+Styling
+Existing UI components
+
+Follow the same architecture and coding patterns already used in EduTrack.
+
+Do not introduce a completely different architecture for Member 4.
+
+5. INSPECT THE EXISTING DATABASE
+
+Before creating or modifying database-related code, inspect the existing SQL Server database and Entity Framework configuration.
+
+Identify the actual existing structures for:
+
+Students
+Teachers
+Admins
+Courses
+Enrollments
+Grades
+Attendance
+GPA/CGPA
+Academic records
+Any existing risk-related information
+Any existing reporting-related information
+
+Determine exactly how GPA, CGPA, grades, and attendance are currently stored/calculated.
+
+If the existing project already contains GPA/CGPA logic, understand it and reuse it where appropriate.
+
+Do not create a second conflicting GPA calculation system.
+
+Do not create duplicate database tables when the required data already exists.
+
+6. IMPLEMENT AtRiskEvaluationService
+
+My primary backend responsibility is:
+
+AtRiskEvaluationService
+
+Create this service according to the existing project's architecture.
+
+The service should evaluate students using the project's actual:
+
+GPA/CGPA
+Attendance
+Academic information
+
+and determine whether a student is at risk.
+
+The evaluation should support the risk categories defined by the project requirements.
+
+For example, if the report requires multiple levels:
+
+High Risk
+Medium Risk
+Low/Normal Risk
+
+implement them according to the documented requirements.
+
+The service should be capable of determining relevant information such as:
+
+Student
+Student ID
+GPA/CGPA
+Attendance percentage
+Risk status
+Risk severity
+Reason for being flagged
+Relevant course/academic context where appropriate
+7. USE THE ACTUAL GPA/ATTENDANCE THRESHOLDS
+
+This is extremely important.
+
+DO NOT randomly invent GPA or attendance thresholds.
+
+First search the:
+
+Project report
+Requirements
+Existing source code
+Database
+Configuration
+
+for the intended thresholds.
+
+If the project specifies thresholds, use those exact requirements.
+
+For example, if the project defines:
+
+GPA < X
+Attendance < Y%
+
+use the documented values.
+
+If multiple risk levels exist, implement those levels according to the project's requirements.
+
+If thresholds already exist somewhere in the application, reuse them instead of creating duplicate hardcoded values.
+
+If the requirements are ambiguous, inspect the existing system and choose the implementation that best fits the documented design.
+
+Do not introduce arbitrary business rules just to make the feature appear complete.
+
+8. SYSTEM-WIDE SUMMARY QUERY HANDLERS
+
+Implement the initial backend data-query functionality required for system-wide summaries.
+
+The system should retrieve meaningful information from the real SQL Server database.
+
+Depending on the actual project requirements, this may include:
+
+Total students
+Total at-risk students
+Academic-risk students
+Attendance-risk students
+High-risk students
+Medium-risk students
+Low/normal-risk students
+Average GPA
+Average attendance
+Students below the GPA threshold
+Students below the attendance threshold
+Other relevant system-wide statistics
+
+Only implement metrics that are supported by the project requirements.
+
+Do not fabricate data.
+
+All values must come from the actual database.
+
+Follow the existing project's backend architecture for data access.
+
+9. CREATE THE TEACHER/ADMIN AT-RISK WARNING PANEL
+
+Implement the frontend At-Risk Warning Panel for the appropriate Teacher/Admin interface.
+
+First inspect the existing Teacher and Admin dashboards.
+
+The new panel must look like a natural extension of the existing EduTrack application.
+
+It should clearly display relevant information such as:
+
+Total number of at-risk students
+Student name
+Student ID
+GPA/CGPA
+Attendance percentage
+Risk level
+Reason for being flagged
+Course information where appropriate
+
+Use suitable UI elements such as:
+
+Summary cards
+Risk badges
+Warning indicators
+Tables
+Search
+Filtering
+Risk-level filtering
+Empty states
+Loading states
+Error states
+
+Do not create a generic dashboard template unrelated to EduTrack.
+
+10. CREATE THE BASIC SYSTEM REPORTING UI
+
+Implement the Basic System Report layout required for Member 4.
+
+The report should display meaningful information retrieved from the backend.
+
+A suitable structure could include:
+
+Overview
+Total Students
+At-Risk Students
+Academic Risk
+Attendance Risk
+Risk Distribution
+High Risk
+Medium Risk
+Low/Normal Risk
+Academic Summary
+
+Where supported by the project:
+
+Average GPA
+Students below GPA threshold
+Average attendance
+Students below attendance threshold
+
+Use the project's actual requirements to determine the final contents.
+
+11. MAXIMIZE UI QUALITY
+
+UI quality is a major priority for my contribution.
+
+I want the Member 4 interface to look:
+
+Professional
+Modern
+Clean
+Polished
+Consistent
+Presentation-ready
+
+However, it must look like it belongs to EduTrack.
+
+Before designing the new UI, inspect the existing:
+
+Colors
+Typography
+Font sizes
+Spacing
+Border radius
+Cards
+Buttons
+Tables
+Sidebar
+Navbar
+Dashboard
+Icons
+Forms
+Responsive behavior
+
+Then extend the existing design system.
+
+The result should look like it was built by the same development team.
+
+Do not simply paste a generic dashboard template.
+
+12. UI DESIGN EXPECTATIONS
+
+Make the Member 4 interface visually strong.
+
+Use appropriate:
+
+Dashboard cards
+Summary statistics
+Clear visual hierarchy
+Professional spacing
+Consistent typography
+Icons
+Modern tables
+Risk indicators
+Badges
+Filters
+Search
+Responsive layouts
+Hover states
+Loading states
+Empty states
+Error states
+Success/error feedback
+Subtle transitions where appropriate
+
+Risk information should be immediately understandable.
+
+For example:
+
+HIGH RISK
+MEDIUM RISK
+NORMAL
+
+should be visually distinguishable without making the interface excessive.
+
+Avoid:
+
+Excessive animations
+Visual clutter
+Random colors
+Inconsistent styling
+Huge unnecessary UI elements
+Unnecessary gradients
+Unprofessional layouts
+
+The interface should feel like a real university management SaaS product.
+
+13. PRESERVE EXISTING ROUTING
+
+If Member 4 requires new routes:
+
+Add only the required routes.
+Follow the existing routing structure.
+Preserve all existing routes.
+Do not rename existing routes unnecessarily.
+Do not break authentication.
+Do not bypass role-based access control.
+
+The Member 4 functionality should integrate naturally with:
+
+Admin
+Teacher
+
+while preserving:
+
+Student
+Member 1 features
+Member 2 features
+Member 3 features
+Authentication
+Existing dashboards
+Existing APIs
+14. ROLE-BASED ACCESS
+
+At-Risk information contains academic information, so inspect the existing authorization system.
+
+Make sure the new functionality is available only to the appropriate roles defined by the project.
+
+Do not create a new authentication system.
+
+Reuse the existing:
+
+Authentication
+Authorization
+Roles
+Claims
+Middleware
+User context
+
+where applicable.
+
+15. DO NOT BREAK MEMBER 3'S WORK
+
+Member 3 implemented:
+
+Student Dashboard
+Per-course transcript view
+Grade recheck request/tracking forms
+StudentController
+GPA/CGPA calculation
+RecheckService pipeline
+
+My work must not interfere with these features.
+
+Do not modify Member 3's GPA/recheck logic unless absolutely required for integration.
+
+If AtRiskEvaluationService needs GPA information, understand how the existing GPA functionality works and reuse it safely.
+
+Do not create a conflicting second GPA/CGPA calculation.
+
+16. DATABASE SAFETY
+
+Before making any database modification:
+
+Inspect the current schema.
+Determine whether a new table is actually necessary.
+Reuse existing tables whenever possible.
+Follow the project's existing migration/database approach.
+Never delete existing data.
+Never reset the database.
+Never drop existing tables.
+Never alter existing columns unnecessarily.
+
+If a database change is genuinely required, keep it isolated and explain why it is needed.
+
+17. TESTING
+
+After implementation, test the complete application.
+
+Backend
+
+Verify:
+
+Project builds successfully.
+APIs start successfully.
+Database connection works.
+AtRiskEvaluationService works.
+GPA data is retrieved correctly.
+Attendance data is retrieved correctly.
+Risk thresholds are applied correctly.
+Risk levels are calculated correctly.
+Summary queries return correct values.
+Empty data is handled safely.
+Invalid data does not crash the application.
+Frontend
+
+Verify:
+
+Login works.
+Existing dashboards work.
+Member 1 features work.
+Member 2 features work.
+Member 3 features work.
+Teacher pages work.
+Admin pages work.
+At-Risk panel works.
+Reporting page works.
+Navigation works.
+Loading states work.
+API errors are handled.
+Empty states work.
+No console errors exist.
+No broken UI exists.
+18. REGRESSION TESTING
+
+This is one of the highest-priority requirements.
+
+After completing Member 4's work, verify that Members 1, 2, and 3's existing functionality still works exactly as before.
+
+My implementation should be an extension of the existing system, not a replacement.
+
+If you discover an existing issue, determine whether:
+
+A. The issue existed before Member 4 changes
+OR
+B. The issue was caused by Member 4 changes
+
+Do not silently rewrite unrelated code.
+
+Fix problems caused by my implementation and only modify existing functionality when integration genuinely requires it.
+
+19. CODE QUALITY
+
+Keep the implementation:
+
+Modular
+Clean
+Readable
+Maintainable
+Properly named
+Consistent with the existing project
+Properly separated into services/controllers/components
+Free from unnecessary duplication
+
+Do not create massive files containing unrelated functionality.
+
+Create reusable components where appropriate.
+
+Do not install unnecessary packages if the existing project already provides the required functionality.
+
+20. REVIEW ALL CHANGES BEFORE COMMITTING
+
+Before committing:
+
+git status
+
+Review the complete list of changed files.
+
+Make sure:
+
+Every change is related to Member 4.
+No unrelated files were modified.
+No Member 1–3 functionality was accidentally changed.
+No temporary/debug files remain.
+No secrets/API keys/passwords were added.
+No unnecessary dependencies were introduced.
+
+If an existing teammate file was modified, verify that the modification was genuinely necessary.
+
+21. COMMIT MY WORK
+
+After everything is implemented and tested successfully:
+
+git add .
+git commit -m "Implement Member 4 early warning and reporting"
+
+Then push only my branch:
+
+git push -u origin turja-early-warning-reporting
+
+Do not push directly to the main/integration branch.
+
+CURRENT SCOPE
+
+For now, I am working on:
+
+Member 4 — Checkpoint 1 ONLY
+
+Do NOT implement Checkpoint 2 unless I explicitly ask you to do so later.
+
+Do not add unnecessary future functionality.
+
+Focus on making Checkpoint 1:
+
+Complete
+Stable
+Professional
+Well integrated
+Visually polished
+Safe for the existing application
+MOST IMPORTANT RULES
+Read and understand the project reports before coding.
+The existing website is already running correctly.
+Inspect the existing Git branches before creating mine.
+Create my dedicated branch: turja-early-warning-reporting.
+Members 1–3's work is protected.
+Prefer new files/components/services over modifying teammates' code.
+Do not break existing functionality.
+Use actual SQL Server data.
+Do not invent GPA/attendance thresholds when the project defines them.
+Reuse existing GPA/CGPA functionality where appropriate.
+Follow the existing backend architecture.
+Follow the existing frontend/UI design system.
+Make the UI highly polished and professional.
+Do not perform destructive Git or database operations.
+Test the entire application after implementation.
+Only work on Member 4 Checkpoint 1 for now.
+Do not modify Member 1–3 code unless genuinely necessary for integration.
+Do not introduce duplicate business logic or duplicate database structures.
+FINAL GOAL
+
+My Member 4 contribution should look like it was originally designed as part of EduTrack, not added afterward.
+
+The final implementation should provide:
+
+                    MEMBER 4
+                       │
+          ┌────────────┴────────────┐
+          │                         │
+       BACKEND                   FRONTEND
+          │                         │
+AtRiskEvaluationService       At-Risk Warning Panel
+          │                         │
+Risk Calculation              Teacher/Admin UI
+          │                         │
+System Summary Queries        Basic System Reports
+          │                         │
+          └────────────┬────────────┘
+                       │
+                EXISTING EDUTRACK
+             Members 1 + 2 + 3 Work
+
+The result must be:
+
+Original + Professional + Stable + Well Integrated + Visually Polished + Non-destructive to existing work.
+
+Do not rush into coding.
+
+First understand the reports, inspect the existing architecture, inspect Members 1–3's implementation, create the turja-early-warning-reporting branch, and then implement Member 4 Checkpoint 1 carefully.
