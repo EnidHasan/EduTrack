@@ -81,6 +81,19 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         return RedirectToAction(nameof(Disputes));
     }
 
+    public async Task<IActionResult> MyRoutine()
+    {
+        var teacher = await CurrentTeacherAsync();
+        if (teacher is null) return Forbid();
+
+        var routines = await db.ClassRoutines
+            .Include(r => r.Course)
+            .Where(r => r.Course!.TeacherId == teacher.Id)
+            .ToListAsync();
+
+        return View(routines);
+    }
+
     private async Task<Teacher?> CurrentTeacherAsync()
     {
         var user = await users.GetUserAsync(User);

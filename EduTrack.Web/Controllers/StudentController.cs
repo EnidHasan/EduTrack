@@ -90,4 +90,26 @@ public class StudentController(ApplicationDbContext db, UserManager<ApplicationU
 
         return RedirectToAction(nameof(Disputes));
     }
+
+    public async Task<IActionResult> MyRoutine()
+    {
+        var user = await users.GetUserAsync(User);
+        if (user == null) return NotFound();
+
+        var student = await db.Students.FirstOrDefaultAsync(s => s.ApplicationUserId == user.Id);
+        if (student == null) return NotFound();
+
+        var enrolledCourseIds = await db.Enrollments
+            .Where(e => e.StudentId == student.Id)
+            .Select(e => e.CourseId)
+            .ToListAsync();
+
+        var routines = await db.ClassRoutines
+            .Include(r => r.Course)
+            .ThenInclude(c => c!.Teacher)
+            .Where(r => enrolledCourseIds.Contains(r.CourseId))
+            .ToListAsync();
+
+        return View(routines);
+    }
 }
