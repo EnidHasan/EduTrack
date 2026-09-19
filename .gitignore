@@ -21,3 +21,6 @@ secrets.json
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# Uploaded content
+EduTrack.Web/App_Data/
