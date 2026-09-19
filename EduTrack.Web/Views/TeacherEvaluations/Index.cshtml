@@ -1,0 +1,26 @@
+@model IReadOnlyList<EduTrack.Web.ViewModels.EvaluationOpportunity>
+@{ ViewData["Title"] = "Teacher Evaluation"; }
+<div class="evaluation-hero">
+    <span class="evaluation-kicker"><i class="bi bi-stars"></i> STUDENT VOICE</span>
+    <h1>Help great teaching grow.</h1>
+    <p>Your feedback helps improve the learning experience. Teachers receive only anonymous summaries after an evaluation period closes.</p>
+</div>
+<div class="evaluation-section-heading"><div><span class="evaluation-kicker">YOUR COURSES</span><h2>Open evaluations</h2></div><span class="evaluation-count">@Model.Count available</span></div>
+@if (Model.Count == 0)
+{
+    <div class="evaluation-empty"><i class="bi bi-calendar2-check"></i><h3>Nothing to evaluate right now</h3><p>When an evaluation period opens for one of your enrolled courses, it will appear here.</p></div>
+}
+else
+{
+    <div class="evaluation-grid">
+    @foreach (var item in Model)
+    {
+        <article class="evaluation-card">
+            <div class="evaluation-card-top"><span class="evaluation-course-code">@item.CourseCode</span><span class="evaluation-term">@item.PeriodLabel</span></div>
+            <h3>@item.CourseName</h3><p><i class="bi bi-person-badge"></i> @item.TeacherName</p>
+            @if (item.Submitted) { <span class="evaluation-done"><i class="bi bi-check-circle-fill"></i> Submitted</span> }
+            else { <a asp-action="Submit" asp-route-periodId="@item.PeriodId" asp-route-enrollmentId="@item.EnrollmentId" class="evaluation-button">Start evaluation <i class="bi bi-arrow-up-right"></i></a> }
+        </article>
+    }
+    </div>
+}

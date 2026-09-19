@@ -1,0 +1,28 @@
+@model EduTrack.Web.ViewModels.EvaluationClosingDateInput
+@{
+    ViewData["Title"] = "Edit Evaluation Closing Date";
+    var period = ViewBag.Period as EduTrack.Web.Models.TeacherEvaluationPeriod;
+}
+<div class="evaluation-hero evaluation-hero-compact">
+    <span class="evaluation-kicker"><i class="bi bi-calendar-event"></i> EVALUATION PERIOD</span>
+    <h1>Edit closing date.</h1>
+    <p>@period?.Term @period?.AcademicYear · Opens @period?.OpensAtUtc.ToLocalTime().ToString("dd MMM yyyy, h:mm tt")</p>
+</div>
+<form asp-action="EditClosingDate" method="post" class="evaluation-form evaluation-period-form">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <div class="evaluation-field-grid">
+        <div>
+            <label asp-for="ClosesAt"></label>
+            <input asp-for="ClosesAt" type="datetime-local" value="@Model.ClosesAt?.ToString("yyyy-MM-ddTHH:mm")" />
+            <span asp-validation-for="ClosesAt" class="text-danger"></span>
+        </div>
+    </div>
+    <p class="text-muted mt-3 mb-0">Changing this date does not remove submitted evaluations. Teachers can see anonymous results after the new closing time, once at least three students have responded.</p>
+    <div class="evaluation-form-actions">
+        <a asp-action="Admin" class="evaluation-button evaluation-button-light">Cancel</a>
+        <button type="submit" class="evaluation-button">Save closing date <i class="bi bi-arrow-right"></i></button>
+    </div>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

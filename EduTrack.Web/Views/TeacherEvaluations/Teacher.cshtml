@@ -1,0 +1,5 @@
+@model IReadOnlyList<EduTrack.Web.ViewModels.EvaluationSummary>
+@{ ViewData["Title"] = "My Evaluations"; }
+<div class="evaluation-hero evaluation-hero-compact"><span class="evaluation-kicker"><i class="bi bi-stars"></i> TEACHING INSIGHTS</span><h1>Feedback that moves us forward.</h1><p>See anonymous course-level feedback after the evaluation period closes and at least three students have responded.</p></div>
+<div class="evaluation-section-heading"><div><span class="evaluation-kicker">YOUR COURSES</span><h2>Evaluation results</h2></div><span class="evaluation-count">@Model.Count course summaries</span></div>
+<partial name="_SummaryCards" model="Model" />
