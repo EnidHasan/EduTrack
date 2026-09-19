@@ -187,5 +187,28 @@ public static class DbSeeder
             }
             await db.SaveChangesAsync();
         }
+
+        // 7. Seed Class Routines
+        if (!await db.ClassRoutines.AnyAsync())
+        {
+            var cse101 = dbCourses.FirstOrDefault(x => x.CourseCode == "CSE101");
+            var phy101 = dbCourses.FirstOrDefault(x => x.CourseCode == "PHY101");
+            var cse201 = dbCourses.FirstOrDefault(x => x.CourseCode == "CSE201");
+            var eng101 = dbCourses.FirstOrDefault(x => x.CourseCode == "ENG101");
+
+            if (cse101 != null && phy101 != null && cse201 != null && eng101 != null)
+            {
+                db.ClassRoutines.AddRange(
+                    new ClassRoutine { CourseId = cse101.Id, DayOfWeek = "Sunday", StartTime = new TimeSpan(8, 0, 0), EndTime = new TimeSpan(8, 50, 0), RoomNumber = "7A05", Section = "A1" },
+                    new ClassRoutine { CourseId = cse101.Id, DayOfWeek = "Tuesday", StartTime = new TimeSpan(9, 40, 0), EndTime = new TimeSpan(10, 30, 0), RoomNumber = "7A05", Section = "A1" },
+                    new ClassRoutine { CourseId = phy101.Id, DayOfWeek = "Sunday", StartTime = new TimeSpan(8, 50, 0), EndTime = new TimeSpan(9, 40, 0), RoomNumber = "7B01", Section = "A1" },
+                    new ClassRoutine { CourseId = phy101.Id, DayOfWeek = "Tuesday", StartTime = new TimeSpan(10, 30, 0), EndTime = new TimeSpan(11, 20, 0), RoomNumber = "7B01", Section = "A1" },
+                    new ClassRoutine { CourseId = cse201.Id, DayOfWeek = "Monday", StartTime = new TimeSpan(11, 20, 0), EndTime = new TimeSpan(12, 10, 0), RoomNumber = "8C02", Section = "A2" },
+                    new ClassRoutine { CourseId = cse201.Id, DayOfWeek = "Wednesday", StartTime = new TimeSpan(13, 0, 0), EndTime = new TimeSpan(13, 50, 0), RoomNumber = "8C02", Section = "A2" },
+                    new ClassRoutine { CourseId = eng101.Id, DayOfWeek = "Thursday", StartTime = new TimeSpan(8, 0, 0), EndTime = new TimeSpan(9, 40, 0), RoomNumber = "7A06", Section = "A" }
+                );
+                await db.SaveChangesAsync();
+            }
+        }
     }
 }
