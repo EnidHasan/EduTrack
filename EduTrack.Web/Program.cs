@@ -48,6 +48,7 @@ builder.Services.AddScoped<RecheckService>();
 builder.Services.AddScoped<AtRiskEvaluationService>();
 builder.Services.AddScoped<CgpaCalculationService>();
 builder.Services.AddScoped<CourseMaterialService>();
+builder.Services.AddScoped<AcademicAnalyticsService>();
 var app = builder.Build();
 if (!app.Environment.IsDevelopment()) { app.UseExceptionHandler("/Home/Error"); app.UseHsts(); }
 app.UseHttpsRedirection();

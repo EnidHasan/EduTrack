@@ -21,6 +21,7 @@
 <a class="@(page == "Teacher" && ViewContext.RouteData.Values["action"]?.ToString() != "Disputes" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Teacher" && ViewContext.RouteData.Values["action"]?.ToString() != "Disputes" ? "page" : null)" asp-controller="Teacher" asp-action="Index"><i class="bi bi-journal-bookmark-fill text-info"></i> My courses</a>
 <a class="@(page == "Teacher" && ViewContext.RouteData.Values["action"]?.ToString() == "Disputes" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Teacher" && ViewContext.RouteData.Values["action"]?.ToString() == "Disputes" ? "page" : null)" asp-controller="Teacher" asp-action="Disputes"><i class="bi bi-exclamation-triangle-fill text-warning"></i> Grade Disputes</a>
 <a class="@(page == "EarlyWarning" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "EarlyWarning" ? "page" : null)" asp-controller="EarlyWarning" asp-action="Index"><i class="bi bi-shield-exclamation text-danger"></i> Course At-Risk Panel</a>
+<a class="@(page == "Reports" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Reports" ? "page" : null)" asp-controller="Reports" asp-action="Index"><i class="bi bi-bar-chart-line-fill text-primary"></i> Academic Analytics</a>
 }
 @if (User.IsInRole("Admin")) {
 <span class="nav-label">Administration</span>
@@ -32,7 +33,7 @@
 <a class="@(page == "Users" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Users" ? "page" : null)" asp-controller="Users" asp-action="Index"><i class="bi bi-shield-lock-fill text-danger"></i> User accounts</a>
 <span class="nav-label">Analytics & Early Warning</span>
 <a class="@(page == "EarlyWarning" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "EarlyWarning" ? "page" : null)" asp-controller="EarlyWarning" asp-action="Index"><i class="bi bi-shield-exclamation text-danger"></i> At-Risk Warning Panel</a>
-<a class="@(page == "Reports" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Reports" ? "page" : null)" asp-controller="Reports" asp-action="Index"><i class="bi bi-bar-chart-line-fill text-primary"></i> System Reports</a>
+<a class="@(page == "Reports" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Reports" ? "page" : null)" asp-controller="Reports" asp-action="Index"><i class="bi bi-bar-chart-line-fill text-primary"></i> Academic Analytics</a>
 }
 @if (User.IsInRole("Student")) {
 <span class="nav-label">Academic</span>
