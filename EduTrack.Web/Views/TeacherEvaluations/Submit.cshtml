@@ -1,0 +1,27 @@
+@model EduTrack.Web.ViewModels.TeacherEvaluationInput
+@{ ViewData["Title"] = "Evaluate Teacher"; var course = ViewBag.Course as EduTrack.Web.Models.Course; var period = ViewBag.Period as EduTrack.Web.Models.TeacherEvaluationPeriod; }
+<div class="evaluation-hero evaluation-hero-compact"><span class="evaluation-kicker"><i class="bi bi-stars"></i> @period?.Term @period?.AcademicYear</span><h1>Share your experience.</h1><p>@course?.CourseCode · @course?.CourseName · @(course?.Teacher?.FullName ?? "Teacher")</p></div>
+<form asp-action="Submit" method="post" class="evaluation-form">
+    @Html.AntiForgeryToken()
+    <input asp-for="PeriodId" type="hidden" /><input asp-for="EnrollmentId" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <div class="evaluation-form-intro"><i class="bi bi-shield-lock"></i><div><strong>Your feedback is private</strong><span>Your name will not appear in teacher result summaries. Choose a score from 1 (poor) to 5 (excellent) for every category.</span></div></div>
+    @foreach (var category in new[] { "Clarity", "Preparation", "Fairness", "Communication", "Overall" })
+    {
+        <div class="evaluation-rating-row">
+            <div><strong>@category</strong><small>@(category switch { "Clarity" => "Explains concepts clearly", "Preparation" => "Comes prepared for class", "Fairness" => "Grades and treats students fairly", "Communication" => "Responds and communicates effectively", _ => "Your overall learning experience" })</small></div>
+            <div class="evaluation-stars" role="radiogroup" aria-label="@category rating">
+                @for (var score = 1; score <= 5; score++)
+                {
+                    var id = $"{category}-{score}";
+                    <input type="radio" id="@id" name="@category" value="@score" required />
+                    <label for="@id" title="@score out of 5">@score <i class="bi bi-star-fill"></i></label>
+                }
+            </div>
+            <span class="text-danger small" data-valmsg-for="@category" data-valmsg-replace="true"></span>
+        </div>
+    }
+    <div class="evaluation-comment"><label asp-for="Comment">Additional feedback <span>(optional)</span></label><textarea asp-for="Comment" rows="4" placeholder="What worked well? What could be improved?"></textarea><span asp-validation-for="Comment" class="text-danger"></span></div>
+    <div class="evaluation-form-actions"><a asp-action="Index" class="evaluation-button evaluation-button-light">Cancel</a><button type="submit" class="evaluation-button">Submit evaluation <i class="bi bi-arrow-right"></i></button></div>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
