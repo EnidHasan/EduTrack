@@ -10,4 +10,5 @@ public class Course
     [Display(Name = "Assigned teacher")] public int? TeacherId { get; set; }
     public Teacher? Teacher { get; set; }
     public bool IsActive { get; set; } = true;
+    public ICollection<CourseMaterial> CourseMaterials { get; set; } = [];
 }

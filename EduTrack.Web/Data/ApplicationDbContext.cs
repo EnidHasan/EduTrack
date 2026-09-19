@@ -11,6 +11,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Grade> Grades => Set<Grade>();
     public DbSet<RecheckRequest> RecheckRequests => Set<RecheckRequest>();
     public DbSet<AtRiskFlag> AtRiskFlags => Set<AtRiskFlag>();
+    public DbSet<CourseMaterial> CourseMaterials => Set<CourseMaterial>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -36,5 +37,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<RecheckRequest>().HasOne(x => x.Grade).WithMany().HasForeignKey(x => x.GradeId).OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<AtRiskFlag>().HasOne(x => x.Student).WithMany().HasForeignKey(x => x.StudentId).OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<CourseMaterial>().HasOne(x => x.Course).WithMany(x => x.CourseMaterials).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<CourseMaterial>().HasOne(x => x.Teacher).WithMany(x => x.CourseMaterials).HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.Restrict);
     }
 }
