@@ -57,7 +57,7 @@
                                     }
                                     
                                     <td colspan="@colSpan" style="border-bottom: 3px solid blue; padding: 10px;">
-                                        <div class="fw-bold">@matchedClass.Course?.CourseCode(@matchedClass.Section)</div>
+                                        <div class="fw-bold">@($"{matchedClass.Course?.CourseCode} ({matchedClass.Section})")</div>
                                         <div class="text-muted small">@matchedClass.Course?.CreditHours</div>
                                         <div class="fw-bold">@matchedClass.RoomNumber</div>
                                         <div class="text-muted small">(@matchedClass.Course?.Teacher?.FullName)</div>

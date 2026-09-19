@@ -10,9 +10,15 @@ namespace EduTrack.Web.Controllers;
 [Authorize(Roles = "Admin")]
 public class RoutineController(ApplicationDbContext db) : Controller
 {
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string semester = "1.1")
     {
-        var routines = await db.ClassRoutines.Include(r => r.Course).OrderBy(r => r.DayOfWeek).ThenBy(r => r.StartTime).ToListAsync();
+        ViewBag.CurrentSemester = semester;
+        var routines = await db.ClassRoutines
+            .Include(r => r.Course)
+            .Where(r => r.SemesterLevel == semester)
+            .OrderBy(r => r.DayOfWeek)
+            .ThenBy(r => r.StartTime)
+            .ToListAsync();
         return View(routines);
     }
 
@@ -24,13 +30,13 @@ public class RoutineController(ApplicationDbContext db) : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("CourseId,DayOfWeek,StartTime,EndTime,RoomNumber,Section")] ClassRoutine routine)
+    public async Task<IActionResult> Create([Bind("CourseId,DayOfWeek,StartTime,EndTime,RoomNumber,Section,SemesterLevel")] ClassRoutine routine)
     {
         if (ModelState.IsValid)
         {
             db.Add(routine);
             await db.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { semester = routine.SemesterLevel });
         }
         ViewData["CourseId"] = new SelectList(await db.Courses.ToListAsync(), "Id", "CourseName", routine.CourseId);
         return View(routine);
@@ -49,7 +55,7 @@ public class RoutineController(ApplicationDbContext db) : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,CourseId,DayOfWeek,StartTime,EndTime,RoomNumber,Section")] ClassRoutine routine)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,CourseId,DayOfWeek,StartTime,EndTime,RoomNumber,Section,SemesterLevel")] ClassRoutine routine)
     {
         if (id != routine.Id) return NotFound();
 
@@ -65,7 +71,7 @@ public class RoutineController(ApplicationDbContext db) : Controller
                 if (!db.ClassRoutines.Any(e => e.Id == routine.Id)) return NotFound();
                 else throw;
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { semester = routine.SemesterLevel });
         }
         ViewData["CourseId"] = new SelectList(await db.Courses.ToListAsync(), "Id", "CourseName", routine.CourseId);
         return View(routine);
