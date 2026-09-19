@@ -9,6 +9,22 @@
     <a asp-action="Create" class="btn btn-primary">Create New Block</a>
 </div>
 
+@{
+    var semesters = new[] { "1.1", "1.2", "2.1", "2.2", "3.1", "3.2", "4.1", "4.2" };
+    var currentSemester = ViewBag.CurrentSemester as string ?? "1.1";
+}
+
+<ul class="nav nav-pills mb-4">
+    @foreach(var sem in semesters)
+    {
+        <li class="nav-item">
+            <a class="nav-link @(currentSemester == sem ? "active" : "")" asp-action="Index" asp-route-semester="@sem">
+                Semester @sem
+            </a>
+        </li>
+    }
+</ul>
+
 <table class="table table-striped premium-table">
     <thead>
         <tr>

@@ -33,4 +33,8 @@ public class ClassRoutine
 
     [StringLength(20)]
     public string? Section { get; set; }
+
+    [Required]
+    [StringLength(10)]
+    public string SemesterLevel { get; set; } = string.Empty;
 }
