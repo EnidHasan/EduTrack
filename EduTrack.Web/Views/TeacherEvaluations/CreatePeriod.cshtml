@@ -1,0 +1,9 @@
+@model EduTrack.Web.ViewModels.EvaluationPeriodInput
+@{ ViewData["Title"] = "New Evaluation Period"; }
+<div class="evaluation-hero evaluation-hero-compact"><span class="evaluation-kicker"><i class="bi bi-calendar-plus"></i> ADMINISTRATION</span><h1>Open a feedback window.</h1><p>Students can evaluate enrolled courses only while this period is open.</p></div>
+<form asp-action="CreatePeriod" method="post" class="evaluation-form evaluation-period-form">
+    @Html.AntiForgeryToken()<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <div class="evaluation-field-grid"><div><label asp-for="Term"></label><select asp-for="Term"><option>Fall</option><option>Spring</option><option>Summer</option></select><span asp-validation-for="Term" class="text-danger"></span></div><div><label asp-for="AcademicYear"></label><input asp-for="AcademicYear" type="number" /><span asp-validation-for="AcademicYear" class="text-danger"></span></div><div><label asp-for="OpensAt"></label><input asp-for="OpensAt" type="datetime-local" value="@Model.OpensAt.ToString("yyyy-MM-ddTHH:mm")" /><span asp-validation-for="OpensAt" class="text-danger"></span></div><div><label asp-for="ClosesAt"></label><input asp-for="ClosesAt" type="datetime-local" value="@Model.ClosesAt.ToString("yyyy-MM-ddTHH:mm")" /><span asp-validation-for="ClosesAt" class="text-danger"></span></div></div>
+    <div class="evaluation-form-actions"><a asp-action="Admin" class="evaluation-button evaluation-button-light">Cancel</a><button type="submit" class="evaluation-button">Create period <i class="bi bi-arrow-right"></i></button></div>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
