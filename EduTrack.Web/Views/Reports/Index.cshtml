@@ -1,43 +1,120 @@
-@model EduTrack.Web.ViewModels.SystemReportViewModel
+@model EduTrack.Web.ViewModels.AcademicAnalyticsViewModel
 @{
-    ViewData["Title"] = "System Academic & At-Risk Summary Reports";
+    ViewData["Title"] = "Academic Analytics";
+    var userIsAdmin = User.IsInRole("Admin");
 }
 
-<div class="page-head d-flex align-items-center justify-content-between flex-wrap gap-3">
+<div class="page-head d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
     <div>
-        <div class="d-flex align-items-center gap-2 mb-1">
+        <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
             <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 rounded-2">
-                <i class="bi bi-bar-chart-line-fill me-1"></i> System Analytics Subsystem
+                <i class="bi bi-graph-up me-1"></i> Academic Analytics Subsystem
             </span>
+            @if (Model.IsTeacherScope)
+            {
+                <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1 rounded-2">
+                    <i class="bi bi-person-badge me-1"></i> Instructor: @(Model.TeacherName ?? "Assigned Courses")
+                </span>
+            }
+            else
+            {
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-2">
+                    <i class="bi bi-building me-1"></i> Institutional Overview
+                </span>
+            }
             <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 rounded-2">
                 <i class="bi bi-clock me-1"></i> Generated: @Model.GeneratedAt.ToString("MMM dd, yyyy HH:mm")
             </span>
         </div>
-        <h1 class="h2 mb-1 fw-bold text-dark">System Academic & Risk Summary Report</h1>
-        <p class="text-muted mb-0">Institutional summary metrics, risk distribution analytics, department breakdowns, and course performance.</p>
+        <h1 class="h2 mb-1 fw-bold text-dark">Academic Analytics</h1>
+        <p class="text-muted mb-0">Performance overview across selected courses, pass/fail trends, and grade statistics.</p>
     </div>
     <div class="d-flex align-items-center gap-2">
-        <a asp-action="ExportPdf"
-           asp-route-department="@Model.SelectedDepartment"
-           asp-route-semester="@Model.SelectedSemester"
-           class="btn export-pdf-btn d-flex align-items-center gap-2 fw-semibold px-3 py-2 rounded-3">
-            <i class="bi bi-file-earmark-pdf-fill text-danger"></i> Export PDF
-        </a>
+        @if (userIsAdmin)
+        {
+            <a asp-action="ExportPdf"
+               asp-route-department="@Model.Filter.Department"
+               asp-route-semester="@Model.Filter.Semester"
+               class="btn export-pdf-btn d-flex align-items-center gap-2 fw-semibold px-3 py-2 rounded-3">
+                <i class="bi bi-file-earmark-pdf-fill text-danger"></i> Export PDF
+            </a>
+        }
     </div>
 </div>
 
-<!-- System KPI Cards -->
+<!-- Filter Card -->
+<div class="card p-3 mb-4 shadow-sm border-0 rounded-3">
+    <form method="get" asp-action="Index" class="row g-3 align-items-end">
+        <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+            <label class="form-label small fw-bold text-muted text-uppercase mb-1" for="filterYear">Academic Year</label>
+            <select id="filterYear" name="AcademicYear" class="form-select form-select-sm">
+                <option value="">All Years</option>
+                @foreach (var yr in Model.AvailableAcademicYears)
+                {
+                    <option value="@yr" selected="@(Model.Filter.AcademicYear == yr ? "selected" : null)">@yr</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+            <label class="form-label small fw-bold text-muted text-uppercase mb-1" for="filterSemester">Semester</label>
+            <select id="filterSemester" name="Semester" class="form-select form-select-sm">
+                <option value="">All Semesters</option>
+                @foreach (var sem in Model.AvailableSemesters)
+                {
+                    <option value="@sem" selected="@(string.Equals(Model.Filter.Semester, sem, StringComparison.OrdinalIgnoreCase) ? "selected" : null)">@sem</option>
+                }
+            </select>
+        </div>
+
+        @if (userIsAdmin)
+        {
+            <div class="col-12 col-sm-6 col-md-3 col-lg-3">
+                <label class="form-label small fw-bold text-muted text-uppercase mb-1" for="filterDept">Department</label>
+                <select id="filterDept" name="Department" class="form-select form-select-sm">
+                    <option value="">All Departments</option>
+                    @foreach (var dept in Model.AvailableDepartments)
+                    {
+                        <option value="@dept" selected="@(string.Equals(Model.Filter.Department, dept, StringComparison.OrdinalIgnoreCase) ? "selected" : null)">@dept</option>
+                    }
+                </select>
+            </div>
+        }
+
+        <div class="col-12 col-sm-6 col-md-3 @(userIsAdmin ? "col-lg-3" : "col-lg-5")">
+            <label class="form-label small fw-bold text-muted text-uppercase mb-1" for="filterCourse">Course</label>
+            <select id="filterCourse" name="CourseId" class="form-select form-select-sm">
+                <option value="">All Courses</option>
+                @foreach (var c in Model.AvailableCourses)
+                {
+                    <option value="@c.Id" selected="@(Model.Filter.CourseId == c.Id ? "selected" : null)">@c.DisplayName</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-12 col-md-12 col-lg-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary btn-sm px-3 flex-grow-1 d-flex align-items-center justify-content-center gap-1">
+                <i class="bi bi-funnel-fill"></i> Apply Filters
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm px-3" title="Reset Filters">
+                Reset
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- KPI Cards -->
 <div class="row g-3 mb-4">
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat stat-students h-100">
+        <div class="stat stat-students h-100 shadow-sm border-0 rounded-3">
             <div class="stat-top">
                 <i class="bi bi-people-fill">
                     <span>STUDENTS</span>
                 </i>
-                <span class="trend">Enrolled</span>
+                <span class="trend">Graded</span>
             </div>
-            <small class="text-uppercase fw-bold text-muted">Total Active Students</small>
-            <strong class="d-block text-dark">@Model.TotalStudentsCount</strong>
+            <small class="text-uppercase fw-bold text-muted">Total Graded Students</small>
+            <strong class="d-block text-dark fs-3">@Model.TotalGradedStudents</strong>
             <div class="stat-line">
                 <span style="width: 100%;"></span>
             </div>
@@ -45,216 +122,371 @@
     </div>
 
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat h-100" style="--accent: #dc3545;">
-            <div class="stat-top">
-                <i class="bi bi-shield-exclamation">
-                    <span>RISK</span>
-                </i>
-                <span class="trend">Flagged</span>
-            </div>
-            <small class="text-uppercase fw-bold text-muted">Total At-Risk Students</small>
-            <strong class="d-block text-danger">@Model.TotalAtRiskCount</strong>
-            <div class="stat-line">
-                <span style="width: @(Model.TotalStudentsCount > 0 ? (Model.TotalAtRiskCount * 100 / Model.TotalStudentsCount) : 0)%; background: #dc3545;"></span>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat stat-teachers h-100">
+        <div class="stat stat-teachers h-100 shadow-sm border-0 rounded-3">
             <div class="stat-top">
                 <i class="bi bi-calculator-fill">
-                    <span>GPA</span>
+                    <span>AVERAGE</span>
                 </i>
-                <span class="trend">Average</span>
+                <span class="trend">Out of 100</span>
             </div>
-            <small class="text-uppercase fw-bold text-muted">System Average GPA</small>
-            <strong class="d-block text-primary">@Model.SystemAverageGpa.ToString("F2")</strong>
+            <small class="text-uppercase fw-bold text-muted">Average Final Mark</small>
+            <strong class="d-block text-primary fs-3">
+                @if (Model.HasGradedData)
+                {
+                    @Model.AverageFinalMark.ToString("F1")
+                }
+                else
+                {
+                    <span class="fs-6 text-muted">N/A</span>
+                }
+            </strong>
             <div class="stat-line">
-                <span style="width: @(Model.SystemAverageGpa * 100 / 4.0m)%;"></span>
+                <span style="width: @(Model.HasGradedData ? Model.AverageFinalMark : 0)%;"></span>
             </div>
         </div>
     </div>
 
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat stat-users h-100">
+        <div class="stat stat-users h-100 shadow-sm border-0 rounded-3">
             <div class="stat-top">
-                <i class="bi bi-calendar-check-fill">
-                    <span>ATTEND</span>
+                <i class="bi bi-check-circle-fill">
+                    <span>PASS RATE</span>
                 </i>
-                <span class="trend">Average</span>
+                <span class="trend text-success">Passed</span>
             </div>
-            <small class="text-uppercase fw-bold text-muted">System Average Attendance</small>
-            <strong class="d-block text-teal">@Model.SystemAverageAttendance.ToString("F1")%</strong>
-            <div class="stat-line">
-                <span style="width: @Model.SystemAverageAttendance%;"></span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Risk Breakdown Visual Bars -->
-<div class="card p-4 mb-4 shadow-sm">
-    <h3 class="h5 fw-bold mb-3 d-flex align-items-center gap-2">
-        <i class="bi bi-pie-chart-fill text-primary"></i> System Risk Level & Category Distribution
-    </h3>
-    <div class="row g-4">
-        <!-- Risk Level Breakdown -->
-        <div class="col-12 col-md-6">
-            <div class="p-3 border rounded-3 bg-light-subtle h-100">
-                <h4 class="h6 fw-bold text-uppercase text-muted mb-3">Standing Distribution</h4>
-
-                <!-- Progress Bar -->
-                <div class="progress mb-3" style="height: 24px; border-radius: 12px; overflow: hidden;">
-                    <div class="progress-bar bg-danger fw-bold" role="progressbar" style="width: @(Model.TotalStudentsCount > 0 ? (Model.HighRiskCount * 100 / Model.TotalStudentsCount) : 0)%" title="High Risk: @Model.HighRiskCount">
-                        @if (Model.HighRiskCount > 0) { <span>High (@Model.HighRiskCount)</span> }
-                    </div>
-                    <div class="progress-bar bg-warning text-dark fw-bold" role="progressbar" style="width: @(Model.TotalStudentsCount > 0 ? (Model.MediumRiskCount * 100 / Model.TotalStudentsCount) : 0)%" title="Medium Risk: @Model.MediumRiskCount">
-                        @if (Model.MediumRiskCount > 0) { <span>Med (@Model.MediumRiskCount)</span> }
-                    </div>
-                    <div class="progress-bar bg-success fw-bold" role="progressbar" style="width: @(Model.TotalStudentsCount > 0 ? (Model.NormalCount * 100 / Model.TotalStudentsCount) : 0)%" title="Normal Standing: @Model.NormalCount">
-                        @if (Model.NormalCount > 0) { <span>Normal (@Model.NormalCount)</span> }
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-between small text-muted">
-                    <span class="d-flex align-items-center gap-1"><i class="bi bi-circle-fill text-danger"></i> High Risk: @Model.HighRiskCount</span>
-                    <span class="d-flex align-items-center gap-1"><i class="bi bi-circle-fill text-warning"></i> Medium Risk: @Model.MediumRiskCount</span>
-                    <span class="d-flex align-items-center gap-1"><i class="bi bi-circle-fill text-success"></i> Normal: @Model.NormalCount</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Risk Category Breakdown -->
-        <div class="col-12 col-md-6">
-            <div class="p-3 border rounded-3 bg-light-subtle h-100">
-                <h4 class="h6 fw-bold text-uppercase text-muted mb-3">Primary Risk Cause Breakdown</h4>
-                <div class="d-flex flex-column gap-2">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <span class="small fw-semibold text-dark"><i class="bi bi-book-half text-danger me-1"></i> Academic Risk Only (GPA &lt; 2.75):</span>
-                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2">@Model.AcademicRiskCount students</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <span class="small fw-semibold text-dark"><i class="bi bi-person-x text-warning me-1"></i> Attendance Risk Only (Att. &lt; 75%):</span>
-                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2">@Model.AttendanceRiskCount students</span>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <span class="small fw-semibold text-dark"><i class="bi bi-exclamation-diamond text-danger me-1"></i> Both Academic & Attendance Risk:</span>
-                        <span class="badge bg-danger text-white px-2">@Model.BothRiskCount students</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Department Summary Table -->
-<div class="card shadow-sm mb-4">
-    <div class="card-heading border-bottom p-3">
-        <h3 class="h5 mb-0 fw-bold"><i class="bi bi-building me-2 text-primary"></i>Department Performance & Risk Breakdown</h3>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th class="ps-4">Department Name</th>
-                    <th>Total Students</th>
-                    <th>At-Risk Count</th>
-                    <th>High Risk</th>
-                    <th>Medium Risk</th>
-                    <th>Avg. GPA</th>
-                    <th>Avg. Attendance</th>
-                    <th class="pe-4">Risk Rate %</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var d in Model.DepartmentSummaries)
+            <small class="text-uppercase fw-bold text-muted">Pass Rate (@Model.PassCount passed)</small>
+            <strong class="d-block text-success fs-3">
+                @if (Model.HasGradedData)
                 {
-                    <tr>
-                        <td class="ps-4 font-monospace fw-bold text-dark">@d.DepartmentName</td>
-                        <td>@d.TotalStudents</td>
-                        <td>
-                            @if (d.AtRiskCount > 0)
-                            {
-                                <span class="badge bg-danger-subtle text-danger border px-2">@d.AtRiskCount</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-success-subtle text-success px-2">0</span>
-                            }
-                        </td>
-                        <td><span class="text-danger fw-bold">@d.HighRiskCount</span></td>
-                        <td><span class="text-warning fw-bold">@d.MediumRiskCount</span></td>
-                        <td class="fw-semibold">@d.AverageGpa.ToString("F2")</td>
-                        <td class="fw-semibold">@d.AverageAttendance.ToString("F1")%</td>
-                        <td class="pe-4">
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="progress flex-grow-1" style="height: 6px; width: 60px;">
-                                    <div class="progress-bar bg-danger" style="width: @d.AtRiskPercentage%"></div>
-                                </div>
-                                <small class="fw-bold">@d.AtRiskPercentage%</small>
-                            </div>
-                        </td>
-                    </tr>
+                    @($"{Model.PassRate:F1}%")
                 }
-            </tbody>
-        </table>
+                else
+                {
+                    <span class="fs-6 text-muted">N/A</span>
+                }
+            </strong>
+            <div class="stat-line">
+                <span style="width: @(Model.HasGradedData ? Model.PassRate : 0)%; background-color: #10b981;"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat h-100 shadow-sm border-0 rounded-3" style="--accent: #ef4444;">
+            <div class="stat-top">
+                <i class="bi bi-x-circle-fill">
+                    <span>FAIL RATE</span>
+                </i>
+                <span class="trend text-danger">Failed</span>
+            </div>
+            <small class="text-uppercase fw-bold text-muted">Fail Rate (@Model.FailCount failed)</small>
+            <strong class="d-block text-danger fs-3">
+                @if (Model.HasGradedData)
+                {
+                    @($"{Model.FailRate:F1}%")
+                }
+                else
+                {
+                    <span class="fs-6 text-muted">N/A</span>
+                }
+            </strong>
+            <div class="stat-line">
+                <span style="width: @(Model.HasGradedData ? Model.FailRate : 0)%; background-color: #ef4444;"></span>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Course Summary Table -->
-<div class="card shadow-sm">
-    <div class="card-heading border-bottom p-3">
-        <h3 class="h5 mb-0 fw-bold"><i class="bi bi-journal-text me-2 text-primary"></i>Course Level Performance & Grade Summary</h3>
+@if (!Model.HasGradedData)
+{
+    <!-- Empty State Notification -->
+    <div class="card p-5 mb-4 text-center border-0 shadow-sm rounded-3 bg-light">
+        <div class="mb-3">
+            <i class="bi bi-bar-chart-line display-4 text-muted opacity-50"></i>
+        </div>
+        <h4 class="h5 fw-bold text-dark">No graded student data is available for the selected filters.</h4>
+        <p class="text-muted mb-3">Adjust your academic year, semester, department, or course selection to view performance analytics.</p>
+        <div>
+            <a asp-action="Index" class="btn btn-sm btn-outline-primary px-3">
+                <i class="bi bi-arrow-counterclockwise me-1"></i> Clear Filters
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Graphical Charts Section -->
+    <div class="row g-4 mb-4">
+        <!-- Pass/Fail Distribution Donut Chart -->
+        <div class="col-12 col-lg-5">
+            <div class="card p-4 h-100 shadow-sm border-0 rounded-3">
+                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                    <h3 class="h5 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-pie-chart-fill text-primary"></i> Pass / Fail Distribution
+                    </h3>
+                    <span class="badge bg-light text-muted border">Total: @Model.TotalGradedStudents</span>
+                </div>
+                <div class="chart-container position-relative d-flex align-items-center justify-content-center" style="min-height: 280px; max-height: 320px;">
+                    <canvas id="passFailChart"></canvas>
+                </div>
+                <div class="row text-center mt-3 pt-2 border-top g-2">
+                    <div class="col-6">
+                        <div class="p-2 rounded bg-success-subtle border border-success-subtle">
+                            <span class="small text-success fw-bold text-uppercase d-block">Passed</span>
+                            <span class="h6 mb-0 fw-bold text-success">@Model.PassCount (@Model.PassRate:F1%)</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-2 rounded bg-danger-subtle border border-danger-subtle">
+                            <span class="small text-danger fw-bold text-uppercase d-block">Failed</span>
+                            <span class="h6 mb-0 fw-bold text-danger">@Model.FailCount (@Model.FailRate:F1%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course Averages Horizontal Bar Chart -->
+        <div class="col-12 col-lg-7">
+            <div class="card p-4 h-100 shadow-sm border-0 rounded-3">
+                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                    <h3 class="h5 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-bar-chart-steps text-primary"></i> Course Average Performance
+                    </h3>
+                    <span class="badge bg-light text-muted border">Average Final Mark out of 100</span>
+                </div>
+                <div class="chart-container position-relative" style="min-height: 280px; max-height: 360px; overflow-y: auto;">
+                    <canvas id="courseAveragesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Course Performance Table -->
+<div class="card shadow-sm border-0 rounded-3 mb-4">
+    <div class="card-heading border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <h3 class="h5 mb-0 fw-bold d-flex align-items-center gap-2">
+            <i class="bi bi-table text-primary"></i> Course Performance Summary
+        </h3>
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+            @Model.CourseAverages.Count Courses
+        </span>
     </div>
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr>
-                    <th class="ps-4">Course</th>
-                    <th>Assigned Instructor</th>
-                    <th>Credit Hours</th>
+                    <th class="ps-4">Course Code</th>
+                    <th>Course Title</th>
+                    <th>Instructor</th>
                     <th>Enrolled</th>
                     <th>Graded</th>
-                    <th>Avg. Total Mark</th>
-                    <th>Pass Rate</th>
-                    <th class="pe-4">At-Risk Enrolled</th>
+                    <th>Average Mark</th>
+                    <th>Pass Count</th>
+                    <th>Fail Count</th>
+                    <th class="pe-4">Pass Rate</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var c in Model.CourseSummaries)
+                @if (!Model.CourseAverages.Any())
                 {
                     <tr>
-                        <td class="ps-4">
-                            <strong class="d-block text-dark">@c.CourseCode</strong>
-                            <small class="text-muted">@c.CourseTitle</small>
-                        </td>
-                        <td><span class="fw-medium text-dark">@c.TeacherName</span></td>
-                        <td>@c.CreditHours.ToString("F1")</td>
-                        <td>@c.TotalEnrolled</td>
-                        <td>@c.GradedCount</td>
-                        <td class="fw-bold text-primary">@c.AverageTotalMark.ToString("F1") / 100</td>
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="badge @(c.PassRatePercent >= 75.0m ? "bg-success-subtle text-success" : "bg-warning-subtle text-warning") border px-2">
-                                    @c.PassRatePercent% Pass
-                                </span>
-                                <small class="text-muted">(@c.PassCount P / @c.FailCount F)</small>
-                            </div>
-                        </td>
-                        <td class="pe-4">
-                            @if (c.AtRiskEnrolledCount > 0)
-                            {
-                                <span class="badge bg-danger text-white px-2 py-1">@c.AtRiskEnrolledCount At-Risk</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-success-subtle text-success px-2">0</span>
-                            }
+                        <td colspan="9" class="text-center py-4 text-muted">
+                            No course records found for the current selection.
                         </td>
                     </tr>
+                }
+                else
+                {
+                    @foreach (var c in Model.CourseAverages)
+                    {
+                        <tr>
+                            <td class="ps-4 font-monospace fw-bold text-dark">@c.CourseCode</td>
+                            <td><strong class="text-dark">@c.CourseTitle</strong></td>
+                            <td><span class="text-muted small">@c.TeacherName</span></td>
+                            <td><span class="badge bg-light text-dark border">@c.TotalEnrolledCount</span></td>
+                            <td>
+                                @if (c.GradedStudentCount > 0)
+                                {
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle">@c.GradedStudentCount</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary">0</span>
+                                }
+                            </td>
+                            <td>
+                                @if (c.GradedStudentCount > 0)
+                                {
+                                    <span class="fw-bold text-primary">@c.AverageMark.ToString("F1")</span>
+                                    <small class="text-muted">/ 100</small>
+                                }
+                                else
+                                {
+                                    <span class="text-muted fst-italic small">No graded data</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="fw-semibold text-success">@c.PassCount</span>
+                            </td>
+                            <td>
+                                <span class="fw-semibold @(c.FailCount > 0 ? "text-danger" : "text-muted")">@c.FailCount</span>
+                            </td>
+                            <td class="pe-4">
+                                @if (c.GradedStudentCount > 0)
+                                {
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress flex-grow-1" style="height: 8px; width: 60px; min-width: 50px;">
+                                            <div class="progress-bar @(c.PassRate >= 75.0m ? "bg-success" : c.PassRate >= 50.0m ? "bg-warning" : "bg-danger")"
+                                                 style="width: @c.PassRate%;"></div>
+                                        </div>
+                                        <small class="fw-bold @(c.PassRate >= 75.0m ? "text-success" : "text-dark")">@c.PassRate:F1%</small>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">N/A</span>
+                                }
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    @if (Model.HasGradedData)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // 1. Pass / Fail Distribution Donut Chart
+                const passFailCtx = document.getElementById('passFailChart');
+                if (passFailCtx) {
+                    const passCount = @Model.PassCount;
+                    const failCount = @Model.FailCount;
+                    const total = passCount + failCount;
+
+                    new Chart(passFailCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Pass (>= 40)', 'Fail (< 40)'],
+                            datasets: [{
+                                data: [passCount, failCount],
+                                backgroundColor: ['#10b981', '#ef4444'],
+                                hoverBackgroundColor: ['#059669', '#dc2626'],
+                                borderWidth: 2,
+                                borderColor: '#ffffff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        boxWidth: 14,
+                                        font: { family: "'Outfit', sans-serif", size: 12 },
+                                        padding: 15
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: '#1e293b',
+                                    titleFont: { family: "'Outfit', sans-serif", weight: 'bold' },
+                                    bodyFont: { family: "'Outfit', sans-serif" },
+                                    callbacks: {
+                                        label: function (context) {
+                                            const count = context.raw || 0;
+                                            const pct = total > 0 ? ((count / total) * 100).toFixed(1) : '0.0';
+                                            return ` Students: ${count} (${pct}%)`;
+                                        }
+                                    }
+                                }
+                            },
+                            cutout: '65%'
+                        }
+                    });
+                }
+
+                // 2. Course Averages Horizontal Bar Chart
+                const courseAvgCtx = document.getElementById('courseAveragesChart');
+                if (courseAvgCtx) {
+                    @{
+                        var gradedCourses = Model.CourseAverages.Where(c => c.GradedStudentCount > 0).ToList();
+                        var courseCodesJson = System.Text.Json.JsonSerializer.Serialize(gradedCourses.Select(c => c.CourseCode));
+                        var courseTitlesJson = System.Text.Json.JsonSerializer.Serialize(gradedCourses.Select(c => c.CourseTitle));
+                        var courseAveragesJson = System.Text.Json.JsonSerializer.Serialize(gradedCourses.Select(c => c.AverageMark));
+                    }
+
+                    const courseCodes = @Html.Raw(courseCodesJson);
+                    const courseTitles = @Html.Raw(courseTitlesJson);
+                    const courseAverages = @Html.Raw(courseAveragesJson);
+
+                    new Chart(courseAvgCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: courseCodes,
+                            datasets: [{
+                                label: 'Average Mark',
+                                data: courseAverages,
+                                backgroundColor: '#4f46e5',
+                                hoverBackgroundColor: '#4338ca',
+                                borderRadius: 6,
+                                barThickness: 24,
+                                maxBarThickness: 32
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                                    ticks: {
+                                        font: { family: "'Outfit', sans-serif" },
+                                        callback: function (val) { return val + '%'; }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Average Final Mark (0 - 100)',
+                                        font: { family: "'Outfit', sans-serif", weight: 'bold' }
+                                    }
+                                },
+                                y: {
+                                    grid: { display: false },
+                                    ticks: {
+                                        font: { family: "'Outfit', sans-serif", weight: 'bold' }
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    backgroundColor: '#1e293b',
+                                    titleFont: { family: "'Outfit', sans-serif", weight: 'bold' },
+                                    bodyFont: { family: "'Outfit', sans-serif" },
+                                    callbacks: {
+                                        title: function (context) {
+                                            const idx = context[0].dataIndex;
+                                            return `${courseCodes[idx]} - ${courseTitles[idx]}`;
+                                        },
+                                        label: function (context) {
+                                            return ` Average: ${context.raw.toFixed(1)} / 100`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
+    }
+}
