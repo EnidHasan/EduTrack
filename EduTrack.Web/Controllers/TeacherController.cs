@@ -29,6 +29,9 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         return View(enrollments);
     }
 
+    /// <summary>
+    /// Displays the grade entry form for a specific course enrollment.
+    /// </summary>
     public async Task<IActionResult> GradeEntry(int enrollmentId)
     {
         var teacher = await CurrentTeacherAsync();
@@ -39,6 +42,9 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         return View(enrollment.Grade ?? new Grade { EnrollmentId = enrollmentId, Enrollment = enrollment });
     }
 
+    /// <summary>
+    /// Validates mark bounds, saves grade details, and recalculates total grade & letter grade.
+    /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> GradeEntry(Grade model)
     {
@@ -75,6 +81,9 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         return RedirectToAction(nameof(Course), new { id = enrollment.CourseId });
     }
 
+    /// <summary>
+    /// Renders all student recheck requests submitted to the logged-in teacher.
+    /// </summary>
     public async Task<IActionResult> Disputes()
     {
         var teacher = await CurrentTeacherAsync();
@@ -83,6 +92,9 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         return View(requests);
     }
 
+    /// <summary>
+    /// Approves or rejects a student recheck request and auto-syncs total grades.
+    /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateDisputeStatus(int requestId, string status, string? comment)
     {
