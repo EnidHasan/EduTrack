@@ -7,7 +7,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Course Materials: @course?.CourseName (@course?.CourseCode)</h2>
     <div>
-        <a asp-action="Create" asp-route-courseId="@course?.Id" class="btn btn-primary">
+        <a asp-action="Create" asp-route-courseId="@course?.Id" class="btn btn-primary teacher-material-upload">
             <i class="bi bi-upload"></i> Upload Material
         </a>
         <a asp-controller="Teacher" asp-action="Course" asp-route-id="@course?.Id" class="btn btn-secondary">
@@ -44,16 +44,16 @@ else
                                 <td>@material.OriginalFileName</td>
                                 <td>@material.UploadedAt.ToString("MMM dd, yyyy")</td>
                                 <td>
-                                    <div class="btn-group btn-group-sm">
-                                        <a asp-action="Download" asp-route-id="@material.Id" class="btn btn-outline-primary" target="_blank" title="Download">
-                                            <i class="bi bi-download"></i>
+                                    <div class="material-admin-actions">
+                                        <a asp-action="Download" asp-route-id="@material.Id" class="material-admin-action material-admin-download" target="_blank" title="Download file" aria-label="Download @material.OriginalFileName">
+                                            <i class="bi bi-download" aria-hidden="true"></i><span>Download</span>
                                         </a>
-                                        <a asp-action="Edit" asp-route-id="@material.Id" class="btn btn-outline-secondary" title="Edit Metadata">
-                                            <i class="bi bi-pencil"></i>
+                                        <a asp-action="Edit" asp-route-id="@material.Id" class="material-admin-action material-admin-edit" title="Edit material details" aria-label="Edit @material.Title">
+                                            <i class="bi bi-pencil-square" aria-hidden="true"></i><span>Edit</span>
                                         </a>
                                         <form asp-action="Delete" asp-route-id="@material.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this material?');">
-                                            <button type="submit" class="btn btn-outline-danger" title="Delete">
-                                                <i class="bi bi-trash"></i>
+                                            <button type="submit" class="material-admin-action material-admin-delete" title="Delete material" aria-label="Delete @material.Title">
+                                                <i class="bi bi-trash3" aria-hidden="true"></i><span>Delete</span>
                                             </button>
                                         </form>
                                     </div>
