@@ -13,6 +13,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<AtRiskFlag> AtRiskFlags => Set<AtRiskFlag>();
     public DbSet<CourseMaterial> CourseMaterials => Set<CourseMaterial>();
     public DbSet<ClassRoutine> ClassRoutines => Set<ClassRoutine>();
+    public DbSet<TeacherEvaluationPeriod> TeacherEvaluationPeriods => Set<TeacherEvaluationPeriod>();
+    public DbSet<TeacherEvaluation> TeacherEvaluations => Set<TeacherEvaluation>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -41,5 +43,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         builder.Entity<CourseMaterial>().HasOne(x => x.Course).WithMany(x => x.CourseMaterials).HasForeignKey(x => x.CourseId).OnDelete(DeleteBehavior.Cascade);
         builder.Entity<CourseMaterial>().HasOne(x => x.Teacher).WithMany(x => x.CourseMaterials).HasForeignKey(x => x.TeacherId).OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<TeacherEvaluationPeriod>().HasIndex(x => new { x.AcademicYear, x.Term }).IsUnique();
+        builder.Entity<TeacherEvaluation>().HasIndex(x => new { x.PeriodId, x.EnrollmentId }).IsUnique();
+        builder.Entity<TeacherEvaluation>().HasOne(x => x.Period).WithMany().HasForeignKey(x => x.PeriodId).OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<TeacherEvaluation>().HasOne(x => x.Enrollment).WithMany().HasForeignKey(x => x.EnrollmentId).OnDelete(DeleteBehavior.Cascade);
     }
 }

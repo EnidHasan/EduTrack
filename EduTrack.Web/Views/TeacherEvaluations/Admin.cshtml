@@ -1,0 +1,15 @@
+@model IReadOnlyList<EduTrack.Web.ViewModels.EvaluationSummary>
+@{ ViewData["Title"] = "Teacher Evaluations"; var periods = ViewBag.Periods as List<EduTrack.Web.Models.TeacherEvaluationPeriod> ?? []; }
+<div class="evaluation-hero evaluation-hero-compact"><span class="evaluation-kicker"><i class="bi bi-stars"></i> QUALITY OF TEACHING</span><h1>Teacher evaluations</h1><p>Manage feedback windows and view course-level results. Responses are presented without student identities.</p></div>
+<div class="evaluation-section-heading"><div><span class="evaluation-kicker">ADMINISTRATION</span><h2>Evaluation periods</h2></div><a asp-action="CreatePeriod" class="evaluation-button"><i class="bi bi-plus-lg"></i> New period</a></div>
+<div class="evaluation-grid">
+@foreach (var period in periods)
+{
+    var now = DateTime.UtcNow;
+    var status = !period.IsEnabled ? "Paused" : now < period.OpensAtUtc ? "Upcoming" : now >= period.ClosesAtUtc ? "Closed" : "Open";
+    <article class="evaluation-card"><div class="evaluation-card-top"><span class="evaluation-course-code">@period.Term @period.AcademicYear</span><span class="evaluation-term">@status</span></div><h3>@period.Term @period.AcademicYear</h3><p>@period.OpensAtUtc.ToLocalTime().ToString("dd MMM yyyy, h:mm tt") → @period.ClosesAtUtc.ToLocalTime().ToString("dd MMM yyyy, h:mm tt")</p><div class="d-flex flex-wrap gap-2 mt-auto"><a asp-action="EditClosingDate" asp-route-id="@period.Id" class="evaluation-button evaluation-button-light evaluation-period-edit"><i class="bi bi-calendar-event" aria-hidden="true"></i> Edit closing date</a><form asp-action="TogglePeriod" asp-route-id="@period.Id" method="post">@Html.AntiForgeryToken()<button type="submit" class="evaluation-button evaluation-button-light evaluation-period-toggle"><i class="bi @(period.IsEnabled ? "bi-pause-circle" : "bi-play-circle")" aria-hidden="true"></i> @(period.IsEnabled ? "Pause submissions" : "Enable submissions")</button></form></div></article>
+}
+@if (periods.Count == 0) { <div class="evaluation-empty"><i class="bi bi-calendar-plus"></i><h3>No periods yet</h3><p>Create a period to invite student feedback.</p></div> }
+</div>
+<div class="evaluation-section-heading"><div><span class="evaluation-kicker">INSIGHTS</span><h2>Course results</h2></div><span class="evaluation-count">@Model.Count course summaries</span></div>
+<partial name="_SummaryCards" model="Model" />

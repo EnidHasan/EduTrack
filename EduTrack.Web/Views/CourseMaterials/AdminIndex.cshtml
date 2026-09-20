@@ -34,13 +34,13 @@
                             <td>@material.OriginalFileName</td>
                             <td>@material.UploadedAt.ToString("MMM dd, yyyy HH:mm")</td>
                             <td>
-                                <div class="btn-group btn-group-sm">
-                                    <a asp-action="Download" asp-route-id="@material.Id" class="btn btn-outline-primary" target="_blank" title="Download">
-                                        <i class="bi bi-download"></i>
+                                <div class="material-admin-actions">
+                                    <a asp-action="Download" asp-route-id="@material.Id" class="material-admin-action material-admin-download" target="_blank" title="Download file" aria-label="Download @material.OriginalFileName">
+                                        <i class="bi bi-download" aria-hidden="true"></i><span>Download</span>
                                     </a>
                                     <form asp-action="AdminDelete" asp-route-id="@material.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to forcibly delete this material as Admin?');">
-                                        <button type="submit" class="btn btn-outline-danger" title="Force Delete">
-                                            <i class="bi bi-trash"></i>
+                                        <button type="submit" class="material-admin-action material-admin-delete" title="Delete material" aria-label="Delete @material.OriginalFileName">
+                                            <i class="bi bi-trash3" aria-hidden="true"></i><span>Delete</span>
                                         </button>
                                     </form>
                                 </div>

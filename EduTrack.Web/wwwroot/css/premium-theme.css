@@ -2123,3 +2123,155 @@ body:not(.role-member) {
     outline: 3px solid rgba(61,205,187,.30) !important;
     outline-offset: 3px;
 }
+
+/* Routine table actions: distinct, compact controls without changing their links. */
+.page-routine .routine-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+.page-routine .routine-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid;
+    border-radius: 11px;
+    font-size: .9rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 5px 12px rgba(21, 42, 73, .08);
+}
+.page-routine .routine-action-edit {
+    color: #164681;
+    border-color: #a9c6ec;
+    background: linear-gradient(135deg, #f5f9ff, #e7f1ff);
+}
+.page-routine .routine-action-delete {
+    color: #a63042;
+    border-color: #efb7be;
+    background: linear-gradient(135deg, #fff8f7, #ffecee);
+}
+.page-routine .routine-action-edit:hover {
+    color: #fff;
+    border-color: #245ea8;
+    background: linear-gradient(135deg, #2859a4, #3478bd);
+}
+.page-routine .routine-action-delete:hover {
+    color: #fff;
+    border-color: #ae3448;
+    background: linear-gradient(135deg, #b7354b, #d8525b);
+}
+.page-routine .routine-action:focus-visible {
+    outline: 3px solid #6cbcc4;
+    outline-offset: 2px;
+}
+
+/* Admin course-material actions stay visually separate and clearly labelled. */
+.page-coursematerials .material-admin-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+.page-coursematerials .material-admin-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px 13px;
+    border: 1px solid;
+    border-radius: 11px;
+    font-size: .88rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 5px 12px rgba(21, 42, 73, .08);
+}
+.page-coursematerials .material-admin-download {
+    color: #174b83;
+    border-color: #a7c7eb;
+    background: linear-gradient(135deg, #f5faff, #e5f1ff);
+}
+.page-coursematerials .material-admin-delete {
+    color: #a42e42;
+    border-color: #edb7be;
+    background: linear-gradient(135deg, #fff8f7, #ffecee);
+}
+.page-coursematerials .material-admin-download:hover {
+    color: #fff;
+    border-color: #2363a4;
+    background: linear-gradient(135deg, #25599d, #3283b9);
+}
+.page-coursematerials .material-admin-delete:hover {
+    color: #fff;
+    border-color: #ab3348;
+    background: linear-gradient(135deg, #b5344c, #d45159);
+}
+.page-coursematerials .material-admin-action:focus-visible {
+    outline: 3px solid #6cbcc4;
+    outline-offset: 2px;
+}
+
+/* Teacher-facing course navigation and material actions. */
+.page-teacher .teacher-return-courses {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 48px;
+    padding: 11px 17px;
+    color: #133e70 !important;
+    border: 1px solid #b9d3ee !important;
+    border-radius: 14px !important;
+    background: linear-gradient(135deg, #ffffff, #e7f3ff) !important;
+    box-shadow: 0 9px 19px rgba(10, 35, 67, .16) !important;
+    font-weight: 800;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+.page-teacher .teacher-return-courses:hover {
+    color: #fff !important;
+    border-color: #3c76af !important;
+    background: linear-gradient(135deg, #264e84, #3985ad) !important;
+}
+.page-teacher .teacher-return-courses:focus-visible {
+    outline: 3px solid #66c8bd;
+    outline-offset: 3px;
+}
+.page-coursematerials .teacher-material-upload.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 48px;
+    padding: 11px 18px;
+    color: #fff !important;
+    border: 1px solid #3d869e !important;
+    border-radius: 14px !important;
+    background: linear-gradient(115deg, #194f82, #197f83) !important;
+    box-shadow: 0 10px 22px rgba(14, 70, 91, .24) !important;
+    font-weight: 800;
+    white-space: nowrap;
+}
+.page-coursematerials .teacher-material-upload.btn:hover {
+    color: #fff !important;
+    background: linear-gradient(115deg, #163e70, #12696d) !important;
+}
+.page-coursematerials .material-admin-edit {
+    color: #185d69;
+    border-color: #a9d6d4;
+    background: linear-gradient(135deg, #f5fcfb, #e4f5f1);
+}
+.page-coursematerials .material-admin-edit:hover {
+    color: #fff;
+    border-color: #218079;
+    background: linear-gradient(135deg, #197b78, #329b8d);
+}

@@ -1,0 +1,21 @@
+@model IReadOnlyList<EduTrack.Web.ViewModels.EvaluationSummary>
+@if (Model.Count == 0) { <div class="evaluation-empty"><i class="bi bi-bar-chart-line"></i><h3>No feedback yet</h3><p>Results will appear here after students submit evaluations.</p></div> }
+else
+{
+    <div class="evaluation-grid">
+    @foreach (var item in Model)
+    {
+        <article class="evaluation-card evaluation-result">
+            <div class="evaluation-card-top"><span class="evaluation-course-code">@item.CourseCode</span><span class="evaluation-term">@item.PeriodLabel</span></div>
+            <h3>@item.CourseName</h3><p><i class="bi bi-person-badge"></i> @item.TeacherName · @item.ResponseCount @(item.ResponseCount == 1 ? "response" : "responses")</p>
+            @if (item.IsVisible)
+            {
+                <div class="evaluation-score"><strong>@item.Overall.ToString("F1")</strong><span>/ 5 overall</span></div>
+                <div class="evaluation-metrics"><span>Clarity <b>@item.Clarity.ToString("F1")</b></span><span>Preparation <b>@item.Preparation.ToString("F1")</b></span><span>Fairness <b>@item.Fairness.ToString("F1")</b></span><span>Communication <b>@item.Communication.ToString("F1")</b></span></div>
+                @if (item.Comments.Count > 0) { <div class="evaluation-comments"><strong>Student feedback</strong>@foreach (var comment in item.Comments) { <blockquote>@comment</blockquote> }</div> }
+            }
+            else { <div class="evaluation-locked"><i class="bi bi-lock-fill"></i> Results appear after closing with at least 3 responses.</div> }
+        </article>
+    }
+    </div>
+}

@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/><link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/><link rel="stylesheet" href="~/css/login.css" asp-append-version="true"/><link rel="stylesheet" href="~/css/app.css" asp-append-version="true"/><link rel="stylesheet" href="~/css/refinements.css" asp-append-version="true"/><link rel="stylesheet" href="~/css/accounts.css" asp-append-version="true"/><link rel="stylesheet" href="~/css/sidebar-fix.css" asp-append-version="true"/><link rel="stylesheet" href="~/css/checkpoint2.css" asp-append-version="true"/><link rel="stylesheet" href="~/css/premium-theme.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/teacher-evaluations.css" asp-append-version="true"/>
 </head><body class="role-@role.ToLowerInvariant() page-@(page?.ToLowerInvariant() ?? "public")">
 <a class="skip-link" href="#main-content">Skip to main content</a>
 @if (User.Identity?.IsAuthenticated == true) {
@@ -23,6 +24,7 @@
 <a class="@(page == "Teacher" && ViewContext.RouteData.Values["action"]?.ToString() == "Disputes" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Teacher" && ViewContext.RouteData.Values["action"]?.ToString() == "Disputes" ? "page" : null)" asp-controller="Teacher" asp-action="Disputes"><i class="bi bi-exclamation-triangle-fill text-warning"></i> Grade Disputes</a>
 <a class="@(page == "EarlyWarning" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "EarlyWarning" ? "page" : null)" asp-controller="EarlyWarning" asp-action="Index"><i class="bi bi-shield-exclamation text-danger"></i> Course At-Risk Panel</a>
 <a class="@(page == "Reports" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Reports" ? "page" : null)" asp-controller="Reports" asp-action="Index"><i class="bi bi-bar-chart-line-fill text-primary"></i> Academic Analytics</a>
+<a class="@(page == "TeacherEvaluations" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "TeacherEvaluations" ? "page" : null)" asp-controller="TeacherEvaluations" asp-action="Teacher"><i class="bi bi-stars text-warning"></i> My Evaluations</a>
 }
 @if (User.IsInRole("Admin")) {
 <span class="nav-label">Administration</span>
@@ -31,6 +33,7 @@
 <a class="@(page == "Courses" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Courses" ? "page" : null)" asp-controller="Courses" asp-action="Index"><i class="bi bi-layers-fill text-primary"></i> Courses</a>
 <a class="@(page == "Routine" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Routine" ? "page" : null)" asp-controller="Routine" asp-action="Index"><i class="bi bi-calendar-week-fill text-success"></i> Class Routine</a>
 <a class="@(page == "CourseMaterials" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "CourseMaterials" ? "page" : null)" asp-controller="CourseMaterials" asp-action="AdminIndex"><i class="bi bi-folder-fill text-secondary"></i> Course Materials</a>
+<a class="@(page == "TeacherEvaluations" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "TeacherEvaluations" ? "page" : null)" asp-controller="TeacherEvaluations" asp-action="Admin"><i class="bi bi-stars text-warning"></i> Teacher Evaluations</a>
 <a class="@(page == "Enrollments" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Enrollments" ? "page" : null)" asp-controller="Enrollments" asp-action="Index"><i class="bi bi-clipboard2-check-fill text-warning"></i> Enrollments</a>
 <a class="@(page == "Users" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Users" ? "page" : null)" asp-controller="Users" asp-action="Index"><i class="bi bi-shield-lock-fill text-danger"></i> User accounts</a>
 <span class="nav-label">Analytics & Early Warning</span>
@@ -42,6 +45,7 @@
 <a class="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "page" : null)" asp-controller="Student" asp-action="Index"><i class="bi bi-file-earmark-text-fill text-info"></i> My Transcript</a>
 <a class="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "Disputes" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "Disputes" ? "page" : null)" asp-controller="Student" asp-action="Disputes"><i class="bi bi-exclamation-triangle-fill text-warning"></i> My Disputes</a>
 <a class="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "MyRoutine" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "MyRoutine" ? "page" : null)" asp-controller="Student" asp-action="MyRoutine"><i class="bi bi-calendar-week-fill text-success"></i> Class Routine</a>
+<a class="@(page == "TeacherEvaluations" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "TeacherEvaluations" ? "page" : null)" asp-controller="TeacherEvaluations" asp-action="Index"><i class="bi bi-stars text-warning"></i> Teacher Evaluation</a>
 }
  </nav>
 <div class="sidebar-account"><span class="nav-label">Account</span><a class="@(page == "Account" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Account" ? "page" : null)" asp-controller="Account" asp-action="Profile"><i class="bi bi-person-circle text-primary"></i><span>My profile</span><i class="bi bi-chevron-right ms-auto account-chevron"></i></a></div>
