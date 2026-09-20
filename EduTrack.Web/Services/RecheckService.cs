@@ -6,6 +6,9 @@ namespace EduTrack.Web.Services;
 
 public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpaService, GradeCalculatorService calculator)
 {
+    /// <summary>
+    /// Gets all recheck dispute requests submitted by a specific student.
+    /// </summary>
     public async Task<List<RecheckRequest>> GetStudentRequestsAsync(int studentId)
     {
         return await db.RecheckRequests
@@ -16,6 +19,9 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
             .ToListAsync();
     }
 
+    /// <summary>
+    /// Gets all recheck dispute requests assigned to a specific teacher.
+    /// </summary>
     public async Task<List<RecheckRequest>> GetTeacherRequestsAsync(int teacherId)
     {
         return await db.RecheckRequests
@@ -26,6 +32,9 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
             .ToListAsync();
     }
 
+    /// <summary>
+    /// Submits a new student recheck dispute for a given grade if no pending request already exists.
+    /// </summary>
     public async Task<(bool success, string message)> SubmitDisputeAsync(int studentId, int gradeId)
     {
         var grade = await db.Grades
@@ -54,6 +63,10 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
         return (true, "Dispute submitted successfully.");
     }
 
+    /// <summary>
+    /// Updates dispute status to Approved or Rejected.
+    /// On approval, recalculates total grade marks and updates the student's overall CGPA.
+    /// </summary>
     public async Task<(bool success, string message)> UpdateDisputeStatusAsync(int requestId, int teacherId, string status, string? comment)
     {
         var request = await db.RecheckRequests
