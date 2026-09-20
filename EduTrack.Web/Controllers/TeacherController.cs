@@ -121,6 +121,21 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         return View(routines);
     }
 
+    public async Task<IActionResult> DownloadRoutinePdf()
+    {
+        var teacher = await CurrentTeacherAsync();
+        if (teacher is null) return Forbid();
+
+        var routines = await db.ClassRoutines
+            .Include(r => r.Course).ThenInclude(c => c!.Teacher)
+            .Where(r => r.Course!.TeacherId == teacher.Id)
+            .ToListAsync();
+
+        var pdf = ClassRoutinePdfBuilder.Build(routines, $"Teacher: {teacher.FullName} ({teacher.Designation}, {teacher.Department})");
+        return File(pdf, "application/pdf", "EduTrack-Teacher-Routine.pdf");
+    }
+
+
     /// <summary>
     /// Updates the final exam date and time for a teacher's assigned course.
     /// </summary>
