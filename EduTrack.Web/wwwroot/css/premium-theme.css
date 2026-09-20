@@ -2123,3 +2123,51 @@ body:not(.role-member) {
     outline: 3px solid rgba(61,205,187,.30) !important;
     outline-offset: 3px;
 }
+
+/* Routine table actions: distinct, compact controls without changing their links. */
+.page-routine .routine-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+.page-routine .routine-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid;
+    border-radius: 11px;
+    font-size: .9rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 5px 12px rgba(21, 42, 73, .08);
+}
+.page-routine .routine-action-edit {
+    color: #164681;
+    border-color: #a9c6ec;
+    background: linear-gradient(135deg, #f5f9ff, #e7f1ff);
+}
+.page-routine .routine-action-delete {
+    color: #a63042;
+    border-color: #efb7be;
+    background: linear-gradient(135deg, #fff8f7, #ffecee);
+}
+.page-routine .routine-action-edit:hover {
+    color: #fff;
+    border-color: #245ea8;
+    background: linear-gradient(135deg, #2859a4, #3478bd);
+}
+.page-routine .routine-action-delete:hover {
+    color: #fff;
+    border-color: #ae3448;
+    background: linear-gradient(135deg, #b7354b, #d8525b);
+}
+.page-routine .routine-action:focus-visible {
+    outline: 3px solid #6cbcc4;
+    outline-offset: 2px;
+}

@@ -47,8 +47,10 @@
             <td>@item.EndTime.ToString(@"hh\:mm")</td>
             <td>@item.RoomNumber</td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                <div class="routine-actions">
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="routine-action routine-action-edit"><i class="bi bi-pencil-square" aria-hidden="true"></i> Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="routine-action routine-action-delete"><i class="bi bi-trash3" aria-hidden="true"></i> Delete</a>
+                </div>
             </td>
         </tr>
 }
