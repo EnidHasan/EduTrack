@@ -56,13 +56,21 @@
                                         colSpan++;
                                     }
                                     
-                                    <td colspan="@colSpan" style="border-bottom: 3px solid blue; padding: 10px;">
-                                        <div class="fw-bold">@($"{matchedClass.Course?.CourseCode} ({matchedClass.Section})")</div>
-                                        <div class="text-muted small">@matchedClass.Course?.CreditHours</div>
-                                        <div class="fw-bold">@matchedClass.RoomNumber</div>
+                                    bool isLab = matchedClass.ClassType == "Lab";
+                                    var borderColor = isLab ? "#fd7e14" : "#0d6efd";
+                                    var bgColor = isLab ? "#fff4e6" : "#eef2ff";
+
+                                    <td colspan="@colSpan" style="border-bottom: 4px solid @borderColor; background-color: @bgColor; padding: 10px;">
+                                        @if (isLab)
+                                        {
+                                            <span class="badge bg-warning text-dark mb-1" style="font-size: 0.7rem;">LAB</span>
+                                        }
+                                        <div class="fw-bold text-dark">@($"{matchedClass.Course?.CourseCode} ({(isLab ? "Group " + matchedClass.Section : "Sec " + matchedClass.Section)})")</div>
+                                        <div class="text-muted small">@matchedClass.RoomNumber</div>
                                     </td>
                                     
                                     i += (colSpan - 1);
+
                                 }
                                 else
                                 {

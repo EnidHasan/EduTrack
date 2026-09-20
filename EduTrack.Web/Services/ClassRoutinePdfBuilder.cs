@@ -204,31 +204,39 @@ public static class ClassRoutinePdfBuilder
                     float cellX = startX + dayColWidth + (t * slotColWidth);
                     float cellWidth = colSpan * slotColWidth;
 
-                    // Class Block Card Background Fill (Soft Mint/Blue Box)
-                    sb.AppendLine("0.88 0.94 1.00 rg");
+                    bool isLab = matchedClass.ClassType == "Lab";
+
+                    // Class Block Card Background Fill (Soft Peach for Lab, Soft Blue for Theory)
+                    if (isLab) sb.AppendLine("1.00 0.94 0.88 rg");
+                    else sb.AppendLine("0.88 0.94 1.00 rg");
                     sb.AppendLine($"{cellX + 1} {rowTopY + 1} {cellWidth - 2} {rowHeight - 2} re f");
 
-                    // Blue Bottom Accent Line (matches web UI border-bottom: 3px solid blue)
-                    sb.AppendLine("0.10 0.35 0.85 rg");
+                    // Bottom Accent Line (Orange for Lab, Blue for Theory)
+                    if (isLab) sb.AppendLine("0.95 0.45 0.05 rg");
+                    else sb.AppendLine("0.10 0.35 0.85 rg");
                     sb.AppendLine($"{cellX + 1} {rowTopY + 1} {cellWidth - 2} 3 re f");
 
                     // Class Card Border Outline
-                    sb.AppendLine("0.60 0.75 0.95 RG");
+                    if (isLab) sb.AppendLine("0.95 0.65 0.35 RG");
+                    else sb.AppendLine("0.60 0.75 0.95 RG");
                     sb.AppendLine("0.75 w");
                     sb.AppendLine($"{cellX + 1} {rowTopY + 1} {cellWidth - 2} {rowHeight - 2} re s");
 
                     // Render Class Content Inside Card
-                    string courseCodeSec = $"{matchedClass.Course?.CourseCode} ({matchedClass.Section})";
+                    string secPrefix = isLab ? "Grp " : "Sec ";
+                    string courseCodeSec = (isLab ? "[LAB] " : "") + $"{matchedClass.Course?.CourseCode} ({secPrefix}{matchedClass.Section})";
                     string roomStr = matchedClass.RoomNumber ?? "";
                     string teacherStr = Fit(matchedClass.Course?.Teacher?.FullName, 22);
 
                     // Line 1: Course & Section (Bold 8pt)
                     sb.AppendLine("BT");
                     sb.AppendLine("/F1 8 Tf");
-                    sb.AppendLine("0.05 0.20 0.60 rg");
+                    if (isLab) sb.AppendLine("0.70 0.25 0.00 rg");
+                    else sb.AppendLine("0.05 0.20 0.60 rg");
                     sb.AppendLine($"{cellX + 4} {rowTopY + rowHeight - 14} Td");
-                    sb.AppendLine($"({Escape(Fit(courseCodeSec, 24))}) Tj");
+                    sb.AppendLine($"({Escape(Fit(courseCodeSec, 35))}) Tj");
                     sb.AppendLine("ET");
+
 
                     // Line 2: Room Number (Bold 8pt)
                     if (!string.IsNullOrWhiteSpace(roomStr))

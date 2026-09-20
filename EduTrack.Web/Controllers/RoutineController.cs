@@ -30,7 +30,7 @@ public class RoutineController(ApplicationDbContext db) : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("CourseId,DayOfWeek,StartTime,EndTime,RoomNumber,Section,SemesterLevel")] ClassRoutine routine)
+    public async Task<IActionResult> Create([Bind("CourseId,DayOfWeek,StartTime,EndTime,RoomNumber,Section,SemesterLevel,ClassType")] ClassRoutine routine)
     {
         if (ModelState.IsValid)
         {
@@ -55,7 +55,8 @@ public class RoutineController(ApplicationDbContext db) : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,CourseId,DayOfWeek,StartTime,EndTime,RoomNumber,Section,SemesterLevel")] ClassRoutine routine)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,CourseId,DayOfWeek,StartTime,EndTime,RoomNumber,Section,SemesterLevel,ClassType")] ClassRoutine routine)
+
     {
         if (id != routine.Id) return NotFound();
 
