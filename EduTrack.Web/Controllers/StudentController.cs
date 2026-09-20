@@ -131,4 +131,48 @@ public class StudentController(ApplicationDbContext db, UserManager<ApplicationU
         var pdf = ClassRoutinePdfBuilder.Build(routines, $"Student: {student.FullName} ({student.RollNumber})");
         return File(pdf, "application/pdf", "EduTrack-Student-Routine.pdf");
     }
+
+    public async Task<IActionResult> ExamRoutine()
+    {
+        var user = await users.GetUserAsync(User);
+        if (user == null) return NotFound();
+
+        var student = await db.Students.FirstOrDefaultAsync(s => s.ApplicationUserId == user.Id);
+        if (student == null) return NotFound();
+
+        var enrolledCourses = await db.Enrollments
+            .Include(e => e.Course)
+            .ThenInclude(c => c!.Teacher)
+            .Where(e => e.StudentId == student.Id && e.Course != null)
+            .Select(e => e.Course!)
+            .Distinct()
+            .OrderBy(c => c.FinalExamDate.HasValue ? 0 : 1)
+            .ThenBy(c => c.FinalExamDate)
+            .ThenBy(c => c.CourseCode)
+            .ToListAsync();
+
+        return View(enrolledCourses);
+    }
+
+    public async Task<IActionResult> DownloadExamRoutinePdf()
+    {
+        var user = await users.GetUserAsync(User);
+        if (user is null) return NotFound();
+        var student = await db.Students.FirstOrDefaultAsync(s => s.ApplicationUserId == user.Id);
+        if (student is null) return NotFound();
+
+        var enrolledCourses = await db.Enrollments
+            .Include(e => e.Course)
+            .ThenInclude(c => c!.Teacher)
+            .Where(e => e.StudentId == student.Id && e.Course != null)
+            .Select(e => e.Course!)
+            .Distinct()
+            .OrderBy(c => c.FinalExamDate.HasValue ? 0 : 1)
+            .ThenBy(c => c.FinalExamDate)
+            .ThenBy(c => c.CourseCode)
+            .ToListAsync();
+
+        var pdf = ExamRoutinePdfBuilder.Build(enrolledCourses, $"Student: {student.FullName} ({student.RollNumber})");
+        return File(pdf, "application/pdf", $"EduTrack-Exam-Routine-{student.RollNumber}.pdf");
+    }
 }
