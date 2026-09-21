@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>EduTrack — Open Book Logo Variations</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #f4f7fb; color: #0f2740; font-family: "Segoe UI", Arial, sans-serif; }
+        main { max-width: 1160px; margin: auto; padding: 48px 24px; }
+        .eyebrow { color: #1741a6; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+        h1 { margin: 12px 0; font-size: clamp(30px, 5vw, 46px); letter-spacing: -.045em; line-height: 1.12; }
+        .intro { max-width: 730px; color: #526479; line-height: 1.7; margin: 0 0 20px; }
+        .reference { display: inline-flex; align-items: center; gap: 12px; padding: 10px 16px; margin-bottom: 28px; background: white; border: 1px solid #dce4ef; border-radius: 12px; color: #526479; font-size: 12px; }
+        .reference img { width: 36px; height: 36px; }
+        .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+        article { overflow: hidden; background: white; border: 1px solid #dce4ef; border-radius: 22px; box-shadow: 0 8px 28px #0f274006; }
+        .heading { display: flex; align-items: center; gap: 12px; padding: 22px 24px 0; }
+        .number { display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 auto; background: #eff6ff; border-radius: 50%; color: #1741a6; font-size: 14px; font-weight: 700; }
+        h2 { margin: 0; font-size: 17px; letter-spacing: -.02em; }
+        .category { margin: 4px 0 0; font-size: 12px; color: #526479; }
+        .hero { display: flex; align-items: center; justify-content: center; gap: 18px; min-height: 194px; padding: 26px 20px; }
+        .hero img { width: 88px; height: 88px; flex: 0 0 auto; }
+        .wordmark { font-size: 36px; font-weight: 750; letter-spacing: -.055em; white-space: nowrap; }
+        .wordmark span { color: #2563eb; }
+        .tagline { margin-top: 4px; color: #526479; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; }
+        .dark { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: #0f2740; padding: 22px 24px; }
+        .compact { display: flex; align-items: center; gap: 10px; }
+        .compact img { width: 36px; height: 36px; }
+        .compact .wordmark { color: white; font-size: 23px; }
+        .compact .wordmark span { color: #5eead4; }
+        .micro { display: flex; align-items: center; gap: 10px; color: #c0cede; font-size: 11px; }
+        .micro img { width: 24px; height: 24px; }
+        .details { padding: 20px 24px 24px; }
+        .details p { min-height: 48px; margin: 0 0 14px; color: #526479; font-size: 14px; line-height: 1.65; }
+        a { color: #1741a6; font-size: 13px; font-weight: 650; text-underline-offset: 4px; }
+        a:focus-visible { outline: 3px solid #2563eb; outline-offset: 5px; border-radius: 2px; }
+        footer { margin-top: 28px; padding: 22px 24px; border: 1px dashed #b8c7d9; border-radius: 16px; color: #526479; font-size: 14px; line-height: 1.7; }
+        footer strong { color: #0f2740; }
+        @media (max-width: 720px) {
+            main { padding: 30px 16px; }
+            .grid { grid-template-columns: 1fr; }
+            .hero img { width: 70px; height: 70px; }
+            .wordmark { font-size: 30px; }
+            .hero { gap: 12px; }
+        }
+        @media print {
+            main { padding: 0; }
+            article { break-inside: avoid; box-shadow: none; }
+            .dark { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <div class="eyebrow">EduTrack / Round two / Open book</div>
+            <h1>Four takes on a fresh chapter.</h1>
+            <p class="intro">The open-book direction, explored four ways. The same blue-and-teal palette and wordmark keep the comparison focused on the symbol. Each includes a dark-header and small-icon preview.</p>
+            <div class="reference"><img src="../open-book.svg" alt="Original Open Book concept"><span>Inspired by your choice: <strong>Open Book</strong> from round one.</span></div>
+        </header>
+        <section class="grid" aria-label="Four open-book variations">
+            <article aria-labelledby="concept-a">
+                <div class="heading"><span class="number">A</span><div><h2 id="concept-a">Discovery Book</h2><p class="category">Closest to the original / Soft and minimal</p></div></div>
+                <div class="hero"><img src="discovery.svg" alt="Rounded open book beneath a teal spark"><div><div class="wordmark">Edu<span>Track</span></div><div class="tagline">Every learner. Moving forward.</div></div></div>
+                <div class="dark"><div class="compact"><img src="discovery.svg" alt=""><span class="wordmark">Edu<span>Track</span></span></div><div class="micro"><span>24px</span><img src="discovery.svg" alt="Discovery Book at 24 pixels"></div></div>
+                <div class="details"><p>A refined version of your preferred concept: softer page corners, a clear center spine, and a spark of discovery.</p><a href="discovery.svg" target="_blank" rel="noopener">View full-size SVG — A</a></div>
+            </article>
+            <article aria-labelledby="concept-b">
+                <div class="heading"><span class="number">B</span><div><h2 id="concept-b">Daybreak Book</h2><p class="category">Optimistic / A new beginning</p></div></div>
+                <div class="hero"><img src="daybreak.svg" alt="A teal sunrise above an open book"><div><div class="wordmark">Edu<span>Track</span></div><div class="tagline">Every learner. Moving forward.</div></div></div>
+                <div class="dark"><div class="compact"><img src="daybreak.svg" alt=""><span class="wordmark">Edu<span>Track</span></span></div><div class="micro"><span>24px</span><img src="daybreak.svg" alt="Daybreak Book at 24 pixels"></div></div>
+                <div class="details"><p>A rising sun above open pages. A welcoming academic identity that suggests opportunity and a brighter future.</p><a href="daybreak.svg" target="_blank" rel="noopener">View full-size SVG — B</a></div>
+            </article>
+            <article aria-labelledby="concept-c">
+                <div class="heading"><span class="number">C</span><div><h2 id="concept-c">Ascent Book</h2><p class="category">Distinctive / Learning in motion</p></div></div>
+                <div class="hero"><img src="ascent.svg" alt="An open book with layered pages rising upward"><div><div class="wordmark">Edu<span>Track</span></div><div class="tagline">Every learner. Moving forward.</div></div></div>
+                <div class="dark"><div class="compact"><img src="ascent.svg" alt=""><span class="wordmark">Edu<span>Track</span></span></div><div class="micro"><span>24px</span><img src="ascent.svg" alt="Ascent Book at 24 pixels"></div></div>
+                <div class="details"><p>Layered pages lift from the book like a wing. An asymmetric mark connecting knowledge with growth and progress.</p><a href="ascent.svg" target="_blank" rel="noopener">View full-size SVG — C</a></div>
+            </article>
+            <article aria-labelledby="concept-d">
+                <div class="heading"><span class="number">D</span><div><h2 id="concept-d">Book Circle</h2><p class="category">Balanced / Academic emblem</p></div></div>
+                <div class="hero"><img src="circle.svg" alt="An open book and spark enclosed by a blue and teal circle"><div><div class="wordmark">Edu<span>Track</span></div><div class="tagline">Every learner. Moving forward.</div></div></div>
+                <div class="dark"><div class="compact"><img src="circle.svg" alt=""><span class="wordmark">Edu<span>Track</span></span></div><div class="micro"><span>24px</span><img src="circle.svg" alt="Book Circle at 24 pixels"></div></div>
+                <div class="details"><p>The book-and-spark symbol within a circular learning path. A contained emblem with a more institutional character.</p><a href="circle.svg" target="_blank" rel="noopener">View full-size SVG — D</a></div>
+            </article>
+        </section>
+        <footer><strong>Choose A, B, C, or D in Copilot.</strong> You can also request a combination or refinements. No live branding has changed; only your selected design will become final. Taglines are illustrative.<br><a href="../index.html">Back to the first round</a></footer>
+    </main>
+</body>
+</html>

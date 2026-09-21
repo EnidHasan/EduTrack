@@ -1,4 +1,238 @@
 @model Grade
 @{ ViewData["Title"] = Model.Id == 0 ? "Enter grade" : "Edit grade"; }
-<div class="page-head"><div><h1>@ViewData["Title"]</h1><p>Marks are summed directly out of 100: Quiz 0-20, Attendance 0-10, Midterm 0-20, Final 0-50.</p></div><a class="btn-soft" asp-action="Course" asp-route-id="@(Model.Enrollment?.CourseId)">&larr; Back to roster</a></div><form asp-action="GradeEntry" method="post" class="card form-card"><input asp-for="Id" type="hidden"/><input asp-for="EnrollmentId" type="hidden"/><div asp-validation-summary="ModelOnly"></div><div class="row g-4"><div class="col-md-3"><label asp-for="AssignmentMark" class="form-label"></label><input asp-for="AssignmentMark" class="form-control" step="0.01" min="0" max="20"/><span asp-validation-for="AssignmentMark" class="text-danger small"></span></div><div class="col-md-3"><label asp-for="AttendanceMark" class="form-label"></label><input asp-for="AttendanceMark" class="form-control" step="0.01" min="0" max="10"/><span asp-validation-for="AttendanceMark" class="text-danger small"></span></div><div class="col-md-3"><label asp-for="MidtermMark" class="form-label"></label><input asp-for="MidtermMark" class="form-control" step="0.01" min="0" max="20"/><span asp-validation-for="MidtermMark" class="text-danger small"></span></div><div class="col-md-3"><label asp-for="FinalMark" class="form-label"></label><input asp-for="FinalMark" class="form-control" step="0.01" min="0" max="50"/><span asp-validation-for="FinalMark" class="text-danger small"></span></div><div class="col-12"><button class="btn-primary">Save grade</button></div></div></form>
-@section Scripts { <partial name="_ValidationScriptsPartial"/> }
+
+<style>
+    .grade-form-card {
+        background: rgba(255,255,255,0.75);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px -10px rgba(31,38,135,0.15);
+        padding: 36px;
+        max-width: 820px;
+        margin: 0 auto;
+    }
+    .mark-group { position: relative; }
+    .mark-group label { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; margin-bottom: 6px; }
+    .mark-group input { border-radius: 12px; padding: 12px 16px; font-size: 1.05rem; font-weight: 600; border: 2px solid #e2e8f0; transition: all 0.25s ease; }
+    .mark-group input:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59,130,246,0.15); outline: none; }
+    .mark-group input.is-invalid { border-color: #ef4444 !important; box-shadow: 0 0 0 4px rgba(239,68,68,0.1) !important; }
+    .mark-group input.is-valid { border-color: #10b981 !important; }
+    .mark-group .field-error { color: #ef4444; font-size: 0.8rem; font-weight: 600; margin-top: 4px; min-height: 20px; display: block; }
+    .mark-group .mark-hint { color: #94a3b8; font-size: 0.78rem; font-weight: 500; }
+
+    .live-preview {
+        background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+        border: 2px solid #bae6fd;
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    .live-preview.preview-error { background: linear-gradient(135deg, #fef2f2, #fee2e2); border-color: #fecaca; }
+    .preview-total { font-size: 2.8rem; font-weight: 900; color: #0f172a; line-height: 1; }
+    .preview-letter { font-size: 1.4rem; font-weight: 800; margin-top: 4px; }
+    .preview-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-bottom: 6px; }
+
+    .grade-A { color: #047857; } .grade-B { color: #b45309; } .grade-C { color: #c2410c; } .grade-D { color: #dc2626; } .grade-F { color: #991b1b; }
+
+    .btn-save-grade {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        color: white; border: none; padding: 14px 40px; border-radius: 12px;
+        font-weight: 700; font-size: 1rem; cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+    }
+    .btn-save-grade:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59,130,246,0.4); }
+    .btn-save-grade:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+</style>
+
+<div class="page-head">
+    <div>
+        <h1>@ViewData["Title"]</h1>
+        <p>Marks are summed directly out of 100: Quiz 0–20, Attendance 0–10, Midterm 0–20, Final 0–50.</p>
+    </div>
+    <a class="btn-soft" asp-action="Course" asp-route-id="@(Model.Enrollment?.CourseId)">&larr; Back to roster</a>
+</div>
+
+<form id="gradeForm" asp-action="GradeEntry" method="post" class="grade-form-card">
+    <input asp-for="Id" type="hidden"/>
+    <input asp-for="EnrollmentId" type="hidden"/>
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="mark-group">
+                <label asp-for="AssignmentMark"></label>
+                <span class="mark-hint">Max: 20</span>
+                <input asp-for="AssignmentMark" class="form-control mark-input" data-min="0" data-max="20" step="0.01" min="0" max="20" inputmode="decimal" autocomplete="off"/>
+                <span class="field-error" data-error-for="AssignmentMark"></span>
+                <span asp-validation-for="AssignmentMark" class="text-danger small"></span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="mark-group">
+                <label asp-for="AttendanceMark"></label>
+                <span class="mark-hint">Max: 10</span>
+                <input asp-for="AttendanceMark" class="form-control mark-input" data-min="0" data-max="10" step="0.01" min="0" max="10" inputmode="decimal" autocomplete="off"/>
+                <span class="field-error" data-error-for="AttendanceMark"></span>
+                <span asp-validation-for="AttendanceMark" class="text-danger small"></span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="mark-group">
+                <label asp-for="MidtermMark"></label>
+                <span class="mark-hint">Max: 20</span>
+                <input asp-for="MidtermMark" class="form-control mark-input" data-min="0" data-max="20" step="0.01" min="0" max="20" inputmode="decimal" autocomplete="off"/>
+                <span class="field-error" data-error-for="MidtermMark"></span>
+                <span asp-validation-for="MidtermMark" class="text-danger small"></span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="mark-group">
+                <label asp-for="FinalMark"></label>
+                <span class="mark-hint">Max: 50</span>
+                <input asp-for="FinalMark" class="form-control mark-input" data-min="0" data-max="50" step="0.01" min="0" max="50" inputmode="decimal" autocomplete="off"/>
+                <span class="field-error" data-error-for="FinalMark"></span>
+                <span asp-validation-for="FinalMark" class="text-danger small"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Preview -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="live-preview" id="livePreview">
+                <div class="preview-label">Projected Total</div>
+                <div class="preview-total" id="previewTotal">0.00</div>
+                <div class="preview-label mt-2">Letter Grade</div>
+                <div class="preview-letter" id="previewLetter">—</div>
+            </div>
+        </div>
+        <div class="col-md-6 d-flex align-items-center">
+            <div class="w-100">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="mark-hint">Total out of 100</span>
+                    <span class="mark-hint" id="previewPercent">0%</span>
+                </div>
+                <div class="progress" style="height: 12px; border-radius: 8px; background: #e2e8f0;">
+                    <div class="progress-bar" id="previewBar" role="progressbar" style="width: 0%; border-radius: 8px; background: linear-gradient(90deg, #3b82f6, #8b5cf6); transition: width 0.4s ease;"></div>
+                </div>
+                <div class="mt-3 text-center">
+                    <span class="mark-hint" id="previewGradePoint">Grade Point: 0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn-save-grade" id="btnSave" disabled>
+            <i class="bi bi-check2-circle me-2"></i>Save Grade
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+    <script>
+    (function() {
+        const inputs = document.querySelectorAll('.mark-input');
+        const btnSave = document.getElementById('btnSave');
+        const previewTotal = document.getElementById('previewTotal');
+        const previewLetter = document.getElementById('previewLetter');
+        const previewPercent = document.getElementById('previewPercent');
+        const previewBar = document.getElementById('previewBar');
+        const previewGradePoint = document.getElementById('previewGradePoint');
+        const livePreview = document.getElementById('livePreview');
+        const gradeForm = document.getElementById('gradeForm');
+
+        function getLetterGrade(total) {
+            if (total >= 80) return { letter: 'A+', point: 4.00, cls: 'grade-A' };
+            if (total >= 75) return { letter: 'A',  point: 3.75, cls: 'grade-A' };
+            if (total >= 70) return { letter: 'A-', point: 3.50, cls: 'grade-A' };
+            if (total >= 65) return { letter: 'B+', point: 3.25, cls: 'grade-B' };
+            if (total >= 60) return { letter: 'B',  point: 3.00, cls: 'grade-B' };
+            if (total >= 55) return { letter: 'B-', point: 2.75, cls: 'grade-B' };
+            if (total >= 50) return { letter: 'C+', point: 2.50, cls: 'grade-C' };
+            if (total >= 45) return { letter: 'C',  point: 2.25, cls: 'grade-C' };
+            if (total >= 40) return { letter: 'D',  point: 2.00, cls: 'grade-D' };
+            return { letter: 'F', point: 0.00, cls: 'grade-F' };
+        }
+
+        function validateField(input) {
+            const val = input.value.trim();
+            const errorEl = input.closest('.mark-group').querySelector('.field-error');
+            const min = parseFloat(input.dataset.min);
+            const max = parseFloat(input.dataset.max);
+            let error = '';
+
+            if (val === '') {
+                error = 'This field is required.';
+            } else if (isNaN(parseFloat(val))) {
+                error = 'Enter a valid number.';
+            } else {
+                const num = parseFloat(val);
+                if (num < min) error = 'Cannot be less than ' + min + '.';
+                else if (num > max) error = 'Cannot exceed ' + max + '.';
+            }
+
+            errorEl.textContent = error;
+            input.classList.toggle('is-invalid', error !== '');
+            input.classList.toggle('is-valid', error === '' && val !== '');
+            return error === '';
+        }
+
+        function updatePreview() {
+            let total = 0;
+            let allValid = true;
+            inputs.forEach(function(input) {
+                if (!validateField(input)) { allValid = false; return; }
+                total += parseFloat(input.value) || 0;
+            });
+
+            total = Math.round(total * 100) / 100;
+            const info = getLetterGrade(total);
+
+            previewTotal.textContent = total.toFixed(2);
+            previewLetter.textContent = allValid ? info.letter : '—';
+            previewLetter.className = 'preview-letter ' + (allValid ? info.cls : '');
+            previewPercent.textContent = Math.round(total) + '%';
+            previewBar.style.width = Math.min(total, 100) + '%';
+            previewGradePoint.textContent = 'Grade Point: ' + (allValid ? info.point.toFixed(2) : '0.00');
+
+            livePreview.classList.toggle('preview-error', !allValid);
+            btnSave.disabled = !allValid;
+        }
+
+        inputs.forEach(function(input) {
+            input.addEventListener('input', updatePreview);
+            input.addEventListener('blur', updatePreview);
+        });
+
+        // Initial run
+        updatePreview();
+
+        // SweetAlert confirmation on submit
+        gradeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var total = previewTotal.textContent;
+            var letter = previewLetter.textContent;
+            Swal.fire({
+                title: 'Save Grade?',
+                html: 'Total: <strong>' + total + '</strong> &mdash; Letter Grade: <strong>' + letter + '</strong><br><small class="text-muted">This will update the student\'s academic record.</small>',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '<i class="bi bi-check2-circle me-1"></i> Yes, Save',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#3b82f6',
+                cancelButtonColor: '#64748b',
+                reverseButtons: true
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    gradeForm.submit();
+                }
+            });
+        });
+    })();
+    </script>
+}

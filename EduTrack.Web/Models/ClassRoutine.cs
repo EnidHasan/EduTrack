@@ -37,4 +37,10 @@ public class ClassRoutine
     [Required]
     [StringLength(10)]
     public string SemesterLevel { get; set; } = string.Empty;
+
+    [Required]
+    [StringLength(10)]
+    [Display(Name = "Class Type")]
+    public string ClassType { get; set; } = "Theory";
 }
+

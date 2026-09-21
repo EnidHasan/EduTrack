@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>EduTrack — Logo Concepts</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #f4f7fb; color: #0f2740; font-family: "Segoe UI", Arial, sans-serif; }
+        main { max-width: 1160px; margin: auto; padding: 56px 24px; }
+        .eyebrow { color: #1741a6; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+        h1 { margin: 12px 0; font-size: clamp(30px, 5vw, 48px); letter-spacing: -.045em; line-height: 1.12; }
+        .intro { max-width: 680px; margin: 0; color: #526479; line-height: 1.7; }
+        .palette { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 22px 0 32px; font-size: 12px; color: #526479; }
+        .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 50%; }
+        .blue { background: #2563eb; }
+        .teal { background: #14b8a6; }
+        .navy { background: #0f2740; }
+        .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+        article { overflow: hidden; background: white; border: 1px solid #dce4ef; border-radius: 22px; box-shadow: 0 8px 28px #0f274006; }
+        .card-heading { display: flex; align-items: center; gap: 12px; padding: 22px 24px 0; }
+        .number { display: grid; place-items: center; width: 32px; height: 32px; flex: 0 0 auto; border: 1px solid #dce4ef; border-radius: 50%; color: #1741a6; font-size: 12px; font-weight: 700; }
+        h2 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
+        .category { margin: 4px 0 0; font-size: 12px; color: #526479; }
+        .hero { display: flex; align-items: center; justify-content: center; gap: 16px; min-height: 194px; padding: 28px 20px; }
+        .hero img { width: 80px; height: 80px; flex: 0 0 auto; }
+        .wordmark { font-size: 36px; font-weight: 750; letter-spacing: -.055em; white-space: nowrap; }
+        .wordmark span { color: #2563eb; }
+        .tagline { margin-top: 4px; color: #526479; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; }
+        .dark { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; background: #0f2740; padding: 22px 24px; }
+        .compact { display: flex; align-items: center; gap: 10px; }
+        .compact img { width: 36px; height: 36px; }
+        .compact .wordmark { color: white; font-size: 23px; }
+        .compact .wordmark span { color: #5eead4; }
+        .micro { display: flex; align-items: center; gap: 12px; color: #c0cede; font-size: 11px; }
+        .micro img { width: 24px; height: 24px; }
+        .details { padding: 20px 24px 24px; }
+        .details p { min-height: 48px; margin: 0 0 14px; color: #526479; font-size: 14px; line-height: 1.65; }
+        a { color: #1741a6; font-size: 13px; font-weight: 650; text-underline-offset: 4px; }
+        a:hover { color: #0f2740; }
+        a:focus-visible { outline: 3px solid #2563eb; outline-offset: 5px; border-radius: 2px; }
+        footer { margin-top: 28px; padding: 22px 24px; border: 1px dashed #b8c7d9; border-radius: 16px; color: #526479; font-size: 14px; line-height: 1.7; }
+        footer strong { color: #0f2740; }
+        @media (max-width: 720px) {
+            main { padding: 32px 16px; }
+            .grid { grid-template-columns: 1fr; }
+            .hero img { width: 64px; height: 64px; }
+            .wordmark { font-size: 32px; }
+        }
+        @media (prefers-reduced-motion: no-preference) {
+            article { transition: box-shadow .2s ease; }
+            article:hover { box-shadow: 0 12px 34px #0f274012; }
+        }
+        @media print {
+            main { padding: 0; }
+            article { break-inside: avoid; box-shadow: none; }
+            .dark { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <div class="eyebrow">EduTrack / Brand exploration</div>
+            <h1>One platform. Four fresh identities.</h1>
+            <p class="intro">Choose the direction that feels right for EduTrack. Each original vector concept is shown as a full logo, a dark-header lockup, and a small icon. These are samples only — your current application logo has not changed.</p>
+            <div class="palette" aria-label="Shared brand palette: blue, teal, and navy">
+                <span class="swatch blue" aria-hidden="true"></span> Blue
+                <span class="swatch teal" aria-hidden="true"></span> Teal
+                <span class="swatch navy" aria-hidden="true"></span> Navy
+                <span> / Same palette. Different personalities.</span>
+            </div>
+        </header>
+        <section class="grid" aria-label="Four logo concepts">
+            <article aria-labelledby="concept-1">
+                <div class="card-heading"><span class="number">01</span><div><h2 id="concept-1">Momentum E</h2><p class="category">Minimal / Confident / Product-first</p></div></div>
+                <div class="hero"><img src="momentum-e.svg" alt="Geometric E with a forward arrow"><div><div class="wordmark">Edu<span>Track</span></div><div class="tagline">Every learner. Moving forward.</div></div></div>
+                <div class="dark"><div class="compact"><img src="momentum-e.svg" alt=""><span class="wordmark">Edu<span>Track</span></span></div><div class="micro"><span>24px icon</span><img src="momentum-e.svg" alt="Momentum E at 24 pixels"></div></div>
+                <div class="details"><p>A bold E with a forward arrow. A clean, app-friendly mark that connects education with momentum.</p><a href="momentum-e.svg" target="_blank" rel="noopener">Open SVG — concept 01</a></div>
+            </article>
+            <article aria-labelledby="concept-2">
+                <div class="card-heading"><span class="number">02</span><div><h2 id="concept-2">Open Book</h2><p class="category">Academic / Welcoming / Clear</p></div></div>
+                <div class="hero"><img src="open-book.svg" alt="Blue and teal open book with a learning spark"><div><div class="wordmark">Edu<span>Track</span></div><div class="tagline">Every learner. Moving forward.</div></div></div>
+                <div class="dark"><div class="compact"><img src="open-book.svg" alt=""><span class="wordmark">Edu<span>Track</span></span></div><div class="micro"><span>24px icon</span><img src="open-book.svg" alt="Open Book at 24 pixels"></div></div>
+                <div class="details"><p>Two open pages and a spark of discovery. Instantly recognizable as education, with a friendly modern feel.</p><a href="open-book.svg" target="_blank" rel="noopener">Open SVG — concept 02</a></div>
+            </article>
+            <article aria-labelledby="concept-3">
+                <div class="card-heading"><span class="number">03</span><div><h2 id="concept-3">Learning Path</h2><p class="category">Dynamic / Connected / Progress-led</p></div></div>
+                <div class="hero"><img src="learning-path.svg" alt="Rising track with milestones and an upward arrow"><div><div class="wordmark">Edu<span>Track</span></div><div class="tagline">Every learner. Moving forward.</div></div></div>
+                <div class="dark"><div class="compact"><img src="learning-path.svg" alt=""><span class="wordmark">Edu<span>Track</span></span></div><div class="micro"><span>24px icon</span><img src="learning-path.svg" alt="Learning Path at 24 pixels"></div></div>
+                <div class="details"><p>A connected route rising through milestones. Highlights the “Track” in EduTrack and the journey toward achievement.</p><a href="learning-path.svg" target="_blank" rel="noopener">Open SVG — concept 03</a></div>
+            </article>
+            <article aria-labelledby="concept-4">
+                <div class="card-heading"><span class="number">04</span><div><h2 id="concept-4">Academy Shield</h2><p class="category">Institutional / Trusted / Established</p></div></div>
+                <div class="hero"><img src="academy-shield.svg" alt="Academic shield with a graduation cap and achievement check"><div><div class="wordmark">Edu<span>Track</span></div><div class="tagline">Every learner. Moving forward.</div></div></div>
+                <div class="dark"><div class="compact"><img src="academy-shield.svg" alt=""><span class="wordmark">Edu<span>Track</span></span></div><div class="micro"><span>24px icon</span><img src="academy-shield.svg" alt="Academy Shield at 24 pixels"></div></div>
+                <div class="details"><p>A graduation cap within a shield, finished with an achievement check. A more formal identity for an academic institution.</p><a href="academy-shield.svg" target="_blank" rel="noopener">Open SVG — concept 04</a></div>
+            </article>
+        </section>
+        <footer><strong>Your choice comes next.</strong> Return to Copilot and reply with <strong>1, 2, 3, or 4</strong>, plus any changes you want. The chosen direction will then be applied to the application's branding. The tagline is illustrative, not a proposed application copy change.</footer>
+    </main>
+</body>
+</html>

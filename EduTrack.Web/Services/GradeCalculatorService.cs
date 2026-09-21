@@ -12,6 +12,11 @@ public class GradeCalculatorService
     public const decimal MidtermMaxMark = 20m;
     public const decimal FinalMaxMark = 50m;
 
+    /// <summary>
+    /// Calculates total mark rounded to 2 decimal places.
+    /// </summary>
+    /// <param name="grade">Grade model instance holding individual marks.</param>
+    /// <returns>Total summed mark out of 100.</returns>
     public decimal CalculateTotalMark(Grade grade) =>
         Math.Round(
             grade.AssignmentMark +
@@ -20,6 +25,11 @@ public class GradeCalculatorService
             grade.FinalMark,
             2, MidpointRounding.AwayFromZero);
 
+    /// <summary>
+    /// Maps a total mark value to its corresponding Letter Grade and Grade Point (4.0 scale).
+    /// </summary>
+    /// <param name="totalMark">Total mark out of 100.</param>
+    /// <returns>A tuple containing the Letter Grade string and Grade Point decimal value.</returns>
     public (string LetterGrade, decimal GradePoint) CalculateLetterGradeAndPoint(decimal totalMark) => totalMark switch
     {
         >= 80 => ("A+", 4.00m),
@@ -35,8 +45,9 @@ public class GradeCalculatorService
     };
 
     /// <summary>
-    /// Recalculates and applies TotalMark, LetterGrade, GradePoint, and UpdatedAt onto the given grade.
+    /// Recalculates and applies TotalMark, LetterGrade, GradePoint, and UpdatedAt onto the given grade instance.
     /// </summary>
+    /// <param name="grade">Grade model instance to update.</param>
     public void Apply(Grade grade)
     {
         grade.TotalMark = CalculateTotalMark(grade);

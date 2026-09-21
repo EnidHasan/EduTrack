@@ -4,8 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EduTrack.Web.Services;
 
-public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpaService)
+public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpaService, GradeCalculatorService calculator)
 {
+    /// <summary>
+    /// Gets all recheck dispute requests submitted by a specific student.
+    /// </summary>
     public async Task<List<RecheckRequest>> GetStudentRequestsAsync(int studentId)
     {
         return await db.RecheckRequests
@@ -16,6 +19,9 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
             .ToListAsync();
     }
 
+    /// <summary>
+    /// Gets all recheck dispute requests assigned to a specific teacher.
+    /// </summary>
     public async Task<List<RecheckRequest>> GetTeacherRequestsAsync(int teacherId)
     {
         return await db.RecheckRequests
@@ -26,6 +32,9 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
             .ToListAsync();
     }
 
+    /// <summary>
+    /// Submits a new student recheck dispute for a given grade if no pending request already exists.
+    /// </summary>
     public async Task<(bool success, string message)> SubmitDisputeAsync(int studentId, int gradeId)
     {
         var grade = await db.Grades
@@ -54,9 +63,14 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
         return (true, "Dispute submitted successfully.");
     }
 
+    /// <summary>
+    /// Updates dispute status to Approved or Rejected.
+    /// On approval, recalculates total grade marks and updates the student's overall CGPA.
+    /// </summary>
     public async Task<(bool success, string message)> UpdateDisputeStatusAsync(int requestId, int teacherId, string status, string? comment)
     {
         var request = await db.RecheckRequests
+            .Include(r => r.Grade)
             .FirstOrDefaultAsync(r => r.Id == requestId && r.TeacherId == teacherId);
 
         if (request == null) return (false, "Dispute not found.");
@@ -64,7 +78,14 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
 
         request.Status = status;
         request.TeacherComment = comment;
-        
+
+        // On approval, recalculate grade totals (in case teacher edited marks before approving)
+        // then recalculate the student's CGPA
+        if (status == "Approved" && request.Grade != null)
+        {
+            calculator.Apply(request.Grade);
+        }
+
         await db.SaveChangesAsync();
 
         if (status == "Approved")
@@ -75,3 +96,4 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
         return (true, $"Dispute {status.ToLower()} successfully.");
     }
 }
+

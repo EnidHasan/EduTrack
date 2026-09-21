@@ -1,3 +1,77 @@
 @model IEnumerable<Enrollment>
-@{ var course = (Course)ViewBag.Course; ViewData["Title"] = course.CourseCode + " roster"; }
-<div class="page-head"><div><h1>@course.CourseCode &middot; @course.CourseName</h1><p>Enter and review student grades for this course.</p></div><div class="d-flex gap-2"><a class="btn-primary" asp-controller="CourseMaterials" asp-action="TeacherIndex" asp-route-courseId="@course.Id">Course Materials</a><a class="btn-secondary teacher-return-courses" asp-action="Index"><i class="bi bi-arrow-left" aria-hidden="true"></i> My courses</a></div></div><div class="card table-responsive"><table class="table"><thead><tr><th>Student</th><th>Roll</th><th>Total mark</th><th>Letter grade</th><th>Grade point</th><th></th></tr></thead><tbody>@foreach(var x in Model){<tr><td>@x.Student?.FullName</td><td>@x.Student?.RollNumber</td><td>@(x.Grade?.TotalMark.ToString("0.00") ?? "—")</td><td>@(x.Grade?.LetterGrade ?? "—")</td><td>@(x.Grade?.GradePoint.ToString("0.00") ?? "—")</td><td><div class="actions"><a class="icon-btn" asp-action="GradeEntry" asp-route-enrollmentId="@x.Id">@(x.Grade is null ? "Enter grade" : "Edit grade")</a></div></td></tr>}</tbody></table>@if(!Model.Any()){<div class="empty">No students enrolled in this course.</div>}</div>
+@{ 
+    var course = (Course)ViewBag.Course; 
+    ViewData["Title"] = course.CourseCode + " roster"; 
+    var examDateStr = course.FinalExamDate?.ToString("yyyy-MM-dd") ?? "";
+}
+
+<div class="page-head">
+    <div>
+        <h1>@course.CourseCode &middot; @course.CourseName</h1>
+        <p>Manage final exam date &amp; enter student grades for this course.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn-primary" asp-controller="CourseMaterials" asp-action="TeacherIndex" asp-route-courseId="@course.Id">Course Materials</a>
+        <a class="btn-secondary teacher-return-courses" asp-action="Index"><i class="bi bi-arrow-left" aria-hidden="true"></i> My courses</a>
+    </div>
+</div>
+
+<div class="card mb-4 p-3" style="background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(0,0,0,0.08);">
+    <h5 class="fw-bold mb-2"><i class="bi bi-calendar-event me-2 text-primary"></i>Semester Final Exam Schedule</h5>
+    <form asp-action="UpdateExamDate" method="post" class="row g-3 align-items-end">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="courseId" value="@course.Id" />
+        
+        <div class="col-md-5">
+            <label class="form-label small fw-semibold text-secondary">Final Exam Date</label>
+            <input type="date" name="finalExamDate" value="@examDateStr" class="form-control" />
+        </div>
+        
+        <div class="col-md-5">
+            <label class="form-label small fw-semibold text-secondary">Exam Time / Slot (e.g. 10:00 AM - 1:00 PM)</label>
+            <input type="text" name="finalExamTime" value="@course.FinalExamTime" placeholder="e.g. 10:00 AM - 1:00 PM (Room 302)" class="form-control" />
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-check-lg me-1"></i> Save Date
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="card table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Roll</th>
+                <th>Total mark</th>
+                <th>Letter grade</th>
+                <th>Grade point</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach(var x in Model)
+        {
+            <tr>
+                <td>@x.Student?.FullName</td>
+                <td>@x.Student?.RollNumber</td>
+                <td>@(x.Grade?.TotalMark.ToString("0.00") ?? "—")</td>
+                <td>@(x.Grade?.LetterGrade ?? "—")</td>
+                <td>@(x.Grade?.GradePoint.ToString("0.00") ?? "—")</td>
+                <td>
+                    <div class="actions">
+                        <a class="icon-btn" asp-action="GradeEntry" asp-route-enrollmentId="@x.Id">@(x.Grade is null ? "Enter grade" : "Edit grade")</a>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    @if(!Model.Any())
+    {
+        <div class="empty">No students enrolled in this course.</div>
+    }
+</div>

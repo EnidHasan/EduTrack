@@ -23,5 +23,7 @@ public static class DbInitializer
             if (!result.Succeeded) throw new InvalidOperationException(string.Join("; ", result.Errors.Select(x => x.Description)));
             await users.AddToRoleAsync(admin, "Admin");
         }
+
+        await SeedSampleDataScript.SeedAsync(services);
     }
 }

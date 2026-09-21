@@ -7,25 +7,36 @@
 <h2>@ViewData["Title"]</h2>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             
             <div class="form-group mb-3">
-                <label asp-for="CourseId" class="control-label"></label>
-                <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId"></select>
+                <label asp-for="CourseId" class="form-label fw-bold"></label>
+                <select asp-for="CourseId" class="form-select" asp-items="ViewBag.CourseId"></select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ClassType" class="form-label fw-bold"></label>
+                <select asp-for="ClassType" id="classTypeSelect" class="form-select">
+                    <option value="Theory">Theory (50 Mins)</option>
+                    <option value="Lab">Lab (150 Mins / 2.5 Hrs)</option>
+                </select>
+                <span asp-validation-for="ClassType" class="text-danger"></span>
             </div>
             
             <div class="form-group mb-3">
-                <label asp-for="Section" class="control-label"></label>
-                <input asp-for="Section" class="form-control" />
+                <label id="sectionLabel" class="form-label fw-bold">Section</label>
+                <select asp-for="Section" id="sectionSelect" class="form-select" required>
+                    <!-- Populated via JS -->
+                </select>
                 <span asp-validation-for="Section" class="text-danger"></span>
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="SemesterLevel" class="control-label"></label>
-                <select asp-for="SemesterLevel" class="form-control">
+                <label asp-for="SemesterLevel" class="form-label fw-bold"></label>
+                <select asp-for="SemesterLevel" class="form-select">
                     <option value="1.1">1.1 (1st Year, 1st Sem)</option>
                     <option value="1.2">1.2 (1st Year, 2nd Sem)</option>
                     <option value="2.1">2.1 (2nd Year, 1st Sem)</option>
@@ -39,8 +50,8 @@
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="DayOfWeek" class="control-label"></label>
-                <select asp-for="DayOfWeek" class="form-control">
+                <label asp-for="DayOfWeek" class="form-label fw-bold"></label>
+                <select asp-for="DayOfWeek" class="form-select">
                     <option value="Sunday">Sunday</option>
                     <option value="Monday">Monday</option>
                     <option value="Tuesday">Tuesday</option>
@@ -51,27 +62,119 @@
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="StartTime" class="control-label"></label>
-                <input asp-for="StartTime" class="form-control" type="time" />
-                <span asp-validation-for="StartTime" class="text-danger"></span>
+                <label class="form-label fw-bold">Time Slot</label>
+                <select id="timeSlotSelect" class="form-select" required>
+                    <!-- Populated via JS -->
+                </select>
             </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="EndTime" class="control-label"></label>
-                <input asp-for="EndTime" class="form-control" type="time" />
-                <span asp-validation-for="EndTime" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="StartTime" id="startTimeInput" />
+            <input type="hidden" asp-for="EndTime" id="endTimeInput" />
 
             <div class="form-group mb-3">
-                <label asp-for="RoomNumber" class="control-label"></label>
+                <label asp-for="RoomNumber" class="form-label fw-bold"></label>
                 <input asp-for="RoomNumber" class="form-control" />
                 <span asp-validation-for="RoomNumber" class="text-danger"></span>
             </div>
             
-            <div class="form-group mb-3">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <div class="form-group mb-3 pt-2">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
             </div>
         </form>
     </div>
 </div>
+
+@section Scripts {
+<script>
+    const initialClassType = "@(Model.ClassType ?? "Theory")";
+    const initialSection = "@(Model.Section ?? "")";
+    const initialStartTime = "@(Model.StartTime.ToString(@"hh\:mm\:ss"))";
+
+    const theorySlots = [
+        { label: "08:00 AM - 08:50 AM", start: "08:00:00", end: "08:50:00" },
+        { label: "08:50 AM - 09:40 AM", start: "08:50:00", end: "09:40:00" },
+        { label: "09:40 AM - 10:30 AM", start: "09:40:00", end: "10:30:00" },
+        { label: "10:30 AM - 11:20 AM", start: "10:30:00", end: "11:20:00" },
+        { label: "11:20 AM - 12:10 PM", start: "11:20:00", end: "12:10:00" },
+        { label: "12:10 PM - 01:00 PM", start: "12:10:00", end: "13:00:00" },
+        { label: "01:00 PM - 01:50 PM", start: "13:00:00", end: "13:50:00" },
+        { label: "01:50 PM - 02:40 PM", start: "13:50:00", end: "14:40:00" },
+        { label: "02:40 PM - 03:30 PM", start: "14:40:00", end: "15:30:00" },
+        { label: "03:30 PM - 04:20 PM", start: "15:30:00", end: "16:20:00" },
+        { label: "04:20 PM - 05:10 PM", start: "16:20:00", end: "17:10:00" },
+        { label: "05:10 PM - 06:00 PM", start: "17:10:00", end: "18:00:00" }
+    ];
+
+    const labSlots = [
+        { label: "08:00 AM - 10:30 AM (Slot 1)", start: "08:00:00", end: "10:30:00" },
+        { label: "10:30 AM - 01:00 PM (Slot 2)", start: "10:30:00", end: "13:00:00" },
+        { label: "01:00 PM - 03:30 PM (Slot 3)", start: "13:00:00", end: "15:30:00" },
+        { label: "03:30 PM - 06:00 PM (Slot 4)", start: "15:30:00", end: "18:00:00" }
+    ];
+
+    const theorySections = ["A", "B", "C"];
+    const labGroups = ["A1", "A2", "B1", "B2", "C1", "C2"];
+
+    function updateOptions(isInitialLoad = false) {
+        const isLab = document.getElementById("classTypeSelect").value === "Lab";
+        const sectionSelect = document.getElementById("sectionSelect");
+        const sectionLabel = document.getElementById("sectionLabel");
+        const timeSlotSelect = document.getElementById("timeSlotSelect");
+
+        // 1. Update Sections / Lab Groups
+        sectionSelect.innerHTML = "";
+        if (isLab) {
+            sectionLabel.innerText = "Lab Group";
+            labGroups.forEach(g => {
+                const opt = document.createElement("option");
+                opt.value = g;
+                opt.innerText = g;
+                if (isInitialLoad && g === initialSection) opt.selected = true;
+                sectionSelect.appendChild(opt);
+            });
+        } else {
+            sectionLabel.innerText = "Section";
+            theorySections.forEach(s => {
+                const opt = document.createElement("option");
+                opt.value = s;
+                opt.innerText = "Section " + s;
+                if (isInitialLoad && s === initialSection) opt.selected = true;
+                sectionSelect.appendChild(opt);
+            });
+        }
+
+        // 2. Update Time Slots
+        timeSlotSelect.innerHTML = "";
+        const slots = isLab ? labSlots : theorySlots;
+        slots.forEach((s, idx) => {
+            const opt = document.createElement("option");
+            opt.value = idx;
+            opt.innerText = s.label;
+            if (isInitialLoad && s.start === initialStartTime) opt.selected = true;
+            timeSlotSelect.appendChild(opt);
+        });
+
+        updateTimeInputs();
+    }
+
+    function updateTimeInputs() {
+        const isLab = document.getElementById("classTypeSelect").value === "Lab";
+        const slots = isLab ? labSlots : theorySlots;
+        const selectedIdx = parseInt(document.getElementById("timeSlotSelect").value) || 0;
+        const selectedSlot = slots[selectedIdx];
+
+        if (selectedSlot) {
+            document.getElementById("startTimeInput").value = selectedSlot.start;
+            document.getElementById("endTimeInput").value = selectedSlot.end;
+        }
+    }
+
+    document.getElementById("classTypeSelect").value = initialClassType;
+    document.getElementById("classTypeSelect").addEventListener("change", () => updateOptions(false));
+    document.getElementById("timeSlotSelect").addEventListener("change", updateTimeInputs);
+
+    // Initial load setup
+    updateOptions(true);
+</script>
+}

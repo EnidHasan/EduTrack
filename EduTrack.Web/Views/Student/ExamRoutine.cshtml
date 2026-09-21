@@ -1,0 +1,135 @@
+@model IEnumerable<Course>
+@{
+    ViewData["Title"] = "Semester Final Exam Routine";
+}
+
+<div class="page-head mb-4">
+    <div>
+        <h1 class="display-6 fw-bold"><i class="bi bi-calendar2-week me-2 text-primary"></i>Semester Final Exam Routine</h1>
+        <p class="text-secondary">View your upcoming semester final examination schedule and time slots for enrolled courses.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="DownloadExamRoutinePdf" class="btn btn-primary">
+            <i class="bi bi-file-earmark-pdf me-1"></i> Export PDF Routine
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back to Overview
+        </a>
+    </div>
+</div>
+
+<!-- Tabular Grid View (Arranged in chronological rows like an actual exam routine) -->
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-5">
+    <div class="card-header bg-white p-4 border-bottom d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold m-0"><i class="bi bi-table me-2 text-primary"></i>Official Examination Schedule Table</h5>
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fs-6 rounded-pill">
+            @Model.Count() Enrolled Courses
+        </span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4">#</th>
+                    <th>Exam Date</th>
+                    <th>Day</th>
+                    <th>Course Code &amp; Title</th>
+                    <th>Credits</th>
+                    <th>Exam Time &amp; Venue</th>
+                    <th>Instructor</th>
+                    <th class="text-end pe-4">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-calendar-x display-6 d-block mb-2 text-secondary opacity-50"></i>
+                            No enrolled courses found.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    int index = 1;
+                    foreach (var course in Model)
+                    {
+                        var hasExamDate = course.FinalExamDate.HasValue;
+                        var daysRemaining = hasExamDate ? (course.FinalExamDate!.Value.Date - DateTime.Today).Days : 0;
+
+                        <tr>
+                            <td class="ps-4 fw-semibold text-secondary">@index</td>
+                            <td>
+                                @if (hasExamDate)
+                                {
+                                    <strong class="text-dark"><i class="bi bi-calendar-event me-1 text-primary"></i>@course.FinalExamDate!.Value.ToString("dd MMM yyyy")</strong>
+                                }
+                                else
+                                {
+                                    <span class="text-muted italic"><i class="bi bi-clock me-1"></i>Not Set</span>
+                                }
+                            </td>
+                            <td>
+                                @if (hasExamDate)
+                                {
+                                    <span class="badge bg-light text-dark border">@course.FinalExamDate!.Value.ToString("dddd")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark">@course.CourseCode</div>
+                                <div class="small text-secondary">@course.CourseName</div>
+                            </td>
+                            <td><span class="badge bg-secondary-subtle text-secondary">@course.CreditHours.ToString("0.0")</span></td>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(course.FinalExamTime))
+                                {
+                                    <span class="fw-semibold text-primary"><i class="bi bi-geo-alt me-1"></i>@course.FinalExamTime</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">TBA</span>
+                                }
+                            </td>
+                            <td><span class="small text-dark">@(course.Teacher?.FullName ?? "TBD")</span></td>
+                            <td class="text-end pe-4">
+                                @if (hasExamDate)
+                                {
+                                    if (daysRemaining > 0)
+                                    {
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
+                                            @daysRemaining day(s) left
+                                        </span>
+                                    }
+                                    else if (daysRemaining == 0)
+                                    {
+                                        <span class="badge bg-danger text-white px-3 py-2 rounded-pill">
+                                            EXAM TODAY
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary-subtle text-secondary border px-3 py-2 rounded-pill">
+                                            Completed
+                                        </span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill">
+                                        Pending Date
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

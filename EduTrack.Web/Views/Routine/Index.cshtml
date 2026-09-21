@@ -6,7 +6,7 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>@ViewData["Title"]</h2>
-    <a asp-action="Create" class="btn btn-primary">Create New Block</a>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i> Create New Block</a>
 </div>
 
 @{
@@ -29,7 +29,8 @@
     <thead>
         <tr>
             <th>Course</th>
-            <th>Section</th>
+            <th>Type</th>
+            <th>Sec / Group</th>
             <th>Day</th>
             <th>Start Time</th>
             <th>End Time</th>
@@ -40,8 +41,18 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>@item.Course?.CourseName (@item.Course?.CourseCode)</td>
-            <td>@item.Section</td>
+            <td class="fw-bold">@item.Course?.CourseName (@item.Course?.CourseCode)</td>
+            <td>
+                @if (item.ClassType == "Lab")
+                {
+                    <span class="badge bg-warning text-dark"><i class="bi bi-laptop me-1"></i>Lab (2.5h)</span>
+                }
+                else
+                {
+                    <span class="badge bg-info text-dark"><i class="bi bi-book me-1"></i>Theory (50m)</span>
+                }
+            </td>
+            <td><span class="fw-semibold">@item.Section</span></td>
             <td>@item.DayOfWeek</td>
             <td>@item.StartTime.ToString(@"hh\:mm")</td>
             <td>@item.EndTime.ToString(@"hh\:mm")</td>

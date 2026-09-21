@@ -29,6 +29,9 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         return View(enrollments);
     }
 
+    /// <summary>
+    /// Displays the grade entry form for a specific course enrollment.
+    /// </summary>
     public async Task<IActionResult> GradeEntry(int enrollmentId)
     {
         var teacher = await CurrentTeacherAsync();
@@ -39,14 +42,32 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         return View(enrollment.Grade ?? new Grade { EnrollmentId = enrollmentId, Enrollment = enrollment });
     }
 
+    /// <summary>
+    /// Validates mark bounds, saves grade details, and recalculates total grade & letter grade.
+    /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> GradeEntry(Grade model)
     {
         var teacher = await CurrentTeacherAsync();
         if (teacher is null) return Forbid();
-        var enrollment = await db.Enrollments.Include(e => e.Course).FirstOrDefaultAsync(e => e.Id == model.EnrollmentId && e.Course!.TeacherId == teacher.Id);
+        var enrollment = await db.Enrollments.Include(e => e.Course).Include(e => e.Student).FirstOrDefaultAsync(e => e.Id == model.EnrollmentId && e.Course!.TeacherId == teacher.Id);
         if (enrollment is null) return NotFound();
-        if (!ModelState.IsValid) return View(model);
+
+        // Explicit server-side range validation
+        if (model.AssignmentMark < 0 || model.AssignmentMark > 20)
+            ModelState.AddModelError(nameof(model.AssignmentMark), "Quiz marks must be between 0 and 20.");
+        if (model.AttendanceMark < 0 || model.AttendanceMark > 10)
+            ModelState.AddModelError(nameof(model.AttendanceMark), "Attendance marks must be between 0 and 10.");
+        if (model.MidtermMark < 0 || model.MidtermMark > 20)
+            ModelState.AddModelError(nameof(model.MidtermMark), "Midterm marks must be between 0 and 20.");
+        if (model.FinalMark < 0 || model.FinalMark > 50)
+            ModelState.AddModelError(nameof(model.FinalMark), "Final marks must be between 0 and 50.");
+
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = "Please correct the validation errors and try again.";
+            return View(model);
+        }
 
         var grade = await db.Grades.FirstOrDefaultAsync(g => g.EnrollmentId == model.EnrollmentId);
         if (grade is null) { grade = new Grade { EnrollmentId = model.EnrollmentId }; db.Add(grade); }
@@ -56,10 +77,13 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         grade.FinalMark = model.FinalMark;
         calculator.Apply(grade);
         await db.SaveChangesAsync();
-        TempData["Success"] = "Grade saved.";
+        TempData["Success"] = $"Grade saved successfully for {enrollment.Student?.FullName ?? "student"} — Total: {grade.TotalMark}, Grade: {grade.LetterGrade}.";
         return RedirectToAction(nameof(Course), new { id = enrollment.CourseId });
     }
 
+    /// <summary>
+    /// Renders all student recheck requests submitted to the logged-in teacher.
+    /// </summary>
     public async Task<IActionResult> Disputes()
     {
         var teacher = await CurrentTeacherAsync();
@@ -68,6 +92,9 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
         return View(requests);
     }
 
+    /// <summary>
+    /// Approves or rejects a student recheck request and auto-syncs total grades.
+    /// </summary>
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateDisputeStatus(int requestId, string status, string? comment)
     {
@@ -103,8 +130,30 @@ public class TeacherController(ApplicationDbContext db, UserManager<ApplicationU
             .Include(r => r.Course).ThenInclude(c => c!.Teacher)
             .Where(r => r.Course!.TeacherId == teacher.Id)
             .ToListAsync();
-        var pdf = ClassRoutinePdfBuilder.Build(routines, $"Teacher: {teacher.FullName}");
+
+        var pdf = ClassRoutinePdfBuilder.Build(routines, $"Teacher: {teacher.FullName} ({teacher.Designation}, {teacher.Department})");
         return File(pdf, "application/pdf", "EduTrack-Teacher-Routine.pdf");
+    }
+
+
+    /// <summary>
+    /// Updates the final exam date and time for a teacher's assigned course.
+    /// </summary>
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateExamDate(int courseId, DateTime? finalExamDate, string? finalExamTime)
+    {
+        var teacher = await CurrentTeacherAsync();
+        if (teacher is null) return Forbid();
+
+        var course = await db.Courses.FirstOrDefaultAsync(c => c.Id == courseId && c.TeacherId == teacher.Id);
+        if (course is null) return NotFound();
+
+        course.FinalExamDate = finalExamDate;
+        course.FinalExamTime = finalExamTime;
+        await db.SaveChangesAsync();
+
+        TempData["Success"] = $"Semester Final Exam schedule updated for {course.CourseCode}.";
+        return RedirectToAction(nameof(Course), new { id = courseId });
     }
 
     private async Task<Teacher?> CurrentTeacherAsync()

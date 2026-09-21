@@ -45,6 +45,7 @@
 <a class="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "page" : null)" asp-controller="Student" asp-action="Index"><i class="bi bi-file-earmark-text-fill text-info"></i> My Transcript</a>
 <a class="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "Disputes" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "Disputes" ? "page" : null)" asp-controller="Student" asp-action="Disputes"><i class="bi bi-exclamation-triangle-fill text-warning"></i> My Disputes</a>
 <a class="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "MyRoutine" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "MyRoutine" ? "page" : null)" asp-controller="Student" asp-action="MyRoutine"><i class="bi bi-calendar-week-fill text-success"></i> Class Routine</a>
+<a class="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "ExamRoutine" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "Student" && ViewContext.RouteData.Values["action"]?.ToString() == "ExamRoutine" ? "page" : null)" asp-controller="Student" asp-action="ExamRoutine"><i class="bi bi-calendar2-check-fill text-danger"></i> Exam Routine</a>
 <a class="@(page == "TeacherEvaluations" ? "active" : "") d-flex align-items-center gap-3" aria-current="@(page == "TeacherEvaluations" ? "page" : null)" asp-controller="TeacherEvaluations" asp-action="Index"><i class="bi bi-stars text-warning"></i> Teacher Evaluation</a>
 }
  </nav>
@@ -53,14 +54,22 @@
 <div class="app-shell"><header class="topbar"><div class="topbar-identity"><button id="menuButton" class="menu-btn" type="button" aria-label="Open navigation menu" aria-controls="sidebar" aria-expanded="false"><i class="bi bi-list"></i></button><div class="topbar-title"><span class="eyebrow">UNIVERSITY ACADEMIC PORTAL</span><strong>@ViewData["Title"]</strong></div><span class="role-pill role-pill-@role.ToLowerInvariant()">@role</span></div><form asp-controller="Account" asp-action="Logout" method="post"><button class="logout-btn" type="submit"><span class="logout-icon"><i class="bi bi-box-arrow-right"></i></span><span>Sign out</span></button></form></header>
 <main class="content" id="main-content" tabindex="-1">
 <div class="notices">
+<noscript>
+@if (TempData.Peek("Success") is string successNs) {
+    <div class="notice success"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span class="notice-message" role="status" aria-atomic="true">@successNs</span><button class="notice-dismiss" type="button" data-dismiss-notice aria-label="Dismiss success message"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+}
+@if (TempData.Peek("Error") is string errorNs) {
+    <div class="notice error"><i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i><span class="notice-message" role="alert" aria-atomic="true">@errorNs</span><button class="notice-dismiss" type="button" data-dismiss-notice aria-label="Dismiss error message"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+}
+</noscript>
 @if (TempData["Success"] is string success) {
-    <div class="notice success"><i class="bi bi-check-circle-fill" aria-hidden="true"></i><span class="notice-message" role="status" aria-atomic="true">@success</span><button class="notice-dismiss" type="button" data-dismiss-notice aria-label="Dismiss success message"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+    <script>document.addEventListener('DOMContentLoaded',function(){Swal.fire({toast:true,position:'top-end',icon:'success',title:@Html.Raw(System.Text.Json.JsonSerializer.Serialize(success)),showConfirmButton:false,timer:3500,timerProgressBar:true,didOpen:function(t){t.addEventListener('mouseenter',Swal.stopTimer);t.addEventListener('mouseleave',Swal.resumeTimer);}});});</script>
 }
 @if (TempData["Error"] is string error) {
-    <div class="notice error"><i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i><span class="notice-message" role="alert" aria-atomic="true">@error</span><button class="notice-dismiss" type="button" data-dismiss-notice aria-label="Dismiss error message"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+    <script>document.addEventListener('DOMContentLoaded',function(){Swal.fire({toast:true,position:'top-end',icon:'error',title:@Html.Raw(System.Text.Json.JsonSerializer.Serialize(error)),showConfirmButton:false,timer:5000,timerProgressBar:true,didOpen:function(t){t.addEventListener('mouseenter',Swal.stopTimer);t.addEventListener('mouseleave',Swal.resumeTimer);}});});</script>
 }
 </div>
 @RenderBody()</main></div><button class="overlay" id="overlay" type="button" tabindex="-1" aria-hidden="true" aria-label="Close navigation menu"></button>
 } else { <main id="main-content">@RenderBody()</main> }
-<script src="~/lib/jquery/dist/jquery.min.js"></script><script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script><script src="~/js/site.js" asp-append-version="true"></script>@await RenderSectionAsync("Scripts", required: false)
+<script src="~/lib/jquery/dist/jquery.min.js"></script><script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><script src="~/js/site.js" asp-append-version="true"></script>@await RenderSectionAsync("Scripts", required: false)
 </body></html>

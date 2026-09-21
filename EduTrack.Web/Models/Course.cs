@@ -10,5 +10,7 @@ public class Course
     [Display(Name = "Assigned teacher")] public int? TeacherId { get; set; }
     public Teacher? Teacher { get; set; }
     public bool IsActive { get; set; } = true;
+    [Display(Name = "Final Exam Date"), DataType(DataType.Date)] public DateTime? FinalExamDate { get; set; }
+    [Display(Name = "Final Exam Time"), StringLength(50)] public string? FinalExamTime { get; set; }
     public ICollection<CourseMaterial> CourseMaterials { get; set; } = [];
 }
