@@ -8,7 +8,7 @@ public static class DbInitializer
     {
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        if (environment.IsDevelopment()) await db.Database.MigrateAsync();
+        await db.Database.MigrateAsync();
         var roles = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         foreach (var role in new[] { "Admin", "Teacher", "Student" }) if (!await roles.RoleExistsAsync(role)) await roles.CreateAsync(new IdentityRole(role));
         var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
