@@ -13,7 +13,7 @@ public class StudentsController(ApplicationDbContext db, UserManager<Application
     public async Task<IActionResult> Index(string? q) { ViewBag.Query = q; var x = db.Students.AsNoTracking(); if (!string.IsNullOrWhiteSpace(q)) x = x.Where(s => s.FullName.Contains(q) || s.RollNumber.Contains(q) || s.Email.Contains(q)); return View(await x.OrderBy(s => s.FullName).ToListAsync()); }
     public async Task<IActionResult> Details(int id)
     {
-        var student = await db.Students.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        var student = await db.Students.AsNoTracking().Include(x => x.ApplicationUser).FirstOrDefaultAsync(x => x.Id == id);
         if (student is null) return NotFound();
 
         var enrollments = await db.Enrollments

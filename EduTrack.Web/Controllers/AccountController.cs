@@ -62,7 +62,7 @@ public class AccountController(SignInManager<ApplicationUser> signInManager, Use
             
             using var stream = model.ProfileImage.OpenReadStream();
             var header = new byte[12];
-            await stream.ReadAsync(header, 0, 12);
+            await stream.ReadExactlyAsync(header, 0, 12);
             bool isValid = false;
             if (header[0] == 0xFF && header[1] == 0xD8 && header[2] == 0xFF) isValid = true; // JPEG
             else if (header[0] == 0x89 && header[1] == 0x50 && header[2] == 0x4E && header[3] == 0x47 && header[4] == 0x0D && header[5] == 0x0A && header[6] == 0x1A && header[7] == 0x0A) isValid = true; // PNG
