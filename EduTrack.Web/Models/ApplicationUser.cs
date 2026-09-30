@@ -8,4 +8,5 @@ public class ApplicationUser : IdentityUser
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
     public bool MustChangePassword { get; set; }
+    [StringLength(255)] public string? ProfilePicture { get; set; }
 }

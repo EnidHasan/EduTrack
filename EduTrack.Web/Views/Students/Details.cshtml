@@ -18,7 +18,16 @@
 
 <section class="student-profile-grid">
     <article class="card student-identity-card">
-        <div class="student-profile-avatar">@student.FullName[0]</div>
+        <div class="student-profile-avatar" style="overflow: hidden;">
+            @if (student.ApplicationUser != null && !string.IsNullOrEmpty(student.ApplicationUser.ProfilePicture))
+            {
+                <img src="~/images/profiles/@student.ApplicationUser.ProfilePicture" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;" />
+            }
+            else
+            {
+                @student.FullName[0]
+            }
+        </div>
         <span class="status @(student.IsActive ? "" : "off")">@(student.IsActive ? "Active student" : "Inactive student")</span>
         <h2>@student.FullName</h2>
         <p>@student.Email</p>

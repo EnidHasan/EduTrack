@@ -12,3 +12,7 @@ The broader project includes course enrollment, automated grade calculation, stu
 Email: admin@edutrack.edu
 Password: Admin@12345
 ```
+
+## Deployment Documentation
+
+For instructions on deploying the application to Render (Docker, PostgreSQL), please refer to the [Deployment Guide](docs/deployment.md).
