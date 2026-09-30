@@ -32,6 +32,9 @@ public class ProfileViewModel
     public string Email { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
     [Phone, Display(Name = "Phone number")] public string? PhoneNumber { get; set; }
+    public string? ProfilePicture { get; set; }
+    [Display(Name = "Profile Picture")]
+    public Microsoft.AspNetCore.Http.IFormFile? ProfileImage { get; set; }
 }
 public record UserListItem(string Id, string FullName, string Email, string Role, bool IsActive, DateTime CreatedAt, string Source, bool IsLinked, bool IsCurrent);
 public record DashboardViewModel(int Students, int Teachers, int Courses, int Users, IReadOnlyList<Course> RecentCourses);

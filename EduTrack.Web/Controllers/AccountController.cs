@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EduTrack.Web.Controllers;
 
 [Authorize]
-public class AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> users, ApplicationDbContext db) : Controller
+public class AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> users, ApplicationDbContext db, IWebHostEnvironment env) : Controller
 {
     [AllowAnonymous]
     public IActionResult Login(string? returnUrl = null, string? reason = null)
@@ -35,14 +35,64 @@ public class AccountController(SignInManager<ApplicationUser> signInManager, Use
     public async Task<IActionResult> Profile()
     {
         var user = await users.GetUserAsync(User); if (user is null) return Challenge();
-        return View(new ProfileViewModel { FullName = user.FullName, Email = user.Email ?? "", PhoneNumber = user.PhoneNumber, Role = (await users.GetRolesAsync(user)).FirstOrDefault() ?? "Member" });
+        return View(new ProfileViewModel { FullName = user.FullName, Email = user.Email ?? "", PhoneNumber = user.PhoneNumber, Role = (await users.GetRolesAsync(user)).FirstOrDefault() ?? "Member", ProfilePicture = user.ProfilePicture });
     }
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Profile(ProfileViewModel model)
     {
         var user = await users.GetUserAsync(User); if (user is null) return Challenge();
         model.Email = user.Email ?? ""; model.Role = (await users.GetRolesAsync(user)).FirstOrDefault() ?? "Member";
+        model.ProfilePicture = user.ProfilePicture;
         if (!ModelState.IsValid) return View(model);
+        
+        if (model.ProfileImage != null)
+        {
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+            var extension = Path.GetExtension(model.ProfileImage.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(extension))
+            {
+                ModelState.AddModelError("ProfileImage", "Only JPG, JPEG, PNG, and WEBP images are allowed.");
+                return View(model);
+            }
+            if (model.ProfileImage.Length > 2 * 1024 * 1024)
+            {
+                ModelState.AddModelError("ProfileImage", "Profile picture cannot exceed 2MB.");
+                return View(model);
+            }
+            
+            using var stream = model.ProfileImage.OpenReadStream();
+            var header = new byte[12];
+            await stream.ReadAsync(header, 0, 12);
+            bool isValid = false;
+            if (header[0] == 0xFF && header[1] == 0xD8 && header[2] == 0xFF) isValid = true; // JPEG
+            else if (header[0] == 0x89 && header[1] == 0x50 && header[2] == 0x4E && header[3] == 0x47 && header[4] == 0x0D && header[5] == 0x0A && header[6] == 0x1A && header[7] == 0x0A) isValid = true; // PNG
+            else if (header[0] == 0x52 && header[1] == 0x49 && header[2] == 0x46 && header[3] == 0x46 && header[8] == 0x57 && header[9] == 0x45 && header[10] == 0x42 && header[11] == 0x50) isValid = true; // WEBP
+            
+            if (!isValid)
+            {
+                ModelState.AddModelError("ProfileImage", "Invalid image file content.");
+                return View(model);
+            }
+            
+            if (!string.IsNullOrEmpty(user.ProfilePicture))
+            {
+                var oldPath = Path.Combine(env.WebRootPath, "images", "profiles", user.ProfilePicture);
+                if (System.IO.File.Exists(oldPath)) System.IO.File.Delete(oldPath);
+            }
+            
+            var fileName = $"{Guid.NewGuid()}{extension}";
+            var uploadsFolder = Path.Combine(env.WebRootPath, "images", "profiles");
+            Directory.CreateDirectory(uploadsFolder);
+            var filePath = Path.Combine(uploadsFolder, fileName);
+            
+            stream.Position = 0;
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await stream.CopyToAsync(fileStream);
+            }
+            user.ProfilePicture = fileName;
+        }
+
         user.FullName = model.FullName; user.PhoneNumber = model.PhoneNumber;
         var student = db.Students.FirstOrDefault(x => x.ApplicationUserId == user.Id); if (student is not null) student.FullName = model.FullName;
         var teacher = db.Teachers.FirstOrDefault(x => x.ApplicationUserId == user.Id); if (teacher is not null) teacher.FullName = model.FullName;
