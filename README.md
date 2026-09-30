@@ -15,4 +15,4 @@ Password: Admin@12345
 
 ## Deployment Documentation
 
-For instructions on deploying the application to an Oracle Cloud Always Free VM (Ubuntu, Nginx, SQL Server Express), please refer to the [Deployment Guide](docs/deployment.md).
+For instructions on deploying the application to Render (Docker, PostgreSQL), please refer to the [Deployment Guide](docs/deployment.md).
