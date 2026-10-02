@@ -364,12 +364,21 @@
                                         </a>
                                         @if (hasGrade)
                                         {
-                                            <form asp-action="SubmitDispute" method="post">
-                                                <input type="hidden" name="gradeId" value="@item.Grade!.Id" />
-                                                <button type="submit" class="action-btn" onclick="return confirm('Would you like to submit an official recheck request for @item.Course.CourseCode?');">
+                                            @if (letter != null && letter.Equals("A+", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                <button type="button" class="action-btn" onclick="alert('Recheck is not available for students who received an A+ in this course.');" style="opacity: 0.6; cursor: not-allowed;" title="Recheck is not available for students who received an A+ in this course.">
                                                     Recheck Request
                                                 </button>
-                                            </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-action="SubmitDispute" method="post">
+                                                    <input type="hidden" name="gradeId" value="@item.Grade!.Id" />
+                                                    <button type="submit" class="action-btn" onclick="return confirm('Would you like to submit an official recheck request for @item.Course.CourseCode?');">
+                                                        Recheck Request
+                                                    </button>
+                                                </form>
+                                            }
                                         }
                                     </div>
                                 </td>

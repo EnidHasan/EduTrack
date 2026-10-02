@@ -6,6 +6,12 @@ The system enables administrators to manage students, teachers, courses, user ac
 
 The broader project includes course enrollment, automated grade calculation, student transcripts, grade-recheck workflows, academic-risk detection, dashboards, and reporting. Its purpose is to reduce repetitive administrative work, protect academic information, improve transparency, and provide students and faculty with a reliable university-wide academic workspace.
 
+## Live Demo
+
+The deployed version of EduTrack is available here:
+
+https://edutrack-xt8h.onrender.com/
+
 ## Default Administrator Login
 
 ```text

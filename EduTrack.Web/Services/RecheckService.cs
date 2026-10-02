@@ -34,6 +34,9 @@ public class RecheckService(ApplicationDbContext db, CgpaCalculationService cgpa
 
         if (grade == null) return (false, "Grade not found.");
 
+        if (grade.LetterGrade != null && grade.LetterGrade.Equals("A+", StringComparison.OrdinalIgnoreCase))
+            return (false, "Recheck is not available for students who received an A+ in this course.");
+
         var existing = await db.RecheckRequests
             .AnyAsync(r => r.GradeId == gradeId && r.Status == "Pending");
 
