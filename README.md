@@ -16,3 +16,4 @@ Password: Admin@12345
 ## Deployment Documentation
 
 For instructions on deploying the application to Render (Docker, PostgreSQL), please refer to the [Deployment Guide](docs/deployment.md).
+livesite:https://edutrack-xt8h.onrender.com/Account/Login
